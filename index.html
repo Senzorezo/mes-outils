@@ -121,6 +121,87 @@
       font-size: .85rem;
     }
 
+    .links-section {
+      margin-top: 46px;
+      padding-top: 34px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.35rem;
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 76px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: inherit;
+      background: rgba(16, 26, 37, .82);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+    }
+
+    .quick-link:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      background: var(--panel2);
+    }
+
+    .quick-link-icon {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: #0b141e;
+      border: 1px solid #31465a;
+      font-size: 1.35rem;
+    }
+
+    .quick-link strong {
+      display: block;
+      color: var(--accent2);
+      font-size: .95rem;
+    }
+
+    .quick-link span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .76rem;
+      line-height: 1.3;
+    }
+
     footer {
       text-align: center;
       color: #64748b;
@@ -136,6 +217,9 @@
 
       header { margin-bottom: 30px; }
       .app-card { min-height: 0; }
+      .links-section { margin-top: 34px; padding-top: 26px; }
+      .section-heading { align-items: flex-start; }
+      .quick-links { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -145,7 +229,7 @@
     <header>
       <h1>Mes outils</h1>
       <div class="subtitle">Portail personnel d'applications</div>
-      <div class="version">Version 1.0 · 06/10/2026</div>
+      <div class="version">Version 1.2 · 06/10/2026</div>
     </header>
 
     <section class="apps">
@@ -179,12 +263,26 @@
       Vampire : L’Âge des Ténèbres.
     </p>
     <span class="open">Ouvrir →</span>
-  </a>
-</section>
+      </a>
+    </section>
+
+    <section class="links-section" aria-labelledby="liens-utiles-titre">
+      <div class="section-heading">
+        <div>
+          <h2 id="liens-utiles-titre">Liens utiles</h2>
+        </div>
+      </div>
+
+      <div class="quick-links" id="liens-utiles">
+        <a class="quick-link" href="https://miro.com/app/board/uXjVHsLH2Ig=/" target="_blank" rel="noopener noreferrer">
+          <strong>Miro — Vampire Dark Ages</strong>
+          <span>Tableau Miro de la campagne Vampire : L’Âge des Ténèbres.</span>
+        </a>
+      </div>
     </section>
 
     <footer>
-      Portail personnel · Version 1.1 · 06/10/2026
+      Portail personnel · Version 1.2 · 06/10/2026
     </footer>
   </main>
 </body>
