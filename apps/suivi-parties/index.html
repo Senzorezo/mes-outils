@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Portail de JdR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- Style personnalisé et rationalisé pour les résumés -->
+  <style>
+    .texte-contenu {
+      line-height: 1.7;
+      color: #cbd5e1;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .texte-contenu p { margin-top: 0px; margin-bottom: 0.85rem; }
+
+    .texte-contenu p:empty, 
+    .texte-contenu pbr,
+    .texte-contenu p:has(br:only-child) {
+      margin-bottom: 0px;
+      height: 0.5rem;
+    }
+
+    .texte-contenu p:first-of-type {
+      font-size: 1.02rem;
+      color: #f59e0b;
+      font-style: italic;
+    }
+
+    .texte-contenu ul, .texte-contenu ol {
+      margin-top: 0.25rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1.25rem;
+    }
+
+    .texte-contenu li { margin-bottom: 0.25rem; }
+
+    .texte-contenu blockquote {
+      border-left: 3px solid #d97706;
+      padding-left: 0.75rem;
+      font-style: italic;
+      color: #94a3b8;
+      margin: 1rem 0;
+    }
+
+    /* Force le déploiement quand on enlève line-clamp-3 */
+    .texte-contenu.line-clamp-none {
+      display: block !important;
+      -webkit-line-clamp: unset;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+  <!-- Barre de Navigation -->
+  <nav class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <button id="btn-retour-accueil" class="hidden text-slate-400 hover:text-white transition text-lg">⬅ Retour</button>
+        <h1 id="nom-application" class="text-xl font-bold tracking-wider text-amber-500 cursor-pointer">🐉 MON PORTAIL JDR</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- Bouton de connexion MJ -->
+        <button id="btn-connexion-mj" class="text-xs text-slate-400 hover:text-amber-500 border border-slate-600 hover:border-amber-500 px-3 py-1.5 rounded transition">
+          🔑 Connexion MJ
+        </button>
+        <button id="btn-export-total" class="hidden text-xs text-slate-400 hover:text-amber-500 border border-slate-600 px-3 py-1.5 rounded transition">
+          💾 Export Global
+        </button>
+        <!-- Le bouton d'action principal (masqué par défaut) -->
+        <button id="btn-creer-principal" class="hidden bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded font-medium transition">
+          + Nouvelle Campagne
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto p-6">
+    
+    <!-- ================= SECTION 1 : LES CAMPAGNES ================= -->
+    <section id="vue-campagnes">
+      <!-- Formulaire Campagne (Masqué par défaut) -->
+      <div id="form-campagne-zone" class="hidden bg-slate-800 p-6 rounded-lg border border-slate-700 mb-8">
+        <h2 class="text-lg font-bold mb-4 text-amber-400">Nouvelle Campagne / Système</h2>
+        <form id="form-campagne" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Nom de la Campagne ou du Jeu</label>
+            <input type="text" id="campagne-titre" required class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="Ex: D&D5 - La Malédiction de Strahd">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Description rapide</label>
+            <textarea id="campagne-desc" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 h-20" placeholder="Une courte description de l'univers ou du système..."></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Image de couverture</label>
+            <input type="file" id="campagne-image-input" accept="image/*" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer">
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="btn-annuler-campagne" class="px-4 py-2 text-slate-400 hover:text-white">Annuler</button>
+            <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white px-6 py-2 rounded font-medium">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+
+      <h2 class="text-2xl font-bold mb-6 border-b border-slate-700 pb-2">Mes Mondes & Campagnes</h2>
+      <div id="liste-campagnes" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Rempli dynamiquement -->
+      </div>
+    </section>
+
+    <!-- ================= SECTION 2 : INTERIEUR CAMPAGNE ================= -->
+    <section id="vue-resumes" class="hidden">
+      <!-- En-tête de la campagne sélectionnée -->
+      <div id="campagne-en-tete" class="relative rounded-lg overflow-hidden h-48 mb-8 border border-slate-700 flex flex-col justify-end p-6">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent z-10"></div>
+        <div id="campagne-bg-image" class="absolute inset-0 bg-cover bg-center"></div>
+        <div class="relative z-20">
+          <h2 id="campagne-titre-actif" class="text-3xl font-extrabold text-amber-400">Nom de la Campagne</h2>
+          <p id="campagne-desc-active" class="text-slate-300 text-sm mt-1 max-w-2xl">Description...</p>
+        </div>
+      </div>
+
+      <!-- Le système d'onglets pour choisir la catégorie -->
+      <div class="flex border-b border-slate-700 mb-6 gap-2">
+        <button id="onglet-resumes" class="px-4 py-2 border-b-2 border-amber-500 text-amber-400 font-medium text-sm transition">📜 Journal d'aventures</button>
+        <button id="onglet-personnages" class="px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium text-sm transition">👥 Personnages</button>
+      </div>
+
+      <!-- =============== ZONE 1 : RÉSUMÉS =============== -->
+      <div id="zone-onglet-resumes">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-slate-700 pb-4 gap-4">
+          <h3 class="text-2xl font-bold">Journal d'aventures</h3>
+          <div id="barre-export" class="hidden bg-slate-800 border border-slate-700 p-2 rounded-lg flex flex-wrap items-center gap-2">
+            <button type="button" onclick="selectionnerTout(true)" class="text-slate-400 hover:text-amber-400 text-xs px-2 py-1 border border-slate-600 rounded transition">☑️ Tout cocher</button>
+            <button type="button" onclick="selectionnerTout(false)" class="text-slate-400 hover:text-red-400 text-xs px-2 py-1 border border-slate-600 rounded transition">✖️ Tout décocher</button>
+            <div class="h-4 w-px bg-slate-600 mx-1 hidden sm:block"></div>
+            <span id="export-compteur" class="text-xs text-amber-400 font-medium px-1">0 sélectionné(s)</span>
+            <button onclick="exporterSelection('txt')" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-3 py-1.5 rounded transition">📄 .TXT</button>
+            <button onclick="exporterSelection('md')" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1.5 rounded font-medium transition">📝 .MD</button>
+          </div>
+        </div>
+
+        <div id="form-article-zone" class="hidden bg-slate-800 p-6 rounded-lg border border-slate-700 mb-8">
+          <h2 class="text-lg font-bold mb-4 text-amber-400">Nouveau Résumé de Session</h2>
+          <form id="form-article" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Titre de la session</label>
+              <input type="text" id="titre" required class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Image d'illustration (Optionnel)</label>
+              <input type="file" id="image-input" accept="image/*" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Résumé de la partie</label>
+              <div id="editor-container" class="bg-white text-slate-900 rounded-b-lg h-64"></div>
+            </div>
+            <div class="flex justify-end gap-3 pt-4">
+              <button type="button" id="btn-annuler-article" class="px-4 py-2 text-slate-400 hover:text-white">Annuler</button>
+              <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white px-6 py-2 rounded font-medium">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="liste-articles" class="grid gap-6 md:grid-cols-2"></div>
+      </div>
+
+      <!-- =============== ZONE 2 : LA SECTION PERSONNAGES =============== -->
+      <div id="zone-onglet-personnages" class="hidden">
+        <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+          <h3 class="text-2xl font-bold">Portraits des Héros</h3>
+          <button id="btn-proposer-perso" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-xs font-medium transition">
+            ➕ Créer / Proposer un personnage
+          </button>
+        </div>
+
+        <div id="form-personnage-zone" class="hidden bg-slate-800 p-6 rounded-lg border border-slate-700 mb-8">
+          <h2 class="text-lg font-bold mb-4 text-amber-400">Créer un Personnage</h2>
+          <form id="form-personnage" class="space-y-4">
+            <input type="hidden" id="perso-parent-id" value="">
+            
+            <div>
+              <label class="block text-sm font-medium mb-1">Nom du Personnage</label>
+              <input type="text" id="perso-nom" required class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="Ex: Elendil">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Spécificité (Race, Classe, Niveau...)</label>
+              <input type="text" id="perso-spec" required class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="Ex: Humain - Guerrier - Niveau 5">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Portrait (Format vertical recommandé)</label>
+              <input type="file" id="perso-image-input" accept="image/*" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Histoire, Background & Notes</label>
+              <div id="perso-editor-container" class="bg-white text-slate-900 rounded-b-lg h-64"></div>
+            </div>
+            <div id="info-validation-joueur" class="text-xs text-amber-500 italic">ℹ️ Votre action sera envoyée au MJ pour approbation avant d'être publique.</div>
+            <div class="flex justify-end gap-3 pt-2">
+              <button type="button" id="btn-annuler-perso" class="px-4 py-2 text-slate-400 hover:text-white">Annuler</button>
+              <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white px-6 py-2 rounded font-medium">Envoyer</button>
+            </div>
+          </form>
+        </div>
+        
+        <div id="liste-personnages" class="grid gap-6 md:grid-cols-2"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 1. Identifiants Supabase
+    const SUPABASE_URL = "https://sridgmkhxomlksjxbicf.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_58I51sY7Y_JFu3tDuo7xmw_L4EvC_sq";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const MOT_DE_PASSE_MJ = "Roll20"; 
+
+    // États de l'application
+    let campagneActiveId = null;
+    let campagneEnModificationId = null;
+    let articleEnCoursDeModificationId = null;
+    let persoEnModificationId = null;
+    let urlImageCampagneExistante = null;
+    let urlImageArticleExistante = null;
+    let urlImagePersoExistante = null;
+    let ongletActif = 'resumes';
+    
+    let estModeMJ = localStorage.getItem('estModeMJ') === 'true';
+
+    // Éléments HTML
+    const vueCampagnes = document.getElementById('vue-campagnes');
+    const vueResumes = document.getElementById('vue-resumes');
+    const btnCreerPrincipal = document.getElementById('btn-creer-principal');
+    const btnRetourAccueil = document.getElementById('btn-retour-accueil');
+    const nomApplication = document.getElementById('nom-application');
+    const btnConnexionMJ = document.getElementById('btn-connexion-mj');
+
+    const formCampagneZone = document.getElementById('form-campagne-zone');
+    const formCampagne = document.getElementById('form-campagne');
+    const btnAnnulerCampagne = document.getElementById('btn-annuler-campagne');
+
+    const formArticleZone = document.getElementById('form-article-zone');
+    const formArticle = document.getElementById('form-article');
+    const btnAnnulerArticle = document.getElementById('btn-annuler-article');
+
+    const ongletResumes = document.getElementById('onglet-resumes');
+    const ongletPersonnages = document.getElementById('onglet-personnages');
+    const zoneOngletResumes = document.getElementById('zone-onglet-resumes');
+    const zoneOngletPersonnages = document.getElementById('zone-onglet-personnages');
+
+    const btnProposerPerso = document.getElementById('btn-proposer-perso');
+    const formPersonnageZone = document.getElementById('form-personnage-zone');
+    const formPersonnage = document.getElementById('form-personnage');
+    const btnAnnulerPerso = document.getElementById('btn-annuler-perso');
+
+    // On initialise les éditeurs Quill
+    const quill = new Quill('#editor-container', { theme: 'snow', modules: { toolbar: [[{ 'header': [1, 2, false] }], ['bold', 'italic', 'underline'], [{'list': 'ordered'}, {'list': 'bullet'}], ['clean']] } });
+    const quillPerso = new Quill('#perso-editor-container', { theme: 'snow', modules: { toolbar: [[{ 'header': [1, 2, false] }], ['bold', 'italic', 'underline'], [{'list': 'ordered'}, {'list': 'bullet'}], ['clean']] } });
+
+    // ================= GESTION DU MODE MJ =================
+
+   function gererAffichageModeMJ() {
+      // 1. On récupère le bouton
+      const btnExport = document.getElementById('btn-export-total');
+
+      if (estModeMJ) {
+        btnConnexionMJ.textContent = "🔓 MJ Connecté (Déconnexion)";
+        btnConnexionMJ.classList.replace('text-slate-400', 'text-amber-500');
+        btnConnexionMJ.classList.replace('border-slate-600', 'border-amber-500');
+        
+        // On affiche les outils MJ
+        btnExport.classList.remove('hidden');
+        if (campagneActiveId === null || ongletActif === 'resumes') btnCreerPrincipal.classList.remove('hidden');
+      } else {
+        btnConnexionMJ.textContent = "🔑 Connexion MJ";
+        btnConnexionMJ.classList.replace('text-amber-500', 'text-slate-400');
+        btnConnexionMJ.classList.replace('border-slate-400', 'border-slate-600');
+        
+        // On masque les outils MJ
+        btnExport.classList.add('hidden');
+        btnCreerPrincipal.classList.add('hidden');
+      }
+      
+      // 2. Chargement des données
+      if (campagneActiveId === null) {
+        chargerCampagnes();
+      } else {
+        if (ongletActif === 'resumes') chargerArticles();
+        else chargerPersonnages();
+      }
+    }
+
+    btnConnexionMJ.addEventListener('click', () => {
+      if (estModeMJ) {
+        if (confirm("Se déconnecter du mode MJ ?")) {
+          estModeMJ = false;
+          localStorage.setItem('estModeMJ', 'false');
+          gererAffichageModeMJ();
+        }
+      } else {
+        const mdp_saisi = prompt("Entrez le mot de passe secret du Maître du Jeu :");
+        if (mdp_saisi === MOT_DE_PASSE_MJ) {
+          estModeMJ = true;
+          localStorage.setItem('estModeMJ', 'true');
+          alert("Accès accordé, bonjour Maître du Jeu ! 🐉");
+          gererAffichageModeMJ();
+        } else if (mdp_saisi !== null) {
+          alert("Mot de passe incorrect. Les dés ont parlé ! 🎲");
+        }
+      }
+    });
+
+    // ================= NAVIGATION & ONGLETS =================
+
+    function afficherVueCampagnes() {
+      campagneActiveId = null;
+      vueCampagnes.classList.remove('hidden');
+      vueResumes.classList.add('hidden');
+      btnRetourAccueil.classList.add('hidden');
+      
+      if (estModeMJ) {
+        btnCreerPrincipal.textContent = "+ Nouvelle Campagne";
+        btnCreerPrincipal.classList.remove('hidden');
+      } else {
+        btnCreerPrincipal.classList.add('hidden');
+      }
+      chargerCampagnes();
+    }
+
+    function basculerOnglet(cible) {
+      ongletActif = cible;
+      formArticleZone.classList.add('hidden');
+      formPersonnageZone.classList.add('hidden');
+      
+      if (cible === 'resumes') {
+        ongletResumes.className = "px-4 py-2 border-b-2 border-amber-500 text-amber-400 font-medium text-sm transition";
+        ongletPersonnages.className = "px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium text-sm transition";
+        zoneOngletResumes.classList.remove('hidden');
+        zoneOngletPersonnages.classList.add('hidden');
+        if (estModeMJ) btnCreerPrincipal.classList.remove('hidden');
+        chargerArticles();
+      } else {
+        ongletPersonnages.className = "px-4 py-2 border-b-2 border-amber-500 text-amber-400 font-medium text-sm transition";
+        ongletResumes.className = "px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 font-medium text-sm transition";
+        zoneOngletResumes.classList.add('hidden');
+        zoneOngletPersonnages.classList.remove('hidden');
+        btnCreerPrincipal.classList.add('hidden');
+        chargerPersonnages();
+      }
+    }
+
+    btnProposerPerso.addEventListener('click', () => {
+      persoEnModificationId = null;
+      urlImagePersoExistante = null;
+      document.getElementById('perso-parent-id').value = "";
+      formPersonnage.reset(); 
+      quillPerso.setContents([]);
+      
+      document.getElementById('info-validation-joueur').classList.toggle('hidden', estModeMJ);
+      formPersonnageZone.querySelector('h2').textContent = estModeMJ ? "Nouveau Personnage (MJ)" : "Proposer un Personnage";
+      formPersonnageZone.classList.toggle('hidden');
+    });
+
+    btnAnnulerPerso.addEventListener('click', () => formPersonnageZone.classList.add('hidden'));
+    ongletResumes.addEventListener('click', () => basculerOnglet('resumes'));
+    ongletPersonnages.addEventListener('click', () => basculerOnglet('personnages'));
+
+    async function afficherVueResumes(campagneId) {
+      basculerOnglet('resumes');
+      campagneActiveId = campagneId; 
+      vueCampagnes.classList.add('hidden');
+      vueResumes.classList.remove('hidden');
+      btnRetourAccueil.classList.remove('hidden');
+      
+      if (estModeMJ) {
+        btnCreerPrincipal.textContent = "+ Rédiger un résumé";
+        btnCreerPrincipal.classList.remove('hidden');
+      } else {
+        btnCreerPrincipal.classList.add('hidden');
+      }
+
+      const { data: campagne } = await supabaseClient.from('jdr_campagnes').select('*').eq('id', campagneId).single();
+      if (campagne) {
+        document.getElementById('campagne-titre-actif').textContent = campagne.titre;
+        document.getElementById('campagne-desc-active').textContent = campagne.description || "Aucune description renseignée.";
+        document.getElementById('campagne-bg-image').style.backgroundImage = campagne.image_url ? `url('${campagne.image_url}')` : 'none';
+      }
+      chargerArticles();
+    }
+
+    nomApplication.addEventListener('click', afficherVueCampagnes);
+    btnRetourAccueil.addEventListener('click', afficherVueCampagnes);
+
+    btnCreerPrincipal.addEventListener('click', () => {
+      if (!estModeMJ) return;
+      if (campagneActiveId === null) {
+        campagneEnModificationId = null;
+        urlImageCampagneExistante = null;
+        formCampagne.reset();
+        formCampagneZone.querySelector('h2').textContent = "Nouvelle Campagne / Système";
+        formCampagneZone.classList.toggle('hidden');
+      } else {
+        articleEnCoursDeModificationId = null;
+        urlImageArticleExistante = null;
+        formArticle.reset();
+        quill.setContents([]);
+        formArticleZone.querySelector('h2').textContent = "Nouveau Résumé de Session";
+        formArticleZone.classList.toggle('hidden');
+      }
+    });
+
+    btnAnnulerCampagne.addEventListener('click', () => formCampagneZone.classList.add('hidden'));
+    btnAnnulerArticle.addEventListener('click', () => formArticleZone.classList.add('hidden'));
+
+    // ================= CRUD CAMPAGNES =================
+
+    formCampagne.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!estModeMJ) return;
+
+      const titre = document.getElementById('campagne-titre').value;
+      const description = document.getElementById('campagne-desc').value;
+      const imageFile = document.getElementById('campagne-image-input').files[0];
+      let imageUrl = urlImageCampagneExistante;
+
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const filePath = `campagnes/${fileName}`;
+
+        const { error: uploadError } = await supabaseClient.storage.from('images-campagnes').upload(filePath, imageFile);
+        if (uploadError) { alert("Erreur d'image: " + uploadError.message); return; }
+
+        const { data } = supabaseClient.storage.from('images-campagnes').getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      }
+
+      if (campagneEnModificationId) {
+        await supabaseClient.from('jdr_campagnes').update({ titre, description, image_url: imageUrl }).eq('id', campagneEnModificationId);
+        alert("Campagne modifiée !");
+      } else {
+        await supabaseClient.from('jdr_campagnes').insert([{ titre, description, image_url: imageUrl }]);
+        alert("Campagne créée !");
+      }
+
+      formCampagneZone.classList.add('hidden');
+      formCampagne.reset();
+      chargerCampagnes();
+    });
+
+    async function chargerCampagnes() {
+      const { data: campagnes } = await supabaseClient.from('jdr_campagnes').select('*').order('titre', { ascending: true });
+      const container = document.getElementById('liste-campagnes');
+      container.innerHTML = "";
+
+      if (!campagnes || campagnes.length === 0) {
+        container.innerHTML = "<div class='text-slate-400 italic col-span-full text-center py-8'>Aucune campagne disponible. Connectez-vous pour en créer une !</div>";
+        return;
+      }
+
+      campagnes.forEach(camp => {
+        const bgStyle = camp.image_url ? `style="background-image: url('${camp.image_url}');"` : '';
+        const boutonsAdminHtml = estModeMJ 
+          ? `<div class="absolute top-2 right-2 flex gap-1 z-20">
+              <button onclick="event.stopPropagation(); preparerModifCampagne(${camp.id}, '${escapeHtml(camp.titre)}', '${escapeHtml(camp.description || '')}', '${camp.image_url || ''}')" class="bg-slate-900/80 hover:bg-amber-600 text-white p-1.5 rounded transition text-xs">✏️</button>
+              <button onclick="event.stopPropagation(); supprimerCampagne(${camp.id})" class="bg-slate-900/80 hover:bg-red-600 text-white p-1.5 rounded transition text-xs">🗑️</button>
+             </div>`
+          : '';
+
+        const card = `
+          <div class="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden flex flex-col justify-between group hover:border-amber-500 transition duration-300">
+            <div class="relative h-32 bg-slate-700 bg-cover bg-center" ${bgStyle}>
+              <div class="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition"></div>
+              ${boutonsAdminHtml}
+            </div>
+            <div class="p-4 cursor-pointer flex-grow" onclick="afficherVueResumes(${camp.id})">
+              <h3 class="text-lg font-bold text-amber-400 group-hover:text-amber-300 transition">${camp.titre}</h3>
+              <p class="text-slate-300 text-xs mt-1 line-clamp-2">${camp.description || 'Pas de description.'}</p>
+            </div>
+          </div>
+        `;
+        container.innerHTML += card;
+      });
+    }
+
+    function preparerModifCampagne(id, titre, desc, img) {
+      if (!estModeMJ) return;
+      campagneEnModificationId = id;
+      urlImageCampagneExistante = img;
+      formCampagneZone.querySelector('h2').textContent = "Modifier la Campagne";
+      document.getElementById('campagne-titre').value = titre;
+      document.getElementById('campagne-desc').value = desc;
+      formCampagneZone.classList.remove('hidden');
+      formCampagneZone.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function supprimerCampagne(id) {
+      if (!estModeMJ) return;
+      if (confirm("Supprimer cette campagne ? Tous ses résumés associés seront définitivement perdus !")) {
+        await supabaseClient.from('jdr_campagnes').delete().eq('id', id);
+        chargerCampagnes();
+      }
+    }
+
+    // ================= CRUD ARTICLES (Résumés) =================
+
+    formArticle.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!estModeMJ) return;
+
+      const titre = document.getElementById('titre').value;
+      const contenu = quill.root.innerHTML;
+      const imageFile = document.getElementById('image-input').files[0];
+      let imageUrl = urlImageArticleExistante;
+
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const filePath = `illustrations/${fileName}`;
+
+        const { error: uploadError } = await supabaseClient.storage.from('images-articles').upload(filePath, imageFile);
+        if (uploadError) { alert("Erreur d'image: " + uploadError.message); return; }
+
+        const { data } = supabaseClient.storage.from('images-articles').getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      }
+
+      if (articleEnCoursDeModificationId) {
+        await supabaseClient.from('jdr_articles').update({ titre, contenu, image_url: imageUrl }).eq('id', articleEnCoursDeModificationId);
+        alert("Résumé mis à jour !");
+      } else {
+        await supabaseClient.from('jdr_articles').insert([{ titre, contenu, image_url: imageUrl, campagne_id: campagneActiveId }]);
+        alert("Résumé enregistré !");
+      }
+
+      formArticleZone.classList.add('hidden');
+      formArticle.reset();
+      quill.setContents([]);
+      chargerArticles();
+    });
+
+    async function chargerArticles() {
+      const { data: articles } = await supabaseClient
+        .from('jdr_articles')
+        .select('*')
+        .eq('campagne_id', campagneActiveId)
+        .order('titre', { ascending: true });
+
+      const container = document.getElementById('liste-articles');
+      container.innerHTML = "";
+
+      const barreExport = document.getElementById('barre-export');
+      if (estModeMJ) {
+        barreExport.classList.remove('hidden');
+      } else {
+        barreExport.classList.add('hidden');
+      }
+      document.getElementById('export-compteur').textContent = "0 sélectionné(s)";
+
+      if (!articles || articles.length === 0) {
+        container.innerHTML = "<div class='text-slate-400 italic col-span-2 text-center py-8'>Aucun résumé dans cette campagne.</div>";
+        return;
+      }
+
+      articles.forEach(art => {
+        const dateStr = new Date(art.cree_le).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+        const imgHtml = art.image_url ? `<img src="${art.image_url}" class="w-full h-40 object-cover rounded-t-lg mb-3">` : '';
+        const checkboxHtml = estModeMJ ? `<input type="checkbox" value="${art.id}" onclick="event.stopPropagation(); gererSelectionExport();" class="checkbox-export w-4 h-4 rounded border-slate-600 bg-slate-700 text-amber-500 focus:ring-amber-500 cursor-pointer mr-2">` : '';
+        const boutonsAdminHtml = estModeMJ ? `<div class="flex gap-2 z-20 items-center"><button onclick="event.stopPropagation(); preparerModifArticle(${art.id}, '${escapeHtml(art.titre)}', '${art.image_url || ''}')" class="text-slate-400 hover:text-amber-500 p-1" title="Modifier">✏️</button><button onclick="event.stopPropagation(); supprimerArticle(${art.id})" class="text-slate-400 hover:text-red-500 p-1" title="Supprimer">🗑️</button></div>` : '';
+
+        const card = document.createElement('article');
+        card.className = "bg-slate-800 border border-slate-700 rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer hover:border-slate-500 transition-all duration-300";
+        card.id = `article-${art.id}`;
+        card.setAttribute('data-titre', art.titre);
+        card.setAttribute('data-date', dateStr);
+        card.setAttribute('data-contenu', art.contenu);
+
+        card.innerHTML = `
+          <div>
+            ${imgHtml}
+            <div class="p-5 pt-2">
+              <div class="flex justify-between items-start mb-2 gap-2">
+                <div class="flex items-center flex-grow">
+                  ${checkboxHtml}
+                  <h4 class="text-lg font-bold text-amber-400 leading-tight">${art.titre}</h4>
+                </div>
+                ${boutonsAdminHtml}
+              </div>
+              <div class="texte-contenu text-slate-300 text-sm leading-relaxed prose prose-invert line-clamp-3 transition-all duration-300">
+                ${art.contenu}
+              </div>
+              <div class="indicateur-lire-suite text-xs text-amber-500/85 mt-2 font-medium">Lire la suite...</div>
+            </div>
+          </div>
+          <div class="bg-slate-850 p-4 border-t border-slate-700 text-xs text-slate-400 flex justify-between">
+            <span>Publié le ${dateStr}</span>
+            <span class="text-green-400">✓ En ligne</span>
+          </div>
+        `;
+        card.addEventListener('click', () => { toggleArticle(card); });
+        container.appendChild(card);
+      });
+    }
+
+    function toggleArticle(cardSelected) {
+      const allCards = Array.from(document.querySelectorAll('#liste-articles article'));
+      const textContainer = cardSelected.querySelector('.texte-contenu');
+      const indicator = cardSelected.querySelector('.indicateur-lire-suite');
+      const isAlreadyOpen = textContainer.classList.contains('line-clamp-none');
+
+      allCards.forEach(c => {
+        const txt = c.querySelector('.texte-contenu');
+        const ind = c.querySelector('.indicateur-lire-suite');
+        if (txt) { txt.classList.remove('line-clamp-none'); txt.classList.add('line-clamp-3'); }
+        if (ind) ind.textContent = "Lire la suite...";
+        const ancienneNav = c.querySelector('.nav-inter-articles');
+        if (ancienneNav) ancienneNav.remove();
+      });
+
+      if (!isAlreadyOpen) {
+        textContainer.classList.remove('line-clamp-3');
+        textContainer.classList.add('line-clamp-none');
+        indicator.textContent = "Replier le résumé ⬆";
+
+        const indexActuel = allCards.indexOf(cardSelected);
+        const aUnPrecedent = indexActuel > 0;
+        const aUnSuivant = indexActuel < allCards.length - 1;
+
+        if (aUnPrecedent || aUnSuivant) {
+          const navContainer = document.createElement('div');
+          navContainer.className = "nav-inter-articles flex justify-between items-center mt-6 pt-4 border-t border-slate-700/50 gap-4 z-30";
+          
+          if (aUnPrecedent) {
+            const cartePrecedente = allCards[indexActuel - 1];
+            const titrePrecedent = cartePrecedente.getAttribute('data-titre');
+            const btnPrecedent = document.createElement('button');
+            btnPrecedent.className = "text-left text-xs text-amber-500 hover:text-amber-400 bg-slate-700/30 hover:bg-slate-750 p-2 rounded border border-slate-700 transition flex flex-col w-1/2 max-w-[48%]";
+            btnPrecedent.innerHTML = `
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">⬅ Précédent</span>
+              <span class="font-bold w-full truncate mt-0.5" title="${titrePrecedent}">${titrePrecedent}</span>
+            `;
+            btnPrecedent.addEventListener('click', (e) => { e.stopPropagation(); toggleArticle(cartePrecedente); });
+            navContainer.appendChild(btnPrecedent);
+          } else {
+            navContainer.appendChild(document.createElement('div'));
+          }
+
+          if (aUnSuivant) {
+            const carteSuivante = allCards[indexActuel + 1];
+            const titreSuivant = carteSuivante.getAttribute('data-titre');
+            const btnSuivant = document.createElement('button');
+            btnSuivant.className = "text-right text-xs text-amber-500 hover:text-amber-400 bg-slate-700/30 hover:bg-slate-750 p-2 rounded border border-slate-700 transition flex flex-col items-end w-1/2 max-w-[48%]";
+            btnSuivant.innerHTML = `
+              <span class="text-[10px] uppercase tracking-wider text-slate-400">Suivant ➡</span>
+              <span class="font-bold w-full truncate mt-0.5" title="${titreSuivant}">${titreSuivant}</span>
+            `;
+            btnSuivant.addEventListener('click', (e) => { e.stopPropagation(); toggleArticle(carteSuivante); });
+            navContainer.appendChild(btnSuivant);
+          }
+          textContainer.after(navContainer);
+        }
+        setTimeout(() => { cardSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+      }
+    }
+
+    async function preparerModifArticle(id, titre, img) {
+      if (!estModeMJ) return;
+      const { data } = await supabaseClient.from('jdr_articles').select('contenu').eq('id', id).single();
+      if (!data) return;
+      articleEnCoursDeModificationId = id;
+      urlImageArticleExistante = img;
+      formArticleZone.querySelector('h2').textContent = "Modifier le Résumé";
+      document.getElementById('titre').value = titre;
+      quill.root.innerHTML = data.contenu;
+      formArticleZone.classList.remove('hidden');
+      formArticleZone.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function supprimerArticle(id) {
+      if (!estModeMJ) return;
+      if (confirm("Supprimer ce résumé de session ?")) {
+        await supabaseClient.from('jdr_articles').delete().eq('id', id);
+        chargerArticles();
+      }
+    }
+
+    // ================= EXPORTATION DES ARTICLES =================
+
+    function gererSelectionExport() {
+      const cochees = document.querySelectorAll('.checkbox-export:checked');
+      const compteur = document.getElementById('export-compteur');
+      compteur.textContent = `${cochees.length} résumé(s) sélec.`;
+    }
+
+    function exporterSelection(format) {
+      const cochees = document.querySelectorAll('.checkbox-export:checked');
+      let texteFinal = "";
+      const nomCampagne = document.getElementById('campagne-titre-actif').textContent.trim();
+
+      cochees.forEach((cb) => {
+        const articleHtml = document.getElementById(`article-${cb.value}`);
+        const titre = articleHtml.getAttribute('data-titre');
+        const date = articleHtml.getAttribute('data-date');
+        const htmlContenu = articleHtml.getAttribute('data-contenu');
+        const texteConverti = format === 'md' ? htmlVersMarkdown(htmlContenu) : htmlVersTexteBrut(htmlContenu);
+
+        if (format === 'md') {
+          texteFinal += `# ${titre}\n*Date de session : ${date}*\n\n${texteConverti}\n\n---\n\n`;
+        } else {
+          texteFinal += `=========================================\n${titre.toUpperCase()}\nDate : ${date}\n=========================================\n\n${texteConverti}\n\n\n`;
+        }
+      });
+
+      const blob = new Blob([texteFinal], { type: "text/plain;charset=utf-8" });
+      const lien = document.createElement("a");
+      lien.href = URL.createObjectURL(blob);
+      lien.download = `Export_${nomCampagne.replace(/[^a-zA-Z0-9]/g, "_")}.${format}`;
+      document.body.appendChild(lien);
+      lien.click();
+      document.body.removeChild(lien);
+    }
+
+    function selectionnerTout(statut) {
+      const checkboxes = document.querySelectorAll('.checkbox-export');
+      checkboxes.forEach(cb => { cb.checked = statut; });
+      gererSelectionExport();
+    }
+
+    function htmlVersMarkdown(html) {
+      let md = html;
+      md = md.replace(/<h1>(.*?)<\/h1>/gi, '# $1\n')
+             .replace(/<h2>(.*?)<\/h2>/gi, '## $1\n')
+             .replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
+             .replace(/<em>(.*?)<\/em>/gi, '*$1*')
+             .replace(/<p>(.*?)<\/p>/gi, '$1\n\n')
+             .replace(/<li>(.*?)<\/li>/gi, '* $1\n')
+             .replace(/<ul>/gi, '').replace(/<\/ul>/gi, '\n')
+             .replace(/<ol>/gi, '').replace(/<\/ol>/gi, '\n')
+             .replace(/<br\s*\/?>/gi, '\n')
+             .replace(/<[^>]+>/g, '');
+      return md.trim();
+    }
+
+    function htmlVersTexteBrut(html) {
+      let txt = html;
+      txt = txt.replace(/<\/p>|<\/h1>|<\/h2>|<\/li>/gi, '\n')
+               .replace(/<br\s*\/?>/gi, '\n')
+               .replace(/<[^>]+>/g, '');
+      return txt.trim();
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    }
+
+    // ================= ENREGISTREMENT & RENDU DES PERSONNAGES =================
+
+    formPersonnage.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nom = document.getElementById('perso-nom').value;
+      const specificite = document.getElementById('perso-spec').value;
+      const background = quillPerso.root.innerHTML;
+      const imageFile = document.getElementById('perso-image-input').files[0];
+      const parentIdValue = document.getElementById('perso-parent-id').value;
+      let imageUrl = urlImagePersoExistante;
+
+      if (imageFile) {
+        const fileName = `${Date.now()}.${imageFile.name.split('.').pop()}`;
+        const filePath = `portraits/${fileName}`;
+        const { error: uploadError } = await supabaseClient.storage.from('images-personnages').upload(filePath, imageFile);
+        
+        if (uploadError) { 
+          alert("Erreur d'image : " + uploadError.message); 
+          return; 
+        }
+        imageUrl = supabaseClient.storage.from('images-personnages').getPublicUrl(filePath).data.publicUrl;
+      }
+
+      // === LA CORRECTION DU FORMULAIRE ===
+      if (estModeMJ && persoEnModificationId) {
+        // Cas A : Le MJ modifie directement une fiche officielle existante
+        await supabaseClient.from('jdr_personnages').update({ nom, specificite, background, image_url: imageUrl }).eq('id', persoEnModificationId);
+        alert("Fiche de personnage mise à jour en direct par le MJ !");
+      } 
+      else if (!estModeMJ && parentIdValue) {
+        // Cas B : Un JOUEUR propose une modif sur une fiche existante (parentIdValue contient l'ID de l'ancien)
+        await supabaseClient.from('jdr_personnages').insert([{ 
+          nom, 
+          specificite, 
+          background, 
+          image_url: imageUrl, 
+          campagne_id: campagneActiveId, 
+          approuve: false, 
+          parent_id: parseInt(parentIdValue) // On le lie officiellement à l'ancien
+        }]);
+        alert("Modifications envoyées au MJ pour validation ! 🎲");
+      } 
+      else {
+        // Cas C : C'est une TOUTE NOUVELLE création de personnage (brute)
+        await supabaseClient.from('jdr_personnages').insert([{ 
+          nom, 
+          specificite, 
+          background, 
+          image_url: imageUrl, 
+          campagne_id: campagneActiveId, 
+          approuve: estModeMJ // Validé si MJ, en attente si joueur
+        }]);
+        alert(estModeMJ ? "Nouveau personnage créé !" : "Fiche envoyée au MJ pour approbation ! 🎲");
+      }
+
+      formPersonnageZone.classList.add('hidden');
+      formPersonnage.reset();
+      quillPerso.setContents([]);
+      chargerPersonnages();
+    });
+
+    // ================= ENREGISTREMENT & RENDU DES PERSONNAGES =================
+
+    async function chargerPersonnages() {
+      const container = document.getElementById('liste-personnages');
+      container.innerHTML = "";
+
+      const { data: touslesPersos, error } = await supabaseClient
+        .from('jdr_personnages')
+        .select('*')
+        .eq('campagne_id', campagneActiveId)
+        .order('nom', { ascending: true });
+
+      if (error) {
+        console.error("Erreur de chargement :", error.message);
+        return;
+      }
+
+      if (!touslesPersos || touslesPersos.length === 0) {
+        container.innerHTML = "<p class='text-slate-400 italic col-span-2 text-center py-8'>Aucun personnage répertorié.</p>";
+        return;
+      }
+
+      const fichesOfficielles = touslesPersos.filter(p => p.approuve);
+      const nouvellesFiches = touslesPersos.filter(p => !p.approuve && !p.parent_id);
+      const propositionsModif = touslesPersos.filter(p => !p.approuve && p.parent_id);
+
+      if (estModeMJ) {
+        nouvellesFiches.forEach(p => container.appendChild(creerCartePersoHTML(p, "creation")));
+        fichesOfficielles.forEach(p => {
+          const modif = propositionsModif.find(m => m.parent_id === p.id);
+          container.appendChild(creerCartePersoHTML(p, modif ? "officiel_avec_modif" : "officiel", modif));
+        });
+      } else {
+        fichesOfficielles.forEach(p => {
+          const maModifEnAttente = propositionsModif.find(m => m.parent_id === p.id);
+          container.appendChild(creerCartePersoHTML(p, "joueur", maModifEnAttente ? true : false));
+        });
+      }
+    }
+
+    function creerCartePersoHTML(perso, type, modifDataOuStatut = null) {
+  const imgHtml = perso.image_url 
+    ? `<div class="w-20 h-20 bg-cover bg-center rounded border border-slate-700 shrink-0" style="background-image: url('${perso.image_url}');"></div>`
+    : `<div class="w-20 h-20 bg-slate-700 flex items-center justify-center text-2xl text-slate-400 rounded border border-slate-600 shrink-0">👤</div>`;
+
+  let statutHtml = "", actionsZone = document.createElement('div');
+  actionsZone.className = "flex gap-2 items-center w-full justify-between flex-wrap";
+
+if (type === "creation") {
+  statutHtml = `<span class="bg-amber-900/60 border border-amber-600 text-amber-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded">⏳ Nouveau</span>`;
+  actionsZone.innerHTML = `<button class="btn-app bg-green-700 hover:bg-green-600 text-white text-xs px-2.5 py-1 rounded">✅ Approuver</button><button class="btn-ref bg-red-700 hover:bg-red-600 text-white text-xs px-2.5 py-1 rounded">❌ Refuser</button>`;
+  
+  // Ré-attachement des événements
+  actionsZone.querySelector('.btn-app').onclick = (e) => { e.stopPropagation(); approuverFiche(perso.id, null); };
+  actionsZone.querySelector('.btn-ref').onclick = (e) => { e.stopPropagation(); refuserFiche(perso.id); };
+} 
+else if (type === "officiel_avec_modif") {
+  statutHtml = `<span class="bg-blue-900/60 border border-blue-500 text-blue-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded animate-pulse">⚠️ Modif en attente</span>`;
+  actionsZone.innerHTML = `
+    <div class="flex gap-2 flex-wrap">
+      <button class="btn-comp bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1 rounded font-bold">🔍 Comparer</button>
+      <button class="btn-val bg-green-700 hover:bg-green-600 text-white text-xs px-3 py-1 rounded font-bold">✅ Valider</button>
+      <button class="btn-rej bg-red-700 hover:bg-red-600 text-white text-xs px-3 py-1 rounded font-bold">❌ Refuser</button>
+    </div>`;
+  
+  // Ré-attachement des événements
+  actionsZone.querySelector('.btn-comp').onclick = (e) => { e.stopPropagation(); voirProposition(modifDataOuStatut.id); };
+  actionsZone.querySelector('.btn-val').onclick = (e) => { e.stopPropagation(); approuverFiche(perso.id, modifDataOuStatut.id); };
+  actionsZone.querySelector('.btn-rej').onclick = (e) => { e.stopPropagation(); refuserFiche(modifDataOuStatut.id); };
+}
+else if (type === "officiel") {
+  statutHtml = `<span class="bg-green-900/40 border border-green-700 text-green-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">✓ En ligne</span>`;
+  actionsZone.innerHTML = `<button class="btn-mod text-slate-400 hover:text-amber-500 text-xs p-1">✏️ Modifier</button><button class="btn-sup text-slate-400 hover:text-red-500 text-xs p-1">🗑️ Supprimer</button>`;
+  
+  // Ré-attachement des événements
+  actionsZone.querySelector('.btn-mod').onclick = (e) => { e.stopPropagation(); preparerModifPerso(perso.id, perso.nom, perso.specificite, perso.image_url, false); };
+  actionsZone.querySelector('.btn-sup').onclick = (e) => { e.stopPropagation(); refuserFiche(perso.id); };
+}
+
+  const card = document.createElement('div');
+  card.className = "bg-slate-800 border border-slate-700 rounded-lg overflow-hidden flex flex-col cursor-pointer hover:border-slate-500 transition-all";
+  
+  // Correction ici : réintégration de l'image, du nom, de la spécificité et du texte
+  card.innerHTML = `
+    <div class="p-5">
+      <div class="flex gap-4 items-start mb-4">
+        ${imgHtml}
+        <div class="min-w-0 flex-grow">
+          <h4 class="text-xl font-bold text-amber-400 truncate">${perso.nom}</h4>
+          ${statutHtml}
+          <p class="text-slate-400 text-xs mt-1 truncate">${perso.specificite || 'Spécificité non renseignée'}</p>
+        </div>
+      </div>
+      <div class="texte-contenu line-clamp-3"> 
+        ${perso.background}
+      </div>
+      <div class="indicateur-lire-suite text-xs text-amber-500 mt-2 cursor-pointer">Lire la suite...</div>
+    </div>
+  `;
+
+  const footer = document.createElement('div'); 
+  footer.className = "bg-slate-850 p-4 border-t border-slate-700"; 
+  footer.appendChild(actionsZone);
+  card.appendChild(footer);
+
+  // Ajout de l'événement pour déplier le texte
+  card.addEventListener('click', (e) => {
+    // Si on clique sur un bouton, on ne fait rien
+    if (e.target.closest('button')) return;
+    
+    const txt = card.querySelector('.texte-contenu');
+    const ind = card.querySelector('.indicateur-lire-suite');
+    txt.classList.toggle('line-clamp-3');
+    txt.classList.toggle('line-clamp-none');
+    ind.textContent = txt.classList.contains('line-clamp-none') ? "Replier la fiche ⬆" : "Lire la suite...";
+  });
+
+  return card;
+}
+
+    async function approuverFiche(idOfficiel, idVersionTravail) {
+      if (idVersionTravail) {
+        const { data: vt } = await supabaseClient.from('jdr_personnages').select('*').eq('id', idVersionTravail).single();
+        await supabaseClient.from('jdr_personnages').update({ nom: vt.nom, specificite: vt.specificite, background: vt.background, image_url: vt.image_url, approuve: true }).eq('id', idOfficiel);
+        await supabaseClient.from('jdr_personnages').delete().eq('id', idVersionTravail);
+      } else {
+        await supabaseClient.from('jdr_personnages').update({ approuve: true }).eq('id', idOfficiel);
+      }
+      chargerPersonnages();
+    }
+
+    async function refuserFiche(id) {
+      if (confirm("Refuser cette modification et supprimer la demande ?")) {
+        // 1. Suppression de la demande en base
+        await supabaseClient.from('jdr_personnages').delete().eq('id', id);
+        
+        // 2. VIDAGE TOTAL et FORCÉ du conteneur avant de recharger
+        const container = document.getElementById('liste-personnages');
+        container.innerHTML = ""; 
+        
+        // 3. Rechargement propre de la liste officielle
+        await chargerPersonnages();
+        alert("Demande rejetée, retour à la fiche originale.");
+      }
+    }
+
+    async function voirProposition(idVersionTravail) {
+      // On ne récupère que la nouvelle version proposée par le joueur
+      const { data: nouvelle } = await supabaseClient.from('jdr_personnages').select('*').eq('id', idVersionTravail).single();
+      
+      if (!nouvelle) return;
+
+      const fenetre = window.open("", "Relecture", "width=600,height=600");
+      fenetre.document.write(`
+        <html>
+        <body style="background:#1e293b; color:#f1f5f9; font-family:sans-serif; padding:25px;">
+          <h2 style="color:#fbbf24; margin-bottom:10px;">Proposition : ${nouvelle.nom}</h2>
+          <p style="color:#94a3b8; text-transform:uppercase; font-size:12px; margin-bottom:20px;">${nouvelle.specificite}</p>
+          <div style="background:#334155; padding:20px; border-radius:8px; line-height:1.6;">
+            ${nouvelle.background}
+          </div>
+          <p style="text-align:center; margin-top:30px; color:#64748b; font-size:12px;">Fermez cette fenêtre après lecture.</p>
+        <\/body>
+        </html>
+      `);
+    }
+
+    async function preparerModifPerso(id, nom, spec, img, estDepuisJoueur) {
+      persoEnModificationId = id; urlImagePersoExistante = img;
+      document.getElementById('perso-parent-id').value = estDepuisJoueur ? id : "";
+      document.getElementById('perso-nom').value = nom; 
+      document.getElementById('perso-spec').value = spec;
+      const { data } = await supabaseClient.from('jdr_personnages').select('background').eq('id', id).single();
+      quillPerso.root.innerHTML = data.background;
+      formPersonnageZone.classList.remove('hidden');
+    }
+
+
+    
+    function nettoyerNomFichier(texte) {
+      return String(texte || 'sans_nom')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9_-]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .substring(0, 80) || 'sans_nom';
+    }
+
+    function extensionDepuisTypeMime(typeMime) {
+      const correspondances = {
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+        'image/webp': 'webp',
+        'image/gif': 'gif',
+        'image/svg+xml': 'svg',
+        'image/avif': 'avif'
+      };
+      return correspondances[typeMime] || 'img';
+    }
+
+    async function ajouterImageAuZip(zip, url, dossier, nomBase, erreurs) {
+      if (!url) return null;
+
+      try {
+        const reponse = await fetch(url);
+        if (!reponse.ok) throw new Error(`HTTP ${reponse.status}`);
+
+        const blob = await reponse.blob();
+        let extension = '';
+
+        try {
+          const cheminUrl = new URL(url).pathname;
+          const dernierSegment = cheminUrl.split('/').pop() || '';
+          const matchExt = dernierSegment.match(/\.([a-zA-Z0-9]{2,5})$/);
+          if (matchExt) extension = matchExt[1].toLowerCase();
+        } catch (_) {}
+
+        if (!extension) extension = extensionDepuisTypeMime(blob.type);
+
+        const cheminLocal = `images/${dossier}/${nettoyerNomFichier(nomBase)}.${extension}`;
+        zip.file(cheminLocal, blob);
+        return cheminLocal;
+      } catch (err) {
+        console.error('Impossible de récupérer l’image :', url, err);
+        erreurs.push(`${url} — ${err.message}`);
+        return null;
+      }
+    }
+
+    async function exporterToutEnMarkdown() {
+      try {
+        console.log("Début de l'export complet avec images...");
+
+        if (typeof JSZip === 'undefined') {
+          throw new Error("La bibliothèque JSZip n'a pas pu être chargée.");
+        }
+
+        // 1. Récupération de toutes les données
+        const { data: campagnes, error: errC } = await supabaseClient.from('jdr_campagnes').select('*');
+        if (errC) throw new Error("Erreur Campagnes: " + errC.message);
+
+        const { data: articles, error: errA } = await supabaseClient.from('jdr_articles').select('*');
+        if (errA) throw new Error("Erreur Articles: " + errA.message);
+
+        const { data: personnages, error: errP } = await supabaseClient.from('jdr_personnages').select('*').eq('approuve', true);
+        if (errP) throw new Error("Erreur Personnages: " + errP.message);
+
+        const zip = new JSZip();
+        const erreursImages = [];
+        let md = `# Archives complètes du Portail JDR\n\n`;
+
+        // 2. Construction de l'archive campagne par campagne
+        for (const camp of campagnes) {
+          md += `--- \n# Campagne : ${camp.titre}\n${camp.description || ''}\n\n`;
+
+          const imageCampagne = await ajouterImageAuZip(
+            zip,
+            camp.image_url,
+            'campagnes',
+            `campagne_${camp.id}_${camp.titre}`,
+            erreursImages
+          );
+          if (imageCampagne) md += `![Couverture de ${camp.titre}](${imageCampagne})\n\n`;
+
+          md += `## 📜 Journal d'aventures\n`;
+          const articlesCampagne = articles.filter(a => a.campagne_id === camp.id);
+
+          for (const art of articlesCampagne) {
+            md += `### ${art.titre}\n`;
+
+            const imageArticle = await ajouterImageAuZip(
+              zip,
+              art.image_url,
+              'articles',
+              `article_${art.id}_${art.titre}`,
+              erreursImages
+            );
+            if (imageArticle) md += `![Illustration de ${art.titre}](${imageArticle})\n\n`;
+
+            md += `${htmlVersMarkdown(art.contenu)}\n\n`;
+          }
+
+          md += `## 👥 Personnages\n`;
+          const personnagesCampagne = personnages.filter(p => p.campagne_id === camp.id);
+
+          for (const perso of personnagesCampagne) {
+            md += `### ${perso.nom} (${perso.specificite || ''})\n`;
+
+            const imagePerso = await ajouterImageAuZip(
+              zip,
+              perso.image_url,
+              'personnages',
+              `personnage_${perso.id}_${perso.nom}`,
+              erreursImages
+            );
+            if (imagePerso) md += `![Portrait de ${perso.nom}](${imagePerso})\n\n`;
+
+            md += `${htmlVersMarkdown(perso.background)}\n\n`;
+          }
+        }
+
+        // 3. Fichiers de sauvegarde contenus dans le ZIP
+        zip.file('Archive_Complete_JDR.md', md);
+        zip.file('donnees.json', JSON.stringify({ campagnes, articles, personnages }, null, 2));
+
+        if (erreursImages.length > 0) {
+          zip.file(
+            'images_non_recuperees.txt',
+            "Certaines images n'ont pas pu être téléchargées :\n\n" + erreursImages.join('\n')
+          );
+        }
+
+        // 4. Génération et téléchargement du ZIP
+        const blobZip = await zip.generateAsync({ type: 'blob' });
+        const lien = document.createElement('a');
+        const urlZip = URL.createObjectURL(blobZip);
+        lien.href = urlZip;
+        lien.download = 'Archive_Complete_JDR.zip';
+        document.body.appendChild(lien);
+        lien.click();
+        document.body.removeChild(lien);
+        setTimeout(() => URL.revokeObjectURL(urlZip), 1000);
+
+        console.log('Export complet terminé !');
+        if (erreursImages.length === 0) {
+          alert('Export terminé : textes, données et images ont été sauvegardés dans le fichier ZIP.');
+        } else {
+          alert(`Export terminé, mais ${erreursImages.length} image(s) n'ont pas pu être récupérée(s). Consulte images_non_recuperees.txt dans le ZIP.`);
+        }
+
+      } catch (err) {
+        console.error("ERREUR D'EXPORT :", err);
+        alert("Une erreur est survenue lors de l'export : " + err.message);
+      }
+    }
+
+// === ATTENTION : Ajoute ces deux lignes ici, juste avant les appels finaux ===
+const btnExportGlobal = document.getElementById('btn-export-total');
+if (btnExportGlobal) {
+  btnExportGlobal.addEventListener('click', exporterToutEnMarkdown);
+}
+
+gererAffichageModeMJ();
+afficherVueCampagnes();
+  </script>
+</body>
+</html>
