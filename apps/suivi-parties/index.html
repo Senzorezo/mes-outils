@@ -214,13 +214,49 @@
     </section>
   </main>
 
+
+  <!-- Connexion sécurisée MJ -->
+  <div id="mj-login-modal" class="hidden fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-6">
+      <h2 class="text-xl font-bold text-amber-400 mb-1">Connexion MJ</h2>
+      <p class="text-sm text-slate-400 mb-5">Identifiez-vous avec votre compte Supabase administrateur.</p>
+
+      <form id="mj-login-form" class="space-y-4">
+        <div>
+          <label for="mj-email" class="block text-sm font-medium mb-1">E-mail</label>
+          <input id="mj-email" type="email" autocomplete="username" required
+                 class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div>
+          <label for="mj-password" class="block text-sm font-medium mb-1">Mot de passe</label>
+          <input id="mj-password" type="password" autocomplete="current-password" required
+                 class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div id="mj-login-error" class="text-sm text-red-400 min-h-[1.25rem]"></div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" id="mj-login-cancel"
+                  class="px-4 py-2 text-slate-300 hover:text-white">
+            Annuler
+          </button>
+          <button type="submit" id="mj-login-submit"
+                  class="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white px-5 py-2 rounded font-medium">
+            Connexion
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     // 1. Identifiants Supabase
     const SUPABASE_URL = "https://sridgmkhxomlksjxbicf.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_58I51sY7Y_JFu3tDuo7xmw_L4EvC_sq";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const MOT_DE_PASSE_MJ = "Roll20"; 
+    const MJ_USER_ID = "32e1a34a-819e-440b-b8d3-226ca8276d73";
 
     // États de l'application
     let campagneActiveId = null;
@@ -232,7 +268,7 @@
     let urlImagePersoExistante = null;
     let ongletActif = 'resumes';
     
-    let estModeMJ = localStorage.getItem('estModeMJ') === 'true';
+    let estModeMJ = false;
 
     // Éléments HTML
     const vueCampagnes = document.getElementById('vue-campagnes');
@@ -297,23 +333,85 @@
       }
     }
 
-    btnConnexionMJ.addEventListener('click', () => {
+    function ouvrirConnexionMJ() {
+      document.getElementById('mj-login-error').textContent = '';
+      document.getElementById('mj-email').value = '';
+      document.getElementById('mj-password').value = '';
+      document.getElementById('mj-login-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('mj-email').focus(), 50);
+    }
+
+    function fermerConnexionMJ() {
+      document.getElementById('mj-login-modal').classList.add('hidden');
+    }
+
+    async function actualiserSessionMJ() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      estModeMJ = !!session?.user && session.user.id === MJ_USER_ID;
+
+      if (session?.user && !estModeMJ) {
+        await supabaseClient.auth.signOut();
+      }
+
+      gererAffichageModeMJ();
+    }
+
+    btnConnexionMJ.addEventListener('click', async () => {
       if (estModeMJ) {
         if (confirm("Se déconnecter du mode MJ ?")) {
+          await supabaseClient.auth.signOut();
           estModeMJ = false;
-          localStorage.setItem('estModeMJ', 'false');
           gererAffichageModeMJ();
         }
       } else {
-        const mdp_saisi = prompt("Entrez le mot de passe secret du Maître du Jeu :");
-        if (mdp_saisi === MOT_DE_PASSE_MJ) {
-          estModeMJ = true;
-          localStorage.setItem('estModeMJ', 'true');
-          alert("Accès accordé, bonjour Maître du Jeu ! 🐉");
-          gererAffichageModeMJ();
-        } else if (mdp_saisi !== null) {
-          alert("Mot de passe incorrect. Les dés ont parlé ! 🎲");
+        ouvrirConnexionMJ();
+      }
+    });
+
+    document.getElementById('mj-login-cancel').addEventListener('click', fermerConnexionMJ);
+
+    document.getElementById('mj-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('mj-email').value.trim();
+      const password = document.getElementById('mj-password').value;
+      const erreur = document.getElementById('mj-login-error');
+      const bouton = document.getElementById('mj-login-submit');
+
+      erreur.textContent = '';
+      bouton.disabled = true;
+      bouton.textContent = 'Connexion...';
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        if (!data?.user || data.user.id !== MJ_USER_ID) {
+          await supabaseClient.auth.signOut();
+          throw new Error("Ce compte n'est pas autorisé pour le mode MJ.");
         }
+
+        estModeMJ = true;
+        fermerConnexionMJ();
+        gererAffichageModeMJ();
+        alert("Accès MJ accordé.");
+      } catch (err) {
+        erreur.textContent = err.message || "Connexion impossible.";
+      } finally {
+        bouton.disabled = false;
+        bouton.textContent = 'Connexion';
+      }
+    });
+
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      const nouveauStatut = !!session?.user && session.user.id === MJ_USER_ID;
+      if (nouveauStatut !== estModeMJ) {
+        estModeMJ = nouveauStatut;
+        gererAffichageModeMJ();
       }
     });
 
@@ -1162,7 +1260,7 @@ if (btnExportGlobal) {
   btnExportGlobal.addEventListener('click', exporterToutEnMarkdown);
 }
 
-gererAffichageModeMJ();
+actualiserSessionMJ();
 afficherVueCampagnes();
   </script>
 </body>
