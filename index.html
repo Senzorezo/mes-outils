@@ -18,13 +18,9 @@
       --accent2: #f0c979;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      background: var(--bg);
-    }
+    html { background: var(--bg); }
 
     body {
       margin: 0;
@@ -64,6 +60,14 @@
       font-size: 1rem;
     }
 
+    .version {
+      margin-top: 8px;
+      color: #64748b;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+
     .apps {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -74,19 +78,11 @@
       display: block;
       text-decoration: none;
       color: inherit;
-
-      background:
-        linear-gradient(
-          180deg,
-          var(--panel2),
-          var(--panel)
-        );
-
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 28px;
       min-height: 220px;
-
       transition:
         transform .2s ease,
         border-color .2s ease,
@@ -138,76 +134,46 @@
         padding-top: 32px;
       }
 
-      header {
-        margin-bottom: 30px;
-      }
-
-      .app-card {
-        min-height: 0;
-      }
+      header { margin-bottom: 30px; }
+      .app-card { min-height: 0; }
     }
   </style>
 </head>
 
 <body>
-
   <main>
-
     <header>
       <h1>Mes outils</h1>
-
-      <div class="subtitle">
-        Portail personnel d'applications
-      </div>
+      <div class="subtitle">Portail personnel d'applications</div>
+      <div class="version">Version 1.0 · 06/10/2026</div>
     </header>
 
     <section class="apps">
-
-      <a
-        class="app-card"
-        href="./apps/suivi-parties/index.html"
-      >
+      <a class="app-card" href="./apps/suivi-parties/index.html">
         <div class="icon">📜</div>
-
         <h2>Suivi des parties JDR</h2>
-
         <p>
           Journal des campagnes, résumés de sessions,
           personnages et archives de parties.
         </p>
-
-        <span class="open">
-          Ouvrir →
-        </span>
+        <span class="open">Ouvrir →</span>
       </a>
 
-
-      <a
-        class="app-card"
-        href="./apps/universal-dice/index.html"
-      >
+      <a class="app-card" href="./apps/universal-dice/index.html">
         <div class="icon">🎲</div>
-
         <h2>Universal Dice Roller</h2>
-
         <p>
           Lanceur de dés partagé pour plusieurs systèmes
           de jeu de rôle, avec tables, historique
           et outils pour le maître de jeu.
         </p>
-
-        <span class="open">
-          Ouvrir →
-        </span>
+        <span class="open">Ouvrir →</span>
       </a>
-
     </section>
 
     <footer>
-      Portail personnel
+      Portail personnel · Version 1.0 · 06/10/2026
     </footer>
-
   </main>
-
 </body>
 </html>
