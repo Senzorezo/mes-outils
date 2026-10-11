@@ -38,14 +38,14 @@
     }
 
     main {
-      width: min(1050px, calc(100% - 40px));
+      width: min(940px, calc(100% - 40px));
       margin: 0 auto;
-      padding: 60px 0;
+      padding: 42px 0;
     }
 
     header {
       text-align: center;
-      margin-bottom: 48px;
+      margin-bottom: 32px;
     }
 
     h1 {
@@ -68,10 +68,30 @@
       letter-spacing: .03em;
     }
 
+    .tool-group + .tool-group { margin-top: 32px; }
+
+    .group-heading { margin: 0 0 14px; }
+    .group-heading h2 {
+      margin: 0 0 7px;
+      font-size: 1.25rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .group-heading h2::before {
+      content: "";
+      width: 4px;
+      height: 25px;
+      flex: 0 0 auto;
+      border-radius: 4px;
+      background: var(--accent);
+    }
+
     .apps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 22px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
     .app-card {
@@ -80,13 +100,18 @@
       color: inherit;
       background: linear-gradient(180deg, var(--panel2), var(--panel));
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 28px;
-      min-height: 220px;
+      border-radius: 12px;
+      padding: 18px 20px;
+      min-height: 0;
       transition:
         transform .2s ease,
         border-color .2s ease,
         box-shadow .2s ease;
+    }
+
+    .app-card:focus-visible {
+      outline: 3px solid var(--accent2);
+      outline-offset: 4px;
     }
 
     .app-card:hover {
@@ -96,130 +121,56 @@
     }
 
     .icon {
-      font-size: 2.6rem;
-      margin-bottom: 18px;
+      font-size: 1.9rem;
+      margin-bottom: 8px;
     }
 
-    .app-card h2 {
-      margin: 0 0 10px;
+    .app-card h3 {
+      margin: 0 0 6px;
       color: var(--accent2);
-      font-size: 1.4rem;
+      font-size: 1.12rem;
     }
 
     .app-card p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.6;
-      font-size: .95rem;
+      line-height: 1.45;
+      font-size: .88rem;
     }
 
     .open {
       display: inline-block;
-      margin-top: 22px;
+      margin-top: 12px;
       color: var(--accent);
       font-weight: 800;
       font-size: .85rem;
     }
 
-    .links-section {
-      margin-top: 46px;
-      padding-top: 34px;
-      border-top: 1px solid var(--line);
+    .useful-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .useful-links a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 14px; border: 1px solid var(--line);
+      border-radius: 10px; background: var(--panel);
+      color: var(--accent2); text-decoration: none; font-size: .88rem;
     }
-
-    .section-heading {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-heading h2 {
-      margin: 0;
-      color: var(--text);
-      font-size: 1.35rem;
-    }
-
-    .section-heading p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: .88rem;
-    }
-
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 12px;
-    }
-
-    .quick-link {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      min-height: 76px;
-      padding: 14px 16px;
-      text-decoration: none;
-      color: inherit;
-      background: rgba(16, 26, 37, .82);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease;
-    }
-
-    .quick-link:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-      background: var(--panel2);
-    }
-
-    .quick-link-icon {
-      width: 42px;
-      height: 42px;
-      flex: 0 0 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 11px;
-      background: #0b141e;
-      border: 1px solid #31465a;
-      font-size: 1.35rem;
-    }
-
-    .quick-link strong {
-      display: block;
-      color: var(--accent2);
-      font-size: .95rem;
-    }
-
-    .quick-link span {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: .76rem;
-      line-height: 1.3;
-    }
+    .useful-links a:hover, .useful-links a:focus-visible { border-color: var(--accent); }
 
     footer {
       text-align: center;
       color: #64748b;
-      margin-top: 52px;
+      margin-top: 36px;
       font-size: .8rem;
     }
 
     @media (max-width: 600px) {
       main {
-        width: min(100% - 24px, 1050px);
+        width: calc(100% - 24px);
         padding-top: 32px;
       }
 
-      header { margin-bottom: 30px; }
+      header { margin-bottom: 24px; }
+      .apps { grid-template-columns: 1fr; }
       .app-card { min-height: 0; }
-      .links-section { margin-top: 34px; padding-top: 26px; }
-      .section-heading { align-items: flex-start; }
-      .quick-links { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -229,13 +180,44 @@
     <header>
       <h1>Mes outils</h1>
       <div class="subtitle">Portail personnel d'applications</div>
-      <div class="version">Version 1.2 · 06/10/2026</div>
+      <div class="version">Version 1.7 · 11/10/2026</div>
     </header>
 
-    <section class="apps">
+    <section class="tool-group" aria-labelledby="group-0">
+      <div class="group-heading">
+        <h2 id="group-0">Gestionnaires de personnages</h2>
+      </div>
+      <div class="apps">
+      <a class="app-card" href="./apps/vampire-dark-ages/index.html">
+        <div class="icon">🩸</div>
+        <h3>Vampire : L’Âge des Ténèbres</h3>
+        <p>
+          Création et gestion de personnages pour
+          Vampire : L’Âge des Ténèbres.
+        </p>
+        <span class="open">Ouvrir →</span>
+      </a>
+
+      <a class="app-card" href="./apps/the-division/index.html">
+        <div class="icon">🛡️</div>
+        <h3>The Division</h3>
+        <p>
+          Création, personnalisation et gestion de personnages
+          pour le jeu de rôle The Division.
+        </p>
+        <span class="open">Ouvrir →</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="tool-group" aria-labelledby="group-1">
+      <div class="group-heading">
+        <h2 id="group-1">Outils de jeu</h2>
+      </div>
+      <div class="apps">
       <a class="app-card" href="./apps/suivi-parties/index.html">
         <div class="icon">📜</div>
-        <h2>Suivi des parties JDR</h2>
+        <h3>Suivi des parties JDR</h3>
         <p>
           Journal des campagnes, résumés de sessions,
           personnages et archives de parties.
@@ -245,7 +227,7 @@
 
       <a class="app-card" href="./apps/universal-dice/index.html">
         <div class="icon">🎲</div>
-        <h2>Universal Dice Roller</h2>
+        <h3>Universal Dice Roller</h3>
         <p>
           Lanceur de dés partagé pour plusieurs systèmes
           de jeu de rôle, avec tables, historique
@@ -253,36 +235,20 @@
         </p>
         <span class="open">Ouvrir →</span>
       </a>
-
-        <!-- Vampire -->
-  <a class="app-card" href="./apps/vampire-dark-ages/index.html">
-    <div class="icon">🩸</div>
-    <h2>Vampire : L’Âge des Ténèbres</h2>
-    <p>
-      Création et gestion de personnages pour
-      Vampire : L’Âge des Ténèbres.
-    </p>
-    <span class="open">Ouvrir →</span>
-      </a>
+      </div>
     </section>
 
-    <section class="links-section" aria-labelledby="liens-utiles-titre">
-      <div class="section-heading">
-        <div>
-          <h2 id="liens-utiles-titre">Liens utiles</h2>
-        </div>
+    <section class="tool-group" aria-labelledby="useful-links">
+      <div class="group-heading">
+        <h2 id="useful-links">Liens utiles</h2>
       </div>
-
-      <div class="quick-links" id="liens-utiles">
-        <a class="quick-link" href="https://miro.com/app/board/uXjVHsLH2Ig=/" target="_blank" rel="noopener noreferrer">
-          <strong>Miro — Vampire Dark Ages</strong>
-          <span>Tableau Miro de la campagne Vampire : L’Âge des Ténèbres.</span>
-        </a>
-      </div>
+      <nav class="useful-links" aria-label="Liens utiles">
+        <a href="https://miro.com/app/board/uXjVHsLH2Ig=/" target="_blank" rel="noopener noreferrer">Accès au Miro pour Vampire Dark Ages <span aria-hidden="true">↗</span></a>
+      </nav>
     </section>
 
     <footer>
-      Portail personnel · Version 1.2 · 06/10/2026
+      Portail personnel · Version 1.7 · 11/10/2026
     </footer>
   </main>
 </body>
