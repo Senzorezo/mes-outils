@@ -30,7 +30,7 @@ label{display:block;font-size:.72rem;font-weight:750;color:#c5d0d9;margin:9px 0 
 .home-title{text-align:center;font-size:1.7rem;font-weight:950;margin:0 0 5px}.home-sub{text-align:center;color:var(--muted);font-size:.84rem;margin-bottom:22px}
 .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.home-actions .btn{padding:16px 10px}
 .tabs{display:flex;gap:6px;margin-bottom:12px}.tab{flex:1;border:1px solid var(--line);background:#0d1721;color:var(--muted);padding:9px;border-radius:10px;font-weight:800}.tab.active{background:#1b2c3d;color:var(--text);border-color:#4a6279}
-.room-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.room-title{font-size:1.1rem;font-weight:900}.room-meta{font-size:.72rem;color:var(--muted);margin-top:3px}
+.room-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.room-title{font-size:1.1rem;font-weight:900}.room-meta{font-size:.72rem;color:var(--muted);margin-top:3px}.room-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.dice3d-personal{display:flex;align-items:center;gap:7px;padding:5px 7px;border:1px solid var(--line);border-radius:11px;background:#0b151f}.dice3d-personal-label{font-size:.63rem;font-weight:900;color:var(--muted);white-space:nowrap}.dice3d-toggle{min-width:58px;height:32px;padding:0 10px;border-radius:999px;border:1px solid #465c70;background:#152331;color:#9cadbc;font-size:.68rem;font-weight:950;letter-spacing:.04em}.dice3d-toggle.on{border-color:#8a6d38;background:#5e431c;color:#fff2d1}.dice3d-palette{display:flex;align-items:center;gap:4px}.dice3d-swatch{width:27px;height:27px;border-radius:50%;border:2px solid rgba(255,255,255,.16);padding:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.28);transition:.14s}.dice3d-swatch.selected{border-color:#fff5df;box-shadow:0 0 0 2px var(--accent),inset 0 0 0 1px rgba(0,0,0,.34);transform:scale(1.04)}.dice3d-swatch:focus-visible,.dice3d-toggle:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .room-grid{display:grid;grid-template-columns:210px minmax(0,1fr) 340px;gap:12px;align-items:start}
 .people{display:grid;gap:8px}.person{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#0c151e}.portrait{height:145px;background:#0a1118;display:grid;place-items:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-fallback{font-size:2.2rem;color:#506274}.portrait.editable{cursor:pointer;position:relative}.portrait.editable:after{content:"Ajouter une image";position:absolute;left:8px;right:8px;bottom:8px;padding:5px 7px;border-radius:8px;background:#081018cc;border:1px solid #42586d;color:#d9e2e9;font-size:.62rem;font-weight:800;text-align:center}.profile-mini{border:0;background:transparent;color:var(--blue);font-size:.65rem;font-weight:800;padding:0;margin-left:6px}.person-info{padding:9px 10px}.char{font-weight:900;text-transform:uppercase;font-size:.8rem}.player{font-size:.68rem;color:var(--muted);margin-top:2px}.gm-tag{display:inline-block;font-size:.58rem;border:1px solid #9b7738;color:var(--accent2);border-radius:999px;padding:2px 6px;margin-bottom:5px}
 .person.offline{opacity:.64}.person.pending{border-color:#9d7537;box-shadow:0 0 0 1px rgba(217,170,88,.12) inset}.presence-line{display:flex;align-items:center;gap:6px;font-size:.62rem;font-weight:850;margin-bottom:6px}.presence-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}.presence-dot.online{background:var(--good);box-shadow:0 0 0 3px rgba(88,197,139,.12)}.presence-dot.offline{background:#708090}.presence-dot.pending{background:var(--accent2);box-shadow:0 0 0 3px rgba(240,201,121,.12)}.participant-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.participant-actions .btn{padding:6px 8px;font-size:.62rem}.participant-choice{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;margin-top:7px}.participant-choice strong{display:block}.participant-choice span{display:block;font-size:.66rem;color:var(--muted);margin-top:2px}.pending-note{font-size:.62rem;color:var(--accent2);font-weight:850;margin-top:4px}.mobile-person.pending{border-color:#9d7537}.mobile-person.offline{opacity:.62}.mobile-person .presence-dot{width:7px;height:7px;margin-right:4px}
@@ -40,16 +40,17 @@ label{display:block;font-size:.72rem;font-weight:750;color:#c5d0d9;margin:9px 0 
 .litm-simple-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
 .roll-privacy{display:flex;align-items:center;gap:9px;margin-top:12px;padding:10px 11px;border:1px solid #3a4f62;border-radius:11px;background:#0b151f}.roll-privacy input{width:auto;margin:0;accent-color:var(--accent)}.roll-privacy-main{display:block;font-size:.74rem;font-weight:900;color:#dfe7ed}.roll-privacy-help{display:block;font-size:.64rem;color:var(--muted);margin-top:2px}.private-badge{display:inline-block;margin-left:5px;padding:2px 6px;border-radius:999px;border:1px solid #92733e;color:var(--accent2);font-size:.56rem;font-weight:900;vertical-align:middle}
 .favorites-section{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}.favorites-title{font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}.favs{display:grid;gap:8px}.fav{display:grid;grid-template-columns:1fr auto;align-items:stretch;border:1px solid #3c5268;border-radius:11px;overflow:hidden;background:#12202d}.fav-run{border:0;background:transparent;color:var(--text);padding:11px 12px;text-align:left}.fav-name{display:block;font-size:.78rem;font-weight:900}.fav-config{display:block;color:var(--muted);font-size:.67rem;margin-top:3px}.fav-del{border:0;border-left:1px solid #3c5268;background:transparent;color:#ef8d94;padding:0 13px;font-size:1rem;font-weight:900}.fav:hover{border-color:#6b8298}.fav-empty{font-size:.72rem;color:var(--muted);padding:10px 0}
-.history{display:grid;gap:8px;max-height:68vh;overflow:auto}.history .dice-line.labeled{margin-top:6px;margin-bottom:2px}.roll{border:1px solid var(--line);border-radius:11px;background:#0b151f;padding:10px}.roll-head{display:flex;justify-content:space-between;gap:8px}.roll-title{font-size:.78rem;font-weight:900}.roll-total{font-size:1.25rem;font-weight:950;color:var(--accent2)}.roll-sub{font-size:.64rem;color:var(--muted);margin-top:2px}.dice-line{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.die{min-width:29px;height:29px;padding:0 6px;border-radius:8px;display:grid;place-items:center;background:#172a3b;border:1px solid #41647f;font-size:.7rem;font-weight:900}.die.neg{background:#3a2026;border-color:#87505a}.die-wrap{display:flex;flex:0 0 auto;flex-direction:column;align-items:center;gap:3px}.die-kind{font-size:.5rem;color:var(--muted);font-weight:800;line-height:1;text-transform:uppercase}.dice-line.labeled{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:8px;width:100%}.die.rerollable{cursor:pointer;transition:.15s}.die.rerollable:hover{transform:translateY(-2px);border-color:var(--accent)}.die.reroll-selected{outline:2px solid var(--accent2);outline-offset:2px;background:#4a3a20!important}.reroll-actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px}.reroll-note{font-size:.68rem;color:var(--muted);text-align:center;margin-top:7px}.ac-face.rerollable{cursor:pointer;padding:4px;border-radius:10px;border:1px solid transparent;transition:.15s}.ac-face.rerollable:hover{border-color:var(--accent)}.ac-face.reroll-selected{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(240,201,121,.25)}
+.history{display:grid;gap:8px;max-height:68vh;overflow:auto}.history .dice-line.labeled{margin-top:6px;margin-bottom:2px}.roll{border:1px solid var(--line);border-radius:11px;background:#0b151f;padding:10px}.roll-head{display:flex;justify-content:space-between;gap:8px}.roll-title{font-size:.78rem;font-weight:900}.roll-total{font-size:1.25rem;font-weight:950;color:var(--accent2)}.roll-sub{font-size:.64rem;color:var(--muted);margin-top:2px}.dice-line{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.die{min-width:29px;height:29px;padding:0 6px;border-radius:8px;display:grid;place-items:center;background:#172a3b;border:1px solid #41647f;font-size:.7rem;font-weight:900}.die.neg{background:#3a2026;border-color:#87505a}.die-wrap{display:flex;flex:0 0 auto;flex-direction:column;align-items:center;gap:3px}.die-kind{font-size:.5rem;color:var(--muted);font-weight:800;line-height:1;text-transform:uppercase}.dice-line.labeled{display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:8px;width:100%}.die.rerollable{cursor:pointer;transition:.15s}.die.rerollable:hover{transform:translateY(-2px);border-color:var(--accent)}.die.reroll-selected{outline:2px solid var(--accent2);outline-offset:2px;background:#4a3a20!important}.die.rerolled-result{position:relative;border-color:var(--accent2)!important;box-shadow:0 0 0 2px rgba(240,201,121,.38),inset 0 0 0 1px rgba(255,245,223,.18),0 0 14px rgba(240,201,121,.24);transform:translateY(-1px)}.die.rerolled-result::after{content:"↻";position:absolute;right:-8px;top:-9px;min-width:16px;height:16px;padding:0 2px;border-radius:999px;display:grid;place-items:center;background:#20170b;border:1px solid var(--accent2);color:var(--accent2);font-size:.56rem;font-weight:950;line-height:1;box-shadow:0 3px 8px rgba(0,0,0,.35)}.reroll-result-note{margin-top:8px;font-size:.66rem;color:var(--accent2);font-weight:850;text-align:center}.reroll-actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px}.reroll-note{font-size:.68rem;color:var(--muted);text-align:center;margin-top:7px}.ac-face.rerollable{cursor:pointer;padding:4px;border-radius:10px;border:1px solid transparent;transition:.15s}.ac-face.rerollable:hover{border-color:var(--accent)}.ac-face.reroll-selected{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(240,201,121,.25)}.ac-face.rerolled-result{position:relative;border-color:var(--accent2)!important;box-shadow:0 0 0 2px rgba(240,201,121,.34),0 0 14px rgba(240,201,121,.2);background:rgba(74,58,32,.38)}.ac-face.rerolled-result::after{content:"↻";position:absolute;right:-7px;top:-7px;min-width:16px;height:16px;padding:0 2px;border-radius:999px;display:grid;place-items:center;background:#20170b;border:1px solid var(--accent2);color:var(--accent2);font-size:.56rem;font-weight:950;line-height:1}
 .modal{position:fixed;inset:0;background:#000a;display:grid;place-items:center;padding:16px;z-index:100}.modal-box{width:min(540px,100%);max-height:90vh;overflow:auto}
 .admin-list{display:grid;gap:10px}.admin-table{border:1px solid var(--line);border-radius:11px;padding:11px;background:#0c161f}.admin-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.member-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid #223344;font-size:.75rem}
 .toast{position:fixed;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translate(-50%,34px) scale(.98);opacity:0;pointer-events:none;background:radial-gradient(circle at top,#2a251c,#111820 68%);border:1px solid #5f4c2d;border-radius:14px;padding:14px 16px;box-shadow:0 18px 46px rgba(0,0,0,.48);z-index:200;transition:.22s;max-width:calc(100vw - 24px);width:min(430px,calc(100vw - 24px));text-align:center}.toast.show{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto;cursor:pointer}.toast .toast-total{font-size:2.4rem;font-weight:950;color:var(--accent2);line-height:1}.toast .toast-name{font-weight:900;margin-top:5px}.toast .toast-who{font-size:.7rem;color:var(--muted);margin-top:3px}.toast .toast-status{font-size:.95rem;font-weight:950;margin-top:8px}.toast .toast-detail{font-size:.72rem;color:var(--muted);margin-top:5px}.toast .dice-line{justify-content:center}.toast-progress{position:absolute;left:8px;right:8px;bottom:5px;height:2px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.08)}.toast-progress-bar{height:100%;width:100%;background:var(--accent2);transform-origin:left center}.toast.show .toast-progress-bar{animation:toastCountdown var(--toast-duration,6.5s) linear forwards}@keyframes toastCountdown{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.dice3d-overlay{position:fixed;inset:0;z-index:260;pointer-events:none;opacity:0;transition:opacity .24s ease;background:radial-gradient(circle at 50% 42%,rgba(16,26,37,.24),rgba(5,10,15,.64) 76%);overflow:hidden}.dice3d-overlay.show{opacity:1}.dice3d-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}.dice3d-caption{position:absolute;left:50%;top:max(74px,calc(env(safe-area-inset-top) + 66px));transform:translateX(-50%);max-width:min(680px,calc(100vw - 32px));padding:8px 12px;border:1px solid rgba(217,170,88,.38);border-radius:999px;background:rgba(8,16,24,.72);backdrop-filter:blur(8px);color:#f3f6f8;text-align:center;font-size:.72rem;font-weight:900;letter-spacing:.02em;box-shadow:0 10px 28px rgba(0,0,0,.24)}.dice3d-caption span{color:var(--accent2)}.dice3d-note{position:absolute;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);max-width:min(620px,calc(100vw - 32px));padding:7px 11px;border-radius:9px;background:rgba(8,16,24,.72);color:var(--muted);font-size:.64rem;font-weight:800;text-align:center}.dice3d-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:110px 24px 90px}.dice3d-fallback-die{width:70px;height:70px;display:grid;place-items:center;border:2px solid rgba(240,201,121,.72);background:linear-gradient(145deg,#1a2a39,#0c151e);color:#fff5df;font-size:1.55rem;font-weight:950;box-shadow:0 16px 30px rgba(0,0,0,.3);animation:dice3dFallbackRoll .8s cubic-bezier(.2,.8,.2,1) both}.dice3d-fallback-die[data-sides="4"]{clip-path:polygon(50% 3%,97% 92%,3% 92%)}.dice3d-fallback-die[data-sides="6"]{border-radius:12px}.dice3d-fallback-die[data-sides="8"]{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.dice3d-fallback-die[data-sides="10"]{clip-path:polygon(50% 0,92% 24%,100% 68%,50% 100%,0 68%,8% 24%)}.dice3d-fallback-die[data-sides="12"],.dice3d-fallback-die[data-sides="20"]{clip-path:polygon(50% 0,90% 20%,100% 62%,72% 100%,28% 100%,0 62%,10% 20%)}@keyframes dice3dFallbackRoll{0%{transform:translateY(-90px) rotate(-130deg) scale(.75);opacity:0}65%{transform:translateY(12px) rotate(18deg) scale(1.05);opacity:1}100%{transform:translateY(0) rotate(0) scale(1);opacity:1}}@media(max-width:700px){.dice3d-caption{top:64px;font-size:.66rem}.dice3d-fallback-die{width:58px;height:58px;font-size:1.25rem}}@media(prefers-reduced-motion:reduce){.dice3d-overlay{transition:none}.dice3d-fallback-die{animation:none}}
 .table-counters{margin-bottom:12px;overflow:hidden}.counter-bar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}.counter-bar-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.counter-list{display:flex;gap:8px;overflow-x:auto;padding:10px 12px}.counter-card{flex:0 0 auto;min-width:150px;border:1px solid #3b5065;border-radius:11px;background:#0c1721;padding:9px}.counter-name{font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#dbe4eb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}.counter-value{font-size:1.75rem;font-weight:950;color:var(--accent2);line-height:1.15;text-align:center;margin:7px 0}.counter-controls{display:grid;grid-template-columns:38px 1fr 38px;gap:6px;align-items:center}.counter-controls .btn{padding:6px 8px}.counter-edit{display:flex;justify-content:center;margin-top:6px}.counter-empty{font-size:.72rem;color:var(--muted);padding:4px 0}.counter-player .counter-value{margin-bottom:1px}
 .mobile-people{display:none}
 @media(max-width:980px){.room-grid{grid-template-columns:180px minmax(0,1fr)}.history-card{grid-column:2}.room-grid>.people-card{grid-row:1 / span 2}}
 @media(max-width:700px){
   header{height:54px}main{padding:10px}.home{min-height:calc(100vh - 74px)}.home-box{padding:16px}.home-actions{grid-template-columns:1fr}
-  .room-top{align-items:flex-start}.room-grid{display:block}.people-card{display:none}.history-card{margin-top:10px}.portrait{display:none}
+  .room-top{align-items:flex-start;flex-wrap:wrap}.room-actions{width:100%;justify-content:space-between}.dice3d-personal{max-width:calc(100% - 76px);overflow-x:auto}.dice3d-personal-label{display:none}.dice3d-swatch{width:25px;height:25px;flex:0 0 auto}.room-grid{display:block}.people-card{display:none}.history-card{margin-top:10px}.portrait{display:none}
   .table-counters{margin-bottom:10px}.counter-list{padding:9px 10px}.counter-card{min-width:132px}.counter-value{font-size:1.55rem}
   .mobile-people{display:flex;gap:6px;overflow:auto;margin-bottom:10px;padding-bottom:2px}.mobile-person{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:.67rem;background:#101d29}.mobile-person strong{text-transform:uppercase}
   .dice-builder{grid-template-columns:1fr 1fr}.dice-builder .wide{grid-column:1/-1}.dice-builder .roll-btn{grid-column:1/-1;padding:13px}
@@ -62,7 +63,7 @@ label{display:block;font-size:.72rem;font-weight:750;color:#c5d0d9;margin:9px 0 
 <header>
   <div class="brand">🎲 Universal Dice Roller<small id="headerSub"></small></div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
-    <span class="muted" style="font-size:.67rem;font-weight:800;letter-spacing:.04em;white-space:nowrap">Version 1.48 · 06/10/2026</span>
+    <span class="muted" style="font-size:.67rem;font-weight:800;letter-spacing:.04em;white-space:nowrap">Version 1.61</span>
     <button class="icon-btn" id="adminBtn" title="Administration">⚙</button>
   </div>
 </header>
@@ -88,7 +89,14 @@ label{display:block;font-size:.72rem;font-weight:750;color:#c5d0d9;margin:9px 0 
         <div class="room-title" id="roomName">Table</div>
         <div class="room-meta"><span id="systemLabel">Générique</span> · code <span id="roomCode" class="code">------</span></div>
       </div>
-      <button class="btn small" onclick="leaveRoom()">Quitter</button>
+      <div class="room-actions">
+        <div id="dice3dPersonal" class="dice3d-personal" aria-label="Préférences personnelles des dés 3D">
+          <span class="dice3d-personal-label">Mes dés</span>
+          <button id="dice3dToggleBtn" class="dice3d-toggle" type="button" onclick="toggleDice3DPersonal()" aria-pressed="false" title="Activer ou désactiver les animations 3D">3D OFF</button>
+          <div id="dice3dPalette" class="dice3d-palette" aria-label="Couleur de mes dés" title="Daggerheart : l’UDR utilise automatiquement un duo harmonisé Espoir/Peur à partir de votre couleur"></div>
+        </div>
+        <button class="btn small" onclick="leaveRoom()">Quitter</button>
+      </div>
     </div>
 
     <div id="tableCounters" class="card table-counters hidden">
@@ -184,6 +192,31 @@ const supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 let session=null, channelId=null, joinCode=null, channelName=null, gameSystem="generic", myRole="player";
 let realtimeRolls=null, realtimeMembers=null, realtimeCounters=null, realtimePresence=null, history=[], favorites=[], counters=[], participants=[], onlineUserIds=new Set(), myProfile=null, rollMode="system", genericGroups=[{count:1,sides:6,modifier:0}];
 let rerollBaseRoll=null, rerollSelection=new Set();
+const DICE3D_STORAGE_KEY="udr_pref_dice3d_personal";
+const DICE3D_COLOR_STORAGE_KEY="udr_pref_dice3d_color";
+const DICE3D_MAX_DICE=24;
+const DICE3D_PALETTE={
+  blue:{label:"Bleu ardoise",hex:0x315b78,css:"#315b78"},
+  red:{label:"Rouge sang",hex:0x7a343e,css:"#7a343e"},
+  green:{label:"Vert forêt",hex:0x3f6652,css:"#3f6652"},
+  gold:{label:"Or ancien",hex:0x8b6a33,css:"#8b6a33"},
+  purple:{label:"Violet",hex:0x5e4c83,css:"#5e4c83"},
+  ivory:{label:"Ivoire",hex:0x81786a,css:"#81786a"},
+  black:{label:"Noir",hex:0x292f36,css:"#292f36"}
+};
+const DICE3D_DAGGERHEART_PALETTE={
+  blue:{hope:0xe5b94f,fear:0x213a5b},
+  red:{hope:0xf0d9ad,fear:0x6a2933},
+  green:{hope:0xe0a84a,fear:0x2e5342},
+  gold:{hope:0xf0dfaa,fear:0x5a431f},
+  purple:{hope:0xe8bfd4,fear:0x493765},
+  ivory:{hope:0xe9cf83,fear:0x343941},
+  black:{hope:0xc9d0d6,fear:0x151d27}
+};
+let dice3dEnabled=localStorage.getItem(DICE3D_STORAGE_KEY)==="1";
+let dice3dColorKey=localStorage.getItem(DICE3D_COLOR_STORAGE_KEY)||"blue";
+if(!DICE3D_PALETTE[dice3dColorKey]) dice3dColorKey="blue";
+let dice3dThreePromise=null, dice3dAnimFrame=null, dice3dCleanupTimer=null;
 const systemUiState={vampire:{difficulty:6,specialty:false}};
 window.systemUiState=systemUiState;
 
@@ -303,6 +336,599 @@ function showRollToast(r){
  clearTimeout(window.__tt);
  window.__tt=setTimeout(closeRollToast,6500);
 }
+function dice3dItemsFromRoll(r){
+ r=normalizeRollForDisplay(r);
+ const rollSystem=rollSystemKey(r);
+ const colorKey=DICE3D_PALETTE[r.metadata?.dice3d_color]?r.metadata.dice3d_color:"blue";
+ const items=[];
+ (r.dice||[]).forEach((g,gi)=>{
+   const label=String(g.label||"");
+   (g.results||[]).forEach((value,di)=>{
+     const numericLabel=String(value);
+     const semanticLabel=rollSystem==="assassins_creed" ? (AC_FACE_NAMES[Number(value)-1]||String(value)) : numericLabel;
+     items.push({
+       value:Number(value),
+       resultLabel:numericLabel,
+       semanticLabel,
+       sides:Math.max(2,Number(g.sides||6)),
+       groupLabel:label,
+       groupIndex:gi,
+       dieIndex:di,
+       system:rollSystem,
+       sign:Number(g.sign??1),
+       colorKey
+     });
+   });
+ });
+ return items;
+}
+
+function dice3dFilterItemsForReroll(r,items){
+ // Un résultat de relance est un jet complet reconstruit pour le résultat 2D,
+ // mais l'animation 3D doit représenter uniquement l'action réellement faite :
+ // les dés explicitement relancés. Ne jamais retomber sur tout le pool si les
+ // positions sont absentes ou invalides, sous peine de simuler des dés non lancés.
+ if(!r?.metadata?.reroll) return Array.isArray(items)?items:[];
+ const selections=Array.isArray(r.metadata?.reroll_selections)?r.metadata.reroll_selections:[];
+ if(!selections.length) return [];
+ const selected=new Set(selections.map(sel=>`${Number(sel.group_index)}:${Number(sel.die_index)}`));
+ return (Array.isArray(items)?items:[]).filter(item=>selected.has(`${Number(item.groupIndex)}:${Number(item.dieIndex)}`));
+}
+
+function dice3dMixHex(a,b,t){
+ const clamp=v=>Math.max(0,Math.min(255,Math.round(v)));
+ const ar=(a>>16)&255, ag=(a>>8)&255, ab=a&255;
+ const br=(b>>16)&255, bg=(b>>8)&255, bb=b&255;
+ return (clamp(ar+(br-ar)*t)<<16) | (clamp(ag+(bg-ag)*t)<<8) | clamp(ab+(bb-ab)*t);
+}
+
+function dice3dRelativeLuminance(hex){
+ const channel=v=>{
+   const s=v/255;
+   return s<=.04045?s/12.92:Math.pow((s+.055)/1.055,2.4);
+ };
+ const r=channel((hex>>16)&255), g=channel((hex>>8)&255), b=channel(hex&255);
+ return .2126*r+.7152*g+.0722*b;
+}
+
+function dice3dDaggerheartPair(colorKey){
+ // Daggerheart utilise un duo fixe et harmonisé par couleur personnelle :
+ // Espoir doit rester immédiatement plus lumineux, Peur plus sombre et profond.
+ // On évite volontairement le simple « clair/foncé » de la même teinte afin que
+ // les deux dés de Dualité soient reconnaissables au premier regard.
+ return DICE3D_DAGGERHEART_PALETTE[colorKey] || DICE3D_DAGGERHEART_PALETTE.blue;
+}
+
+function dice3dRoleFor(item){
+ if(item?.system!=="daggerheart") return null;
+ const label=String(item.groupLabel||"").toLowerCase();
+ if(label.includes("espoir")) return "hope";
+ if(label.includes("peur")) return "fear";
+ return null;
+}
+
+function dice3dColorFor(item){
+ const base=DICE3D_PALETTE[item?.colorKey]?.hex ?? DICE3D_PALETTE.blue.hex;
+ const role=dice3dRoleFor(item);
+ if(role){
+   const pair=dice3dDaggerheartPair(item?.colorKey);
+   return role==="hope"?pair.hope:pair.fear;
+ }
+ return base;
+}
+
+function dice3dColorCssFor(item){
+ return `#${dice3dColorFor(item).toString(16).padStart(6,"0")}`;
+}
+
+function dice3dD10MeshData(){
+ // Pentagonal trapezohedron: the physical shape used by standard D10s.
+ // Two poles + a 10-vertex alternating ring produce 10 planar kite faces.
+ const height=1.08;
+ const radius=.86;
+ const ringY=height*.105572809000084;
+ const vertices=[[0,height,0],[0,-height,0]];
+ for(let k=0;k<10;k++){
+   const a=-Math.PI/2+k*Math.PI/5;
+   vertices.push([Math.cos(a)*radius,k%2===0?ringY:-ringY,Math.sin(a)*radius]);
+ }
+ const faces=[];
+ for(let i=0;i<5;i++){
+   const even=2+((2*i)%10);
+   const odd=2+((2*i+1)%10);
+   const nextEven=2+((2*i+2)%10);
+   const nextOdd=2+((2*i+3)%10);
+   // Winding is outward for both hemispheres.
+   faces.push([0,nextEven,odd,even]);
+   faces.push([1,odd,nextEven,nextOdd]);
+ }
+ return {vertices,faces};
+}
+
+function dice3dGeometry(THREE,sides){
+ switch(Number(sides)){
+   case 2:{
+     const g=new THREE.CylinderGeometry(.72,.72,.22,36,1,false);
+     g.rotateX(Math.PI/2);
+     return g;
+   }
+   case 4:return new THREE.TetrahedronGeometry(.94,0);
+   case 6:return new THREE.BoxGeometry(1.28,1.28,1.28,1,1,1);
+   case 8:return new THREE.OctahedronGeometry(.92,0);
+   case 10:{
+     const {vertices,faces}=dice3dD10MeshData();
+     const pos=[];
+     faces.forEach(([a,b,c,d])=>{
+       pos.push(...vertices[a],...vertices[b],...vertices[c]);
+       pos.push(...vertices[a],...vertices[c],...vertices[d]);
+     });
+     const g=new THREE.BufferGeometry();
+     g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));
+     g.computeVertexNormals();
+     return g;
+   }
+   case 12:return new THREE.DodecahedronGeometry(.9,0);
+   case 20:return new THREE.IcosahedronGeometry(.92,0);
+   default:return new THREE.IcosahedronGeometry(.86,1);
+ }
+}
+
+
+function dice3dFaceCount(sides){
+ switch(Number(sides)){
+   case 2:return 2;
+   case 4:return 4;
+   case 6:return 6;
+   case 8:return 8;
+   case 10:return 10;
+   case 12:return 12;
+   case 20:return 20;
+   default:return Math.max(2,Number(sides)||6);
+ }
+}
+
+function dice3dRoundKey(parts){
+ return parts.map(v=>String(Math.round(Number(v||0)*1000)/1000)).join('|');
+}
+
+function dice3dSortedFaces(faces){
+ return faces.slice().sort((a,b)=>{
+   if(Math.abs(b.center.y-a.center.y)>.001) return b.center.y-a.center.y;
+   const aa=Math.atan2(a.center.z,a.center.x), bb=Math.atan2(b.center.z,b.center.x);
+   if(Math.abs(aa-bb)>.001) return aa-bb;
+   if(Math.abs(b.center.z-a.center.z)>.001) return b.center.z-a.center.z;
+   return a.center.x-b.center.x;
+ });
+}
+
+function dice3dExtractFaces(THREE,geometry,sides){
+ if(Number(sides)===2){
+   const up=new THREE.Vector3(0,0,1), down=new THREE.Vector3(0,0,-1);
+   return [
+     {center:new THREE.Vector3(0,0,.111),normal:up,size:.62},
+     {center:new THREE.Vector3(0,0,-.111),normal:down,size:.62}
+   ];
+ }
+
+ const nonIndexed=geometry.index?geometry.toNonIndexed():geometry.clone();
+ const pos=nonIndexed.getAttribute('position');
+ const map=new Map();
+ for(let i=0;i<pos.count;i+=3){
+   const a=new THREE.Vector3().fromBufferAttribute(pos,i);
+   const b=new THREE.Vector3().fromBufferAttribute(pos,i+1);
+   const c=new THREE.Vector3().fromBufferAttribute(pos,i+2);
+   const normal=new THREE.Vector3().subVectors(b,a).cross(new THREE.Vector3().subVectors(c,a)).normalize();
+   const triangleCenter=a.clone().add(b).add(c).multiplyScalar(1/3);
+
+   // Une face d'un dé convexe doit avoir sa normale orientée vers l'extérieur.
+   // Certaines géométries (notamment notre D10 construit à la main) ont un
+   // winding inversé : sans cette correction, les chiffres sont posés DANS le
+   // dé et la face résultat est ensuite orientée à l'opposé de la caméra.
+   if(normal.dot(triangleCenter)<0) normal.negate();
+
+   const plane=normal.dot(a);
+   const key=dice3dRoundKey([normal.x,normal.y,normal.z,plane]);
+   if(!map.has(key)) map.set(key,{normal:normal.clone(),vertices:[]});
+   const entry=map.get(key);
+   entry.vertices.push(a,b,c);
+ }
+
+ const faces=[];
+ for(const entry of map.values()){
+   const unique=new Map();
+   entry.vertices.forEach(v=>unique.set(dice3dRoundKey([v.x,v.y,v.z]),v));
+   const verts=[...unique.values()];
+   const center=verts.reduce((acc,v)=>acc.add(v),new THREE.Vector3()).multiplyScalar(1/Math.max(1,verts.length));
+   const minDist=verts.reduce((min,v)=>Math.min(min,v.distanceTo(center)),Infinity);
+   const vertexCount=verts.length;
+   let size=minDist*.9;
+   if(vertexCount>=5) size=minDist*.82;
+   else if(vertexCount===4) size=minDist*.88;
+   else size=minDist*.74;
+   const outwardNormal=entry.normal.clone().normalize();
+   if(outwardNormal.dot(center)<0) outwardNormal.negate();
+   faces.push({center,normal:outwardNormal,size:Math.max(.28,size)});
+ }
+ return faces;
+}
+
+function dice3dFaceOrientation(THREE,normal){
+ const n=normal.clone().normalize();
+ let up=Math.abs(n.y)>.92 ? new THREE.Vector3(0,0,1) : new THREE.Vector3(0,1,0);
+ const xAxis=new THREE.Vector3().crossVectors(up,n).normalize();
+ if(xAxis.lengthSq()<1e-6){
+   up=new THREE.Vector3(1,0,0);
+   xAxis.crossVectors(up,n).normalize();
+ }
+ const yAxis=new THREE.Vector3().crossVectors(n,xAxis).normalize();
+ const m=new THREE.Matrix4().makeBasis(xAxis,yAxis,n);
+ return new THREE.Quaternion().setFromRotationMatrix(m);
+}
+
+function dice3dFaceLabelMesh(THREE,text,size,{isResult=false,sides=6}={}){
+ const canvas=document.createElement('canvas');
+ canvas.width=320;canvas.height=320;
+ const ctx=canvas.getContext('2d');
+ if(!ctx) return null;
+ ctx.clearRect(0,0,320,320);
+ ctx.textAlign='center';
+ ctx.textBaseline='middle';
+ ctx.lineJoin='round';
+ ctx.lineCap='round';
+ const value=String(text);
+ const long=value.length>2;
+
+ // Pendant le lancer toutes les faces restent numérotées, mais la face résultat
+ // reçoit un médaillon directement posé sur la face. C'est particulièrement
+ // utile sur les faces triangulaires étroites du D10/D20.
+ if(isResult){
+   const radius=Number(sides)===10?118:Number(sides)>=12?112:106;
+   ctx.beginPath();
+   ctx.arc(160,160,radius,0,Math.PI*2);
+   ctx.fillStyle='rgba(5,10,15,.88)';
+   ctx.fill();
+   ctx.lineWidth=11;
+   ctx.strokeStyle='rgba(240,201,121,.98)';
+   ctx.stroke();
+ }
+
+ const fontSize=isResult
+   ? (long?144:(Number(sides)===10?202:190))
+   : (long?112:146);
+ ctx.font=`950 ${fontSize}px Inter, Arial, sans-serif`;
+ ctx.lineWidth=isResult?24:17;
+ ctx.strokeStyle=isResult?'rgba(5,10,15,1)':'rgba(5,10,15,.9)';
+ ctx.fillStyle=isResult?'#fff7e8':'rgba(255,245,223,.9)';
+ ctx.strokeText(value,160,170,286);
+ ctx.fillText(value,160,170,286);
+
+ const texture=new THREE.CanvasTexture(canvas);
+ texture.colorSpace=THREE.SRGBColorSpace;
+ texture.anisotropy=4;
+ const material=new THREE.MeshBasicMaterial({map:texture,transparent:true,side:THREE.DoubleSide,depthWrite:false,depthTest:false,toneMapped:false,alphaTest:.06,opacity:0});
+ const resultBoost=isResult?(Number(sides)===10?1.58:Number(sides)>=12?1.38:1.28):1;
+ const plane=new THREE.Mesh(new THREE.PlaneGeometry(size*resultBoost,size*resultBoost),material);
+ plane.renderOrder=isResult?8:5;
+ plane.userData.texture=texture;
+ plane.userData.isResult=isResult;
+ plane.userData.baseScale=resultBoost;
+ return plane;
+}
+
+function dice3dNumberedFaces(THREE,geometry,sides){
+ const faces=dice3dSortedFaces(dice3dExtractFaces(THREE,geometry,sides));
+ const count=Math.min(faces.length,dice3dFaceCount(sides));
+ return faces.slice(0,count).map((face,index)=>({
+   ...face,
+   label:String(index+1),
+   orientation:dice3dFaceOrientation(THREE,face.normal)
+ }));
+}
+
+function dice3dTargetQuaternion(THREE,face,cameraPosition,diePosition){
+ // La face résultat vise la position réelle de la caméra depuis la position
+ // finale de CE dé. Cela évite qu'un dé placé à gauche/droite ou au fond de la
+ // grille soit orienté avec un vecteur générique qui ne correspond pas à sa vue.
+ const targetDir=cameraPosition.clone().sub(diePosition).normalize();
+ const desiredFaceOrientation=dice3dFaceOrientation(THREE,targetDir);
+ return desiredFaceOrientation.multiply(face.orientation.clone().invert());
+}
+
+function dice3dPresentationLayout(items,overlay){
+ const count=items.length;
+ const width=Math.max(1,overlay.clientWidth||window.innerWidth||1280);
+ const height=Math.max(1,overlay.clientHeight||window.innerHeight||800);
+ const aspect=width/height;
+ const narrow=width<720;
+ let cols;
+ if(narrow){
+   cols=count<=2?count:count<=6?2:3;
+ }else{
+   if(count<=4) cols=count;
+   else if(count<=8) cols=Math.ceil(count/2);
+   else if(count<=12) cols=4;
+   else if(count<=18) cols=5;
+   else cols=6;
+ }
+ cols=Math.max(1,Math.min(cols,count));
+ const rows=Math.ceil(count/cols);
+ const spacingX=narrow?2.05:(count>18?2.05:count>12?2.18:2.32);
+ const spacingY=narrow?2.02:(count>18?1.98:count>12?2.08:2.2);
+ const targetRadius=narrow
+   ? (count>12?.63:count>8?.69:count>4?.76:.84)
+   : (count>18?.68:count>12?.74:count>8?.8:.9);
+ const contentWidth=(Math.min(cols,count)-1)*spacingX+targetRadius*2.25;
+ const contentHeight=(rows-1)*spacingY+targetRadius*2.25;
+ const fov=38*Math.PI/180;
+ const usable=.82;
+ const distHeight=contentHeight/(2*Math.tan(fov/2)*usable);
+ const distWidth=contentWidth/(2*Math.tan(fov/2)*Math.max(.35,aspect)*usable);
+ const finalCameraZ=Math.max(11.8,distHeight,distWidth);
+ return {count,width,height,aspect,narrow,cols,rows,spacingX,spacingY,targetRadius,contentWidth,contentHeight,finalCameraZ};
+}
+
+function dice3dGeometryPresentationScale(geometry,targetRadius){
+ geometry.computeBoundingSphere?.();
+ const radius=Number(geometry.boundingSphere?.radius||1);
+ return Math.max(.35,Math.min(1.45,targetRadius/Math.max(.001,radius)));
+}
+
+function dice3dFrontTargetQuaternion(THREE,face,cameraPosition,diePosition){
+ // La présentation finale reste frontale, mais chaque dé doit tout de même viser
+ // sa position réelle par rapport à la caméra pour que le chiffre résultat reste
+ // parfaitement lisible, même sur les lignes hautes/basses de la vitrine.
+ return dice3dTargetQuaternion(THREE,face,cameraPosition,diePosition);
+}
+
+function dice3dEnsureOverlay(r,shown,total){
+ let overlay=$("dice3dOverlay");
+ if(overlay) overlay.remove();
+ overlay=document.createElement("div");
+ overlay.id="dice3dOverlay";
+ overlay.className="dice3d-overlay";
+ const who=r.character_name||r.player_name||"Participant";
+ const name=r.roll_name||"Jet de dés";
+ overlay.innerHTML=`<canvas class="dice3d-canvas" aria-hidden="true"></canvas><div class="dice3d-caption"><span>${esc(name)}</span> · ${esc(who)}</div>${total>shown?`<div class="dice3d-note">${shown} dés animés sur ${total} pour préserver les performances · le résultat complet reste inchangé.</div>`:""}`;
+ document.body.appendChild(overlay);
+ requestAnimationFrame(()=>overlay.classList.add("show"));
+ return overlay;
+}
+
+function clearDice3DOverlay(immediate=false){
+ cancelAnimationFrame(dice3dAnimFrame);dice3dAnimFrame=null;
+ clearTimeout(dice3dCleanupTimer);dice3dCleanupTimer=null;
+ const overlay=$("dice3dOverlay");
+ if(!overlay) return;
+ const cleanup=()=>overlay.remove();
+ if(immediate){cleanup();return;}
+ overlay.classList.remove("show");
+ setTimeout(cleanup,260);
+}
+window.clearDice3DOverlay=clearDice3DOverlay;
+
+function playDice3DFallback(r,items){
+ const shown=items.slice(0,DICE3D_MAX_DICE);
+ const overlay=dice3dEnsureOverlay(r,shown.length,items.length);
+ const canvas=overlay.querySelector("canvas");if(canvas) canvas.remove();
+ const box=document.createElement("div");box.className="dice3d-fallback";
+ box.innerHTML=shown.map(i=>`<div class="dice3d-fallback-die" data-sides="${Number(i.sides)}" title="D${Number(i.sides)}" style="background:${dice3dColorCssFor(i)}">${esc(i.resultLabel)}</div>`).join("");
+ overlay.appendChild(box);
+ dice3dCleanupTimer=setTimeout(()=>clearDice3DOverlay(),3000);
+}
+
+async function loadDice3DThree(){
+ if(!dice3dThreePromise){
+   dice3dThreePromise=import("https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js").catch(err=>{
+     dice3dThreePromise=null;
+     throw err;
+   });
+ }
+ return dice3dThreePromise;
+}
+
+async function playDice3D(r){
+ r=normalizeRollForDisplay(r);
+ if(!shouldShowDice3D(r)) return;
+ const allItems=dice3dFilterItemsForReroll(r,dice3dItemsFromRoll(r));
+ if(!allItems.length) return;
+ clearDice3DOverlay(true);
+ const items=allItems.slice(0,DICE3D_MAX_DICE);
+ let THREE;
+ try{THREE=await loadDice3DThree()}catch(e){console.warn("[UDR] Three.js indisponible, fallback 2D :",e);playDice3DFallback(r,allItems);return;}
+ if(!shouldShowDice3D(r)) return;
+ const overlay=dice3dEnsureOverlay(r,items.length,allItems.length);
+ const canvas=overlay.querySelector("canvas");
+ try{
+   const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:"high-performance"});
+   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
+   renderer.outputColorSpace=THREE.SRGBColorSpace;
+   renderer.setClearColor(0x000000,0);
+
+   const scene=new THREE.Scene();
+   const camera=new THREE.PerspectiveCamera(38,1,.1,100);
+   camera.position.set(0,5.7,13.5);camera.lookAt(0,.25,0);
+   scene.add(new THREE.HemisphereLight(0xd7e4ef,0x15202a,2.6));
+   const key=new THREE.DirectionalLight(0xffe1a8,3.1);key.position.set(-4,8,7);scene.add(key);
+   const rim=new THREE.DirectionalLight(0x77b9e8,1.8);rim.position.set(7,3,-4);scene.add(rim);
+
+   const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,18),new THREE.ShadowMaterial({color:0x000000,opacity:.18}));
+   ground.rotation.x=-Math.PI/2;ground.position.y=-1.65;scene.add(ground);
+
+   const layout=dice3dPresentationLayout(items,overlay);
+   const {count,narrow,cols,rows,spacingX,spacingY,targetRadius,finalCameraZ}=layout;
+   const landingRadius=Math.max(2.8,Math.min(5.8,1.5+count*.22));
+   const finalCameraPosition=new THREE.Vector3(0,0,finalCameraZ);
+   const objects=[];
+   items.forEach((item,index)=>{
+     const row=Math.floor(index/cols), col=index%cols;
+     const rowCount=Math.min(cols,count-row*cols);
+     const displayX=(col-(rowCount-1)/2)*spacingX;
+     const displayY=((rows-1)/2-row)*spacingY-.12;
+     const displayZ=0;
+     const angle=(index/Math.max(1,count))*Math.PI*2 + (Math.random()-.5)*0.55;
+     const radius=landingRadius*(0.46+Math.random()*0.54);
+     const landingX=Math.cos(angle)*radius;
+     const landingZ=Math.sin(angle)*Math.min(landingRadius*.68,3.2) + (Math.random()-.5)*0.35;
+     const geo=dice3dGeometry(THREE,item.sides);
+     const numberedFaces=dice3dNumberedFaces(THREE,geo,item.sides);
+     if(numberedFaces.some(face=>face.normal.dot(face.center)<=0)){
+       console.warn(`[UDR] Normale de face encore inversée sur D${item.sides}`,numberedFaces);
+     }
+     const mat=new THREE.MeshStandardMaterial({color:dice3dColorFor(item),roughness:.42,metalness:.08,flatShading:true,transparent:false,opacity:1});
+     const mesh=new THREE.Mesh(geo,mat);
+     mesh.renderOrder=1;
+     const edgeGeo=new THREE.EdgesGeometry(geo,22);
+     const edge=new THREE.LineSegments(edgeGeo,new THREE.LineBasicMaterial({color:0xf0c979,transparent:true,opacity:.34}));
+     edge.renderOrder=2;
+     mesh.add(edge);
+     const faceLabels=[];
+     numberedFaces.forEach(face=>{
+       const isResult=Number(face.label)===Number(item.value);
+       const marker=dice3dFaceLabelMesh(THREE,face.label,face.size,{isResult,sides:item.sides});
+       if(!marker) return;
+       marker.position.copy(face.center).addScaledVector(face.normal,isResult ? .14 : .062);
+       marker.quaternion.copy(face.orientation);
+       mesh.add(marker);
+       faceLabels.push(marker);
+     });
+     mesh.position.set(displayX+(Math.random()-.5)*7,6.5+Math.random()*4,(Math.random()-.5)*5);
+     const startQuaternion=new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*Math.PI*2,Math.random()*Math.PI*2,Math.random()*Math.PI*2));
+     mesh.quaternion.copy(startQuaternion);
+     scene.add(mesh);
+     const targetFace=numberedFaces.find(face=>Number(face.label)===Number(item.value));
+     const finalDiePosition=new THREE.Vector3(displayX,displayY,displayZ);
+     const targetQuaternion=targetFace
+       ? dice3dFrontTargetQuaternion(THREE,targetFace,finalCameraPosition,finalDiePosition)
+       : startQuaternion.clone();
+     const finalScale=dice3dGeometryPresentationScale(geo,targetRadius);
+     objects.push({mesh,faceLabels,item,landingX,landingZ,displayX,displayY,displayZ,start:mesh.position.clone(),startQuaternion,targetQuaternion,finalScale,spin:new THREE.Vector3((Math.random()*.17+.13)*(Math.random()<.5?-1:1),(Math.random()*.19+.15)*(Math.random()<.5?-1:1),(Math.random()*.16+.11)*(Math.random()<.5?-1:1))});
+   });
+
+   const resize=()=>{
+     const w=Math.max(1,overlay.clientWidth),h=Math.max(1,overlay.clientHeight);
+     renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+   };
+   resize();
+   const reduceMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+   const start=performance.now(), rollMs=reduceMotion?220:1625, arrangeMs=reduceMotion?180:860, holdMs=reduceMotion?1150:1800;
+   const totalMs=rollMs+arrangeMs;
+   const easeOut=t=>1-Math.pow(1-t,3);
+   const easeInOut=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+   const animate=now=>{
+     if(!document.body.contains(overlay)){renderer.dispose();return;}
+     resize();
+     const elapsed=now-start;
+     const rollRaw=Math.min(1,elapsed/rollMs);
+     const rollEase=easeOut(rollRaw);
+     const arrangeRaw=elapsed<=rollMs?0:Math.min(1,(elapsed-rollMs)/arrangeMs);
+     const arrangeEase=easeInOut(arrangeRaw);
+     camera.position.z=THREE.MathUtils.lerp(13.5,finalCameraZ,arrangeEase);
+     camera.position.y=THREE.MathUtils.lerp(5.7,0,arrangeEase);
+     camera.lookAt(0,THREE.MathUtils.lerp(.25,-.12,arrangeEase),0);
+     const groundY=-.74;
+     objects.forEach((o,idx)=>{
+       if(arrangeRaw<1e-6){
+         o.mesh.position.x=THREE.MathUtils.lerp(o.start.x,o.landingX,rollEase);
+         o.mesh.position.z=THREE.MathUtils.lerp(o.start.z,o.landingZ,rollEase);
+       }else{
+         // Nouvelle présentation : les dés quittent le sol et se rangent sur une
+         // vitrine frontale unique. X/Y forment la grille ; Z est identique pour tous.
+         o.mesh.position.x=THREE.MathUtils.lerp(o.landingX,o.displayX,arrangeEase);
+         o.mesh.position.z=THREE.MathUtils.lerp(o.landingZ,o.displayZ,arrangeEase);
+       }
+       const baseY=THREE.MathUtils.lerp(o.start.y,groundY,rollEase);
+       const bounce=reduceMotion?0:Math.abs(Math.sin((rollRaw*3.4+idx*.13)*Math.PI))*1.15*Math.pow(1-rollRaw,1.65);
+       const regroupLift=arrangeRaw>0 ? Math.sin(arrangeEase*Math.PI)*.28 : 0;
+       o.mesh.position.y=arrangeRaw>0
+         ? THREE.MathUtils.lerp(groundY,o.displayY,arrangeEase)+regroupLift
+         : baseY+bounce;
+       if(!reduceMotion && rollRaw<.76){
+         const spinScale=.35+1.4*(1-rollRaw);
+         o.mesh.rotateX(o.spin.x*spinScale);
+         o.mesh.rotateY(o.spin.y*spinScale);
+         o.mesh.rotateZ(o.spin.z*spinScale);
+       }else{
+         const snap=rollRaw<.76?0:Math.min(1,(rollRaw-.76)/.24);
+         const amount=arrangeRaw>0 ? (.2+.55*arrangeEase) : (.12+.38*snap);
+         o.mesh.quaternion.slerp(o.targetQuaternion,amount);
+       }
+       if(rollRaw>=.995 || arrangeRaw>=.995) o.mesh.quaternion.copy(o.targetQuaternion);
+
+       // À l'arrivée, chaque géométrie est normalisée sur le même rayon visuel :
+       // un D10 ne monopolise donc plus la composition par rapport à un D6/D8.
+       const displayScale=arrangeRaw>0?THREE.MathUtils.lerp(1,o.finalScale,arrangeEase):1;
+       o.mesh.scale.setScalar(displayScale);
+
+       o.faceLabels?.forEach(label=>{
+         const isResult=!!label.userData?.isResult;
+         if(arrangeRaw>0){
+           // En phase de présentation, seule la face résultat doit vraiment dominer.
+           // Les autres numéros restent visibles si l'on regarde de côté, mais ils ne
+           // doivent plus parasiter la lecture globale d'un gros pool de dés.
+           label.material.opacity=isResult ? 1 : THREE.MathUtils.lerp(.36,0,arrangeEase);
+         }else{
+           label.material.opacity=Math.max(0,Math.min(isResult?1:.74,(rollRaw-.28)/.24));
+         }
+       });
+     });
+     renderer.render(scene,camera);
+     if(elapsed<totalMs){dice3dAnimFrame=requestAnimationFrame(animate);return;}
+     dice3dCleanupTimer=setTimeout(()=>{
+       overlay.classList.remove("show");
+       setTimeout(()=>{
+         objects.forEach(o=>{
+           o.faceLabels?.forEach(label=>{label.userData?.texture?.dispose?.();label.geometry?.dispose?.();label.material?.dispose?.();});
+           o.mesh.geometry?.dispose?.();
+           o.mesh.material?.dispose?.();
+         });
+         renderer.dispose();
+         if(document.body.contains(overlay)) overlay.remove();
+       },280);
+     },holdMs);
+   };
+   dice3dAnimFrame=requestAnimationFrame(animate);
+ }catch(e){
+   console.warn("[UDR] Animation 3D indisponible, fallback 2D :",e);
+   clearDice3DOverlay(true);playDice3DFallback(r,allItems);
+ }
+}
+
+function renderDice3DPersonalControls(){
+ const btn=$("dice3dToggleBtn"), palette=$("dice3dPalette");
+ if(btn){
+   btn.classList.toggle("on",dice3dEnabled);
+   btn.textContent=dice3dEnabled?"3D ON":"3D OFF";
+   btn.setAttribute("aria-pressed",dice3dEnabled?"true":"false");
+   btn.title=dice3dEnabled
+     ? "3D activée : je vois les jets 3D autorisés et mes jets peuvent être vus en 3D"
+     : "3D désactivée : aucun jet 3D n'est affiché et mes jets ne sont pas diffusés en 3D";
+ }
+ if(palette){
+   palette.innerHTML=Object.entries(DICE3D_PALETTE).map(([key,p])=>`<button type="button" class="dice3d-swatch ${key===dice3dColorKey?"selected":""}" style="background:${p.css}" onclick="setDice3DColor('${key}')" aria-label="${esc(p.label)}" title="${esc(p.label)}" aria-pressed="${key===dice3dColorKey?"true":"false"}"></button>`).join("");
+ }
+}
+
+window.toggleDice3DPersonal=()=>{
+ dice3dEnabled=!dice3dEnabled;
+ localStorage.setItem(DICE3D_STORAGE_KEY,dice3dEnabled?"1":"0");
+ if(!dice3dEnabled) clearDice3DOverlay(true);
+ renderDice3DPersonalControls();
+ toast(dice3dEnabled?"Dés 3D activés pour moi":"Dés 3D désactivés pour moi");
+};
+
+window.setDice3DColor=key=>{
+ if(!DICE3D_PALETTE[key]) return;
+ dice3dColorKey=key;
+ localStorage.setItem(DICE3D_COLOR_STORAGE_KEY,key);
+ renderDice3DPersonalControls();
+ toast(`Couleur des dés : ${DICE3D_PALETTE[key].label}`);
+};
+
+function shouldShowDice3D(r){
+ return !!dice3dEnabled && r?.metadata?.dice3d_enabled===true && canViewRollLocally(r);
+}
+
+
 function assertUniqueDomIds(context="DOM"){
  const seen=new Set(), duplicates=new Set();
  document.querySelectorAll("[id]").forEach(el=>{
@@ -364,6 +990,57 @@ function runCoreSelfChecks(){
 
    check("Private roll flag",isPrivateRoll({metadata:{visibility:"gm_private"}})===true);
    check("Public roll flag",isPrivateRoll({metadata:{visibility:"public"}})===false);
+
+   const reroll3dCheck=buildCompositeReroll({
+     dice:[{results:[7]}],modifier:0,roll_type:"generic",metadata:{
+       reroll_partial:true,
+       reroll_base_dice:[{label:"Réserve",sides:10,sign:1,results:[2]}],
+       reroll_selections:[{group_index:0,die_index:0}],
+       reroll_original_modifier:0,
+       reroll_original_name:"Jet",
+       reroll_original_system:"vampire_dark_ages",
+       reroll_original_roll_type:"vampire_dark_ages",
+       reroll_original_metadata:{game_system_key:"vampire_dark_ages",dice3d_enabled:true,dice3d_color:"red"},
+       dice3d_enabled:false,
+       dice3d_color:"green"
+     }
+   });
+   check("Reroll current 3D preference",reroll3dCheck.metadata?.dice3d_enabled===false && reroll3dCheck.metadata?.dice3d_color==="green");
+
+   check("Vampire explosion pending root",vampireRollNeedsExplosion({
+     roll_type:"vampire_dark_ages",
+     dice:[{results:[7,10,4]}],
+     metadata:{game_system_key:"vampire_dark_ages",specialty:true}
+   })===true);
+
+   const d10Data=dice3dD10MeshData();
+   check("D10 trapezohedron topology",d10Data.vertices.length===12 && d10Data.faces.length===10 && d10Data.faces.every(f=>f.length===4));
+
+   const ex1=buildVampireExplosionComposite({
+     dice:[{results:[10],sides:10,sign:1}],
+     metadata:{
+       vampire_explosion_partial:true,
+       vampire_explosion_base_dice:[{label:"Réserve",sides:10,sign:1,results:[10,7]}],
+       vampire_explosion_wave:1,
+       vampire_explosion_chain_id:"chain-test",
+       vampire_explosion_parent_id:"root-test",
+       vampire_explosion_original_name:"Jet",
+       vampire_explosion_original_metadata:{game_system_key:"vampire_dark_ages",specialty:true,difficulty:6}
+     }
+   });
+   const ex2=buildVampireExplosionComposite({
+     dice:[{results:[8],sides:10,sign:1}],
+     metadata:{
+       vampire_explosion_partial:true,
+       vampire_explosion_base_dice:cloneJson(ex1.dice),
+       vampire_explosion_wave:2,
+       vampire_explosion_chain_id:"chain-test",
+       vampire_explosion_parent_id:"root-test",
+       vampire_explosion_original_name:"Jet",
+       vampire_explosion_original_metadata:{game_system_key:"vampire_dark_ages",specialty:true,difficulty:6}
+     }
+   });
+   check("Vampire multi-wave explosion finalization",ex1.metadata?.vampire_explosion_final===false && ex2.metadata?.vampire_explosion_final===true && ex2.metadata?.vampire_explosion_dice_count===2);
  }catch(e){
    failures.push("Exception self-check: "+(e?.message||e));
  }
@@ -374,6 +1051,7 @@ function runCoreSelfChecks(){
 
 async function init(){
   runCoreSelfChecks();
+  renderDice3DPersonalControls();
   const {data:{session:existing}}=await supabase.auth.getSession();
   if(existing) session=existing; else {
     const {data,error}=await supabase.auth.signInAnonymously(); if(error) throw error; session=data.session;
@@ -393,6 +1071,7 @@ function saveRoom(){
  localStorage.setItem("udr_room",JSON.stringify({channelId,joinCode,channelName,gameSystem,myRole}));
 }
 function resetRoomVisualState(){
+ clearDice3DOverlay(true);
  // La grande carte du dernier résultat appartient à la table précédente :
  // elle doit disparaître dès que l'on change de table.
  $("resultHero")?.classList.add("hidden");
@@ -568,6 +1247,7 @@ async function enterRoom(id,code,name,system,role){
  $("roomCode").textContent=joinCode;
  $("systemLabel").textContent=SYSTEMS[gameSystem]?.label||gameSystem;
  $("headerSub").textContent=channelName;
+ renderDice3DPersonalControls();
 
  renderSystemControls();
  await ensurePersistentParticipant();
@@ -960,6 +1640,10 @@ window.sendRoll=async(diceOverride=null,nameOverride=null,modOverride=null,metad
   if(metadata.visibility==null){
     metadata.visibility=$("rollPrivateToGm")?.checked?"gm_private":"public";
   }
+  // La préférence 3D est propre au participant et évaluée au moment du jet.
+  // Elle écrase volontairement une ancienne valeur provenant d'un favori.
+  metadata.dice3d_enabled=!!dice3dEnabled;
+  metadata.dice3d_color=dice3dColorKey;
   if(effectiveSystem==="generic" && !metadata.generic_groups){
     metadata.generic_groups=genericGroups.map(g=>({count:Number(g.count),sides:Number(g.sides),modifier:Number(g.modifier)||0}));
   }
@@ -1000,10 +1684,22 @@ window.sendRoll=async(diceOverride=null,nameOverride=null,modOverride=null,metad
   }});
   if(error) throw error;
   if(!data?.ok) throw new Error(data?.error||"Jet invalide");
-  showResult(data.roll);
 
-  if(effectiveSystem==="vampire_dark_ages" && metadata.specialty){
-    await resolveVampireExplosions(data.roll);
+  const initialRoll=normalizeStoredRollRecord(data.roll);
+  const needsExplosion=effectiveSystem==="vampire_dark_ages" && metadata.specialty && vampireRollNeedsExplosion(initialRoll);
+  if(needsExplosion){
+    // Do not flash the unresolved root result. The final composite will be shown
+    // once the complete explosion chain has been resolved.
+    try{
+      await resolveVampireExplosions(initialRoll);
+    }catch(explosionError){
+      // If the recursive resolution fails, keep the original server result usable
+      // instead of leaving the player with no visible roll at all.
+      processIncomingRoll(initialRoll,true,{forcePendingDisplay:true});
+      throw explosionError;
+    }
+  }else{
+    processIncomingRoll(initialRoll,true);
   }
  }catch(e){alert("Jet impossible : "+(e.message||e))}
 };
@@ -1170,7 +1866,7 @@ function assassinCreedFaces(r){
  return vals.map(v=>({value:v,name:AC_FACE_NAMES[v-1]||`Face ${v}`,image:AC_FACE_IMAGES[v-1]||""}));
 }
 function assassinCreedFacesHtml(r,small=false){
- return assassinCreedFaces(r).map(f=>`<div class="ac-face"><img src="${f.image}" alt="${esc(f.name)}" style="${small?"width:38px;height:38px":""}"><span>${esc(f.name)}</span></div>`).join("");
+ return assassinCreedFaces(r).map((f,di)=>`<div class="ac-face ${rerolledResultClass(r,0,di)}"><img src="${f.image}" alt="${esc(f.name)}" style="${small?"width:38px;height:38px":""}"><span>${esc(f.name)}</span></div>`).join("");
 }
 function assassinCreedCounts(r){
  const counts={};
@@ -1219,6 +1915,23 @@ function vampireOutcome(r){
  else {status="ÉCHEC";kind="failure"}
  return {vals,difficulty,specialty,tens,explosionDice,raw,ones,net,status,kind};
 }
+
+function vampireRollNeedsExplosion(r){
+ if(rollSystemKey(r)!=="vampire_dark_ages") return false;
+ if(r?.metadata?.specialty!==true) return false;
+ if(r?.metadata?.vampire_explosion || r?.metadata?.vampire_explosion_partial) return false;
+ const groups=Array.isArray(r?.dice)?r.dice:[];
+ // A rebuilt reroll may retain earlier explosion waves. Only the last retained
+ // wave can create NEW explosion dice; old 10s must not explode a second time.
+ const triggerGroups=r?.metadata?.vampire_explosion_resume===true ? groups.slice(-1) : groups.slice(0,1);
+ return triggerGroups.some(g=>(g.results||[]).some(v=>Number(v)===10));
+}
+
+function vampireResolutionIsPending(r){
+ if(r?.metadata?.vampire_explosion && r.metadata?.vampire_explosion_final!==true) return true;
+ return vampireRollNeedsExplosion(r);
+}
+
 function interpret(r){
  const vals=(r.dice||[]).flatMap(g=>g.results||[]);
  if(gameSystem==="generic") return `${vals.length} dé${vals.length>1?"s":""} lancé${vals.length>1?"s":""}.`;
@@ -1246,7 +1959,7 @@ const REROLL_SYSTEMS=new Set([
 function buildCompositeReroll(partial){
  if(!partial?.metadata?.reroll_partial) return partial;
 
- const baseDice=cloneJson(partial.metadata.reroll_base_dice||[]);
+ let baseDice=cloneJson(partial.metadata.reroll_base_dice||[]);
  const selections=Array.isArray(partial.metadata.reroll_selections)?partial.metadata.reroll_selections:[];
 
  selections.forEach((sel,j)=>{
@@ -1258,6 +1971,29 @@ function buildCompositeReroll(partial){
    }
  });
 
+ const originalModifier=Number(partial.metadata.reroll_original_modifier||0);
+ const originalMetadata=cloneJson(partial.metadata.reroll_original_metadata||{});
+ const hasCurrent3dFlag=Object.prototype.hasOwnProperty.call(partial.metadata||{},"dice3d_enabled");
+ const current3dEnabled=hasCurrent3dFlag ? partial.metadata.dice3d_enabled===true : originalMetadata.dice3d_enabled===true;
+ const current3dColor=partial.metadata?.dice3d_color||originalMetadata.dice3d_color||"blue";
+ const originalSystem=partial.metadata.reroll_original_system
+   || originalMetadata.game_system_key
+   || partial.metadata.reroll_original_roll_type
+   || "generic";
+
+ const rebuildRaw=Number(partial.metadata?.reroll_vampire_rebuild_from_group);
+ const rebuildVampire=originalSystem==="vampire_dark_ages"
+   && originalMetadata.specialty===true
+   && Number.isInteger(rebuildRaw)
+   && rebuildRaw>=0
+   && rebuildRaw<baseDice.length;
+ if(rebuildVampire){
+   // Explosion waves after the earliest rerolled wave depended on a previous
+   // result and are no longer valid. Keep the affected wave, discard its descendants,
+   // then let the normal explosion resolver rebuild them if a 10 remains/appears.
+   baseDice=baseDice.slice(0,rebuildRaw+1);
+ }
+
  let diceTotal=0;
  baseDice.forEach(g=>{
    const raw=(g.results||[]).reduce((a,v)=>a+Number(v||0),0);
@@ -1266,12 +2002,35 @@ function buildCompositeReroll(partial){
    diceTotal+=g.signed_total;
  });
 
- const originalModifier=Number(partial.metadata.reroll_original_modifier||0);
- const originalMetadata=cloneJson(partial.metadata.reroll_original_metadata||{});
- const originalSystem=partial.metadata.reroll_original_system
-   || originalMetadata.game_system_key
-   || partial.metadata.reroll_original_roll_type
-   || "generic";
+ const metadata={
+   ...originalMetadata,
+   // A reroll is a new visible event: its current 3D preference/color must win
+   // over the metadata captured by the original roll.
+   dice3d_enabled:current3dEnabled,
+   dice3d_color:current3dColor,
+   game_system_key:originalSystem,
+   table_system_key:partial.metadata.reroll_table_system_key
+     || originalMetadata.table_system_key
+     || gameSystem,
+   reroll:true,
+   reroll_parent_id:partial.metadata.reroll_parent_id||null,
+   reroll_chain_origin_id:partial.metadata.reroll_original_metadata?.reroll_chain_origin_id||partial.metadata.reroll_parent_id||null,
+   reroll_selections:selections.map(sel=>({group_index:Number(sel.group_index),die_index:Number(sel.die_index)})),
+   rerolled_count:selections.length
+ };
+
+ if(rebuildVampire){
+   // Remove the old chain identity/finality: this reroll is now the new root from
+   // which any required downstream explosion waves will be rebuilt.
+   delete metadata.vampire_explosion;
+   delete metadata.vampire_explosion_partial;
+   delete metadata.vampire_explosion_chain_id;
+   delete metadata.vampire_explosion_parent_id;
+   delete metadata.vampire_explosion_wave;
+   delete metadata.vampire_explosion_final;
+   metadata.vampire_explosion_resume=true;
+   metadata.vampire_explosion_dice_count=baseDice.slice(1).reduce((sum,g)=>sum+(g.results||[]).length,0);
+ }
 
  return {
    ...partial,
@@ -1281,17 +2040,7 @@ function buildCompositeReroll(partial){
    modifier:originalModifier,
    dice_total:diceTotal,
    total:diceTotal+originalModifier,
-   metadata:{
-     ...originalMetadata,
-     game_system_key:originalSystem,
-     table_system_key:partial.metadata.reroll_table_system_key
-       || originalMetadata.table_system_key
-       || gameSystem,
-     reroll:true,
-     reroll_parent_id:partial.metadata.reroll_parent_id||null,
-     reroll_chain_origin_id:partial.metadata.reroll_original_metadata?.reroll_chain_origin_id||partial.metadata.reroll_parent_id||null,
-     rerolled_count:selections.length
-   }
+   metadata
  };
 }
 
@@ -1398,6 +2147,13 @@ function rollSystemKey(r){
  return r?.metadata?.game_system_key||r?.roll_type||"generic";
 }
 function isPrivateRoll(r){return r?.metadata?.visibility==="gm_private"}
+function canViewRollLocally(r){
+ if(!isPrivateRoll(r)) return true;
+ if(myRole==="gm") return true;
+ if(r?.user_id && String(r.user_id)===String(session?.user?.id||"")) return true;
+ if(r?.metadata?.participant_id && String(r.metadata.participant_id)===String(myProfile?.id||"")) return true;
+ return false;
+}
 function rerollPrefix(r){
  return `${isPrivateRoll(r)?"🔒 ":""}${r?.metadata?.reroll?"↳ Relance · ":""}`;
 }
@@ -1426,13 +2182,37 @@ function prepareRerollState(r){
 }
 
 function rerollKey(gi,di){return `${gi}:${di}`}
+function rerollResultSelections(r){
+ if(!r?.metadata?.reroll || !Array.isArray(r.metadata?.reroll_selections)) return [];
+ return r.metadata.reroll_selections.filter(sel=>
+   Number.isInteger(Number(sel?.group_index)) && Number.isInteger(Number(sel?.die_index))
+ );
+}
+function isRerolledResultDie(r,gi,di){
+ return rerollResultSelections(r).some(sel=>Number(sel.group_index)===Number(gi) && Number(sel.die_index)===Number(di));
+}
+function rerolledResultClass(r,gi,di){return isRerolledResultDie(r,gi,di)?"rerolled-result":""}
+function rerolledResultNoteHtml(r){
+ const n=rerollResultSelections(r).length;
+ if(!n) return "";
+ return `<div class="reroll-result-note">↻ ${n>1?"Nouvelles valeurs des dés relancés":"Nouvelle valeur du dé relancé"} mise${n>1?"s":""} en évidence</div>`;
+}
+function historyDiceHtml(r,classResolver=null,showKind=false){
+ return (r.dice||[]).map((g,gi)=>(g.results||[]).map((v,di)=>{
+   const systemClass=typeof classResolver==="function"?(classResolver(v,g,gi,di)||""):"";
+   const cls=`${systemClass} ${rerolledResultClass(r,gi,di)}`.trim();
+   return showKind
+     ? labeledDieHtml(v,g.sides,cls)
+     : `<span class="die ${cls}">${esc(v)}</span>`;
+ }).join("")).join("");
+}
 
 function selectableDieHtml(r,gi,di,extraClass="",showKind=false){
  const g=r.dice?.[gi];
  const value=g?.results?.[di];
  const selected=rerollSelection.has(rerollKey(gi,di));
  const interactive=canRerollRoll(r);
- const classes=`${extraClass} ${interactive?"rerollable":""} ${selected?"reroll-selected":""}`;
+ const classes=`${extraClass} ${rerolledResultClass(r,gi,di)} ${interactive?"rerollable":""} ${selected?"reroll-selected":""}`;
  const attrs=interactive
    ? `onclick="toggleRerollDie(${gi},${di})" title="Relancer ce D${Number(g?.sides||0)}"`
    : "";
@@ -1491,7 +2271,7 @@ function assassinCreedFacesHtmlSelectable(r){
  return faces.map((f,di)=>{
    const selected=rerollSelection.has(rerollKey(0,di));
    const interactive=canRerollRoll(r);
-   return `<div class="ac-face ${interactive?"rerollable":""} ${selected?"reroll-selected":""}"
+   return `<div class="ac-face ${rerolledResultClass(r,0,di)} ${interactive?"rerollable":""} ${selected?"reroll-selected":""}"
      ${interactive?`onclick="toggleRerollDie(0,${di})" title="Relancer cette face"`:""}>
      <img src="${f.image}" alt="${esc(f.name)}"><span>${esc(f.name)}</span>
    </div>`;
@@ -1555,12 +2335,22 @@ window.rerollSelectedDice=async()=>{
      };
    });
 
+   const rerollOriginalMetadata={
+     ...cloneJson(rerollBaseRoll.metadata||{}),
+     dice3d_enabled:!!dice3dEnabled,
+     dice3d_color:dice3dColorKey
+   };
+   const vampireRebuildFromGroup=originalSystem==="vampire_dark_ages" && rerollBaseRoll.metadata?.specialty===true
+     ? Math.min(...selections.map(s=>Number(s.group_index)))
+     : null;
    const metadata={
      source:"universal_dice_roller",
      game_system_key:originalSystem,
      table_system_key:rerollBaseRoll.metadata?.table_system_key||gameSystem,
      participant_id:rerollBaseRoll.metadata?.participant_id||myProfile?.id||null,
      visibility:rerollBaseRoll.metadata?.visibility||"public",
+     dice3d_enabled:!!dice3dEnabled,
+     dice3d_color:dice3dColorKey,
      reroll_partial:true,
      reroll_parent_id:rerollBaseRoll.id||null,
      reroll_original_system:originalSystem,
@@ -1569,8 +2359,9 @@ window.rerollSelectedDice=async()=>{
      reroll_base_dice:cloneJson(rerollBaseRoll.dice||[]),
      reroll_original_modifier:Number(rerollBaseRoll.modifier||0),
      reroll_original_name:rerollBaseRoll.roll_name||"Jet",
-     reroll_original_metadata:cloneJson(rerollBaseRoll.metadata||{}),
-     reroll_table_system_key:rerollBaseRoll.metadata?.table_system_key||gameSystem
+     reroll_original_metadata:rerollOriginalMetadata,
+     reroll_table_system_key:rerollBaseRoll.metadata?.table_system_key||gameSystem,
+     ...(Number.isInteger(vampireRebuildFromGroup)?{reroll_vampire_rebuild_from_group:vampireRebuildFromGroup}:{})
    };
 
    const {data,error}=await supabase.functions.invoke("roll-dice",{body:{
@@ -1587,7 +2378,17 @@ window.rerollSelectedDice=async()=>{
 
    if(error) throw error;
    if(!data?.ok) throw new Error(data?.error||"Relance invalide");
-   processIncomingRoll(data.roll,true);
+   const rerolled=normalizeRollForDisplay(data.roll);
+   if(originalSystem==="vampire_dark_ages" && rerolled.metadata?.specialty===true && vampireRollNeedsExplosion(rerolled)){
+     try{
+       await resolveVampireExplosions(rerolled);
+     }catch(explosionError){
+       processIncomingRoll(rerolled,true,{forcePendingDisplay:true});
+       throw explosionError;
+     }
+   }else{
+     processIncomingRoll(data.roll,true);
+   }
  }catch(e){
    alert("Relance impossible : "+(e.message||e));
  }
@@ -1596,16 +2397,20 @@ window.rerollSelectedDice=async()=>{
 window.rerollSelectedGenericDice=window.rerollSelectedDice;
 
 async function resolveVampireExplosions(initialRoll){
+ initialRoll=normalizeStoredRollRecord(initialRoll);
  const normalized=normalizeRollForDisplay(initialRoll);
  if(rollSystemKey(normalized)!=="vampire_dark_ages" || !normalized.metadata?.specialty) return normalized;
 
  let current=normalized;
- let latestResults=(current.dice||[]).flatMap(g=>g.results||[]).map(Number);
+ const currentGroups=Array.isArray(current.dice)?current.dice:[];
+ let latestResults=(currentGroups[currentGroups.length-1]?.results||[]).map(Number);
  let tens=latestResults.filter(v=>v===10).length;
  if(!tens) return current;
 
  const chainId=current.metadata?.vampire_explosion_chain_id||current.id;
- let wave=0;
+ // If this starts from a reroll of an existing explosion wave, preserve the
+ // already valid wave numbering and append only its rebuilt descendants.
+ let wave=Math.max(0,currentGroups.length-1);
 
  // Garde-fou très large contre une chaîne pathologique ; en pratique la probabilité
  // d'approcher cette limite est infinitésimale.
@@ -1617,6 +2422,8 @@ async function resolveVampireExplosions(initialRoll){
      table_system_key:current.metadata?.table_system_key||gameSystem,
      participant_id:initialRoll.metadata?.participant_id||myProfile?.id||null,
      visibility:initialRoll.metadata?.visibility||"public",
+     dice3d_enabled:initialRoll.metadata?.dice3d_enabled===true,
+     dice3d_color:DICE3D_PALETTE[initialRoll.metadata?.dice3d_color]?initialRoll.metadata.dice3d_color:dice3dColorKey,
      specialty:true,
      difficulty:Number(current.metadata?.difficulty||6),
 
@@ -1651,12 +2458,21 @@ async function resolveVampireExplosions(initialRoll){
    processIncomingRoll(data.roll,true);
  }
 
+ if(tens>0){
+   throw new Error("Chaîne d’explosions Vampire interrompue après 100 vagues de sécurité.");
+ }
  return current;
 }
 
-function processIncomingRoll(raw,showToastNow=true){
+function processIncomingRoll(raw,showToastNow=true,options={}){
  raw=normalizeStoredRollRecord(raw);
  const r=normalizeRollForDisplay(raw);
+ // Défense locale supplémentaire : même si un événement Realtime privé arrivait
+ // sur un client non autorisé, il n'est ni ajouté à l'historique ni affiché.
+ if(!canViewRollLocally(r)) return r;
+ // Specialty rolls containing a 10 are not final yet. Intermediate explosion
+ // waves are likewise technical records and must never flash as final results.
+ if(vampireResolutionIsPending(r) && options.forcePendingDisplay!==true) return r;
  const chainId=r.metadata?.vampire_explosion_chain_id||null;
 
  if(chainId){
@@ -1676,7 +2492,10 @@ function processIncomingRoll(raw,showToastNow=true){
    showResult(r);
 
    const pendingExplosion=r.metadata?.vampire_explosion && !r.metadata?.vampire_explosion_final;
-   if(showToastNow && !pendingExplosion) showRollToast(r);
+   if(showToastNow && !pendingExplosion){
+     showRollToast(r);
+     if(shouldShowDice3D(r)) playDice3D(r).catch(e=>console.warn("[UDR] Animation 3D :",e));
+   }
  }
  return r;
 }
@@ -1754,6 +2573,9 @@ function showResult(r){
      <div class="dice-line labeled" style="justify-content:center">${genericDiceHtml(r,canReroll)}</div>
      <div class="vamp-detail">${r.metadata?.reroll?"Relance · ":""}${esc(SYSTEMS[rollSystem]?.label||"Jet libre")} · Total : ${esc(r.total)}</div>
      ${rerollControlsHtml(r)}`;
+ }
+ if(r.metadata?.reroll){
+   $("resultInterpret").insertAdjacentHTML("beforeend",rerolledResultNoteHtml(r));
  }
 }
 
@@ -2129,7 +2951,7 @@ window.saveMyProfile=async()=>{
 
 async function loadHistory(){
  const {data,error}=await supabase.from("dice_rolls").select("*").eq("channel_id",channelId).order("created_at",{ascending:false}).limit(50);if(error)return;
- const normalized=(data||[]).map(normalizeStoredRollRecord).map(normalizeRollForDisplay);
+ const normalized=(data||[]).map(normalizeStoredRollRecord).map(normalizeRollForDisplay).filter(canViewRollLocally);
  const seenExplosionChains=new Set();
  history=normalized.filter(r=>{
    const chain=r.metadata?.vampire_explosion_chain_id;
@@ -2150,10 +2972,6 @@ function renderHistory(){
    const rollSystem=r.metadata?.game_system_key||r.roll_type||"generic";
    if(rollSystem==="daggerheart"){
      const d=daggerheartOutcome(r);
-     const extras=[
-       ...d.advantage.map(v=>`<span class="die adv">${esc(v)}</span>`),
-       ...d.disadvantage.map(v=>`<span class="die neg">${esc(v)}</span>`)
-     ].join("");
      return `<div class="roll">
        <div class="roll-head">
          <div>
@@ -2162,13 +2980,17 @@ function renderHistory(){
          </div>
          <div class="roll-total">${d.total}</div>
        </div>
-       <div class="dice-line">
-         <span class="die hope">${esc(d.hope)}</span>
-         <span class="die fear">${esc(d.fear)}</span>
-         ${extras}
-       </div>
+       <div class="dice-line">${historyDiceHtml(r,(v,g)=>{
+         const label=String(g.label||"").toLowerCase();
+         if(label.includes("espoir")) return "hope";
+         if(label.includes("peur")) return "fear";
+         if(label.includes("désavantage")) return "neg";
+         if(label.includes("avantage")) return "adv";
+         return "";
+       })}</div>
        <div class="dh-status ${d.critical?"dh-critical":d.success?"good":""}" style="font-size:.8rem">${esc(d.status)}</div>
        ${d.critical?`<div class="roll-sub">+1 Espoir · Effacez 1 Stress</div>`:""}
+       ${rerolledResultNoteHtml(r)}
      </div>`;
    }
    if(rollSystem==="legend_in_the_mist"){
@@ -2189,14 +3011,14 @@ function renderHistory(){
      return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · Assassin's Creed · ${esc(a.approach)} ${a.difficulty} · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${a.matches}</div></div>
        <div class="ac-faces">${assassinCreedFacesHtml(r,true)}</div><div class="ac-text">${esc(assassinCreedText(r))}</div>
        <div class="dh-status ${a.success?"good":""}" style="font-size:.8rem">${esc(a.status)}</div>
-       <div class="roll-sub">${a.matches} correspondance${a.matches>1?"s":""} / ${a.difficulty} requise${a.difficulty>1?"s":""}</div></div>`;
+       <div class="roll-sub">${a.matches} correspondance${a.matches>1?"s":""} / ${a.difficulty} requise${a.difficulty>1?"s":""}</div>${rerolledResultNoteHtml(r)}</div>`;
    }
    if(rollSystem==="fabula_ultima"){
      const f=fabulaUltimaOutcome(r);
      return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · ${esc(rollConfigText(r))} · Fabula Ultima · DL ${f.difficulty} · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${f.total}</div></div>
-       <div class="dice-line"><span class="die">${esc(f.die1)}</span><span class="die">${esc(f.die2)}</span></div>
+       <div class="dice-line">${historyDiceHtml(r)}</div>
        <div class="fu-status ${f.critical?"fu-critical":f.fumble?"fu-fumble":f.success?"good":""}" style="font-size:.8rem">${esc(f.status)}</div>
-       <div class="roll-sub">HR : ${f.hr} · Total : ${f.total}</div>${f.fumble?`<div class="roll-sub">Échec automatique · +1 Point Fabula pour un PJ</div>`:""}</div>`;
+       <div class="roll-sub">HR : ${f.hr} · Total : ${f.total}</div>${f.fumble?`<div class="roll-sub">Échec automatique · +1 Point Fabula pour un PJ</div>`:""}${rerolledResultNoteHtml(r)}</div>`;
    }
    if(rollSystem==="vampire_dark_ages"){
      const v=vampireOutcome(r);
@@ -2209,16 +3031,16 @@ function renderHistory(){
          </div>
          <div class="roll-total">${v.net}</div>
        </div>
-       <div class="dice-line">${v.vals.map(x=>`<span class="die ${x===1?"one":x>=v.difficulty?"success":""}">${esc(x)}</span>`).join("")}</div>
+       <div class="dice-line">${historyDiceHtml(r,(x)=>Number(x)===1?"one":Number(x)>=v.difficulty?"success":"")}</div>
        <div class="vamp-status ${cls}" style="font-size:.8rem">${esc(v.status)}</div>
-       <div class="roll-sub">${v.specialty?"Avec spécialité · ":""}Succès bruts : ${v.raw} · 1 : ${v.ones} · Succès nets : ${v.net}${v.specialty?` · ${v.explosionDice} D10 supplémentaire${v.explosionDice>1?"s":""} par explosion`:""}</div>
+       <div class="roll-sub">${v.specialty?"Avec spécialité · ":""}Succès bruts : ${v.raw} · 1 : ${v.ones} · Succès nets : ${v.net}${v.specialty?` · ${v.explosionDice} D10 supplémentaire${v.explosionDice>1?"s":""} par explosion`:""}</div>${rerolledResultNoteHtml(r)}
      </div>`;
    }
    if(rollSystem==="band_of_blades"){
      const b=bandOfBladesOutcome(r);
-     return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · ${esc(rollConfigText(r))} · Band of Blades · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${b.best}</div></div><div class="dice-line">${b.vals.map(v=>`<span class="die ${Number(v)===6?"success":""}">${esc(v)}</span>`).join("")}</div><div class="dh-status ${b.critical?"dh-critical":b.kind==="success"?"good":""}" style="font-size:.8rem">${esc(b.status)}</div>${b.zeroDice?`<div class="roll-sub">0 dé : résultat conservé = ${b.kept} (le plus faible)</div>`:b.critical?`<div class="roll-sub">${b.sixes} résultats de 6</div>`:""}</div>`;
+     return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · ${esc(rollConfigText(r))} · Band of Blades · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${b.best}</div></div><div class="dice-line">${historyDiceHtml(r,(v)=>Number(v)===6?"success":"")}</div><div class="dh-status ${b.critical?"dh-critical":b.kind==="success"?"good":""}" style="font-size:.8rem">${esc(b.status)}</div>${b.zeroDice?`<div class="roll-sub">0 dé : résultat conservé = ${b.kept} (le plus faible)</div>`:b.critical?`<div class="roll-sub">${b.sixes} résultats de 6</div>`:""}${rerolledResultNoteHtml(r)}</div>`;
    }
-   return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · ${esc(rollConfigText(r))} · ${esc(SYSTEMS[rollSystem]?.label||"Générique")} · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${esc(r.total)}</div></div><div class="dice-line labeled">${(r.dice||[]).flatMap(g=>(g.results||[]).map(v=>labeledDieHtml(v,g.sides,g.sign===-1?"neg":""))).join("")}</div>${r.metadata?.reroll?`<div class="roll-sub">Relance partielle : ${Number(r.metadata?.rerolled_count||0)} dé(s) remplacé(s)</div>`:""}</div>`;
+   return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · ${esc(rollConfigText(r))} · ${esc(SYSTEMS[rollSystem]?.label||"Générique")} · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${esc(r.total)}</div></div><div class="dice-line labeled">${historyDiceHtml(r,(v,g)=>Number(g.sign)===-1?"neg":"",true)}</div>${r.metadata?.reroll?`<div class="roll-sub">Relance partielle : ${Number(r.metadata?.rerolled_count||0)} dé(s) remplacé(s)</div>`:""}${rerolledResultNoteHtml(r)}</div>`;
  }).join("");
 }
 
@@ -2489,7 +3311,8 @@ $("adminBtn").onclick=()=>modal("Administration",`<div class="muted" style="font
 window.unlockAdmin=()=>{if($("adminPass").value!==CONFIG.ADMIN_PASSWORD){toast("Mot de passe incorrect");return}renderAdmin()};
 async function renderAdmin(){
  const {data,error}=await supabase.rpc("admin_list_dice_channels");if(error){alert(error.message);return}
- modal("Administration des tables",`<div class="admin-list">${(data||[]).map(c=>`<div class="admin-table"><div class="admin-row"><div><strong>${esc(c.channel_name)}</strong><div class="muted" style="font-size:.68rem">${esc(SYSTEMS[c.game_system_key]?.label||c.game_system_key)} · <span class="code">${esc(c.join_code)}</span> · ${c.member_count} membre(s) · ${c.roll_count} jet(s)</div></div><span class="${c.active?"good":"danger"}">${c.active?"ACTIVE":"INACTIVE"}</span></div><div class="actions"><button class="btn small" onclick="adminMembers('${c.channel_id}')">Participants</button><button class="btn small" onclick="adminToggle('${c.channel_id}',${!c.active})">${c.active?"Désactiver":"Réactiver"}</button><button class="btn red small" onclick="adminDelete('${c.channel_id}','${esc(c.channel_name).replace(/'/g,"&#39;")}')">Supprimer</button></div><div id="am-${c.channel_id}"></div></div>`).join("")||`<div class="muted">Aucune table.</div>`}</div><div class="actions"><button class="btn" onclick="closeModal()">Fermer</button></div>`);
+ modal("Administration des tables",`
+   <div class="admin-list">${(data||[]).map(c=>`<div class="admin-table"><div class="admin-row"><div><strong>${esc(c.channel_name)}</strong><div class="muted" style="font-size:.68rem">${esc(SYSTEMS[c.game_system_key]?.label||c.game_system_key)} · <span class="code">${esc(c.join_code)}</span> · ${c.member_count} membre(s) · ${c.roll_count} jet(s)</div></div><span class="${c.active?"good":"danger"}">${c.active?"ACTIVE":"INACTIVE"}</span></div><div class="actions"><button class="btn small" onclick="adminMembers('${c.channel_id}')">Participants</button><button class="btn small" onclick="adminToggle('${c.channel_id}',${!c.active})">${c.active?"Désactiver":"Réactiver"}</button><button class="btn red small" onclick="adminDelete('${c.channel_id}','${esc(c.channel_name).replace(/'/g,"&#39;")}')">Supprimer</button></div><div id="am-${c.channel_id}"></div></div>`).join("")||`<div class="muted">Aucune table.</div>`}</div><div class="actions"><button class="btn" onclick="closeModal()">Fermer</button></div>`);
 }
 window.adminToggle=async(id,active)=>{if(!confirm(active?"Réactiver cette table ?":"Désactiver cette table ?"))return;await supabase.rpc("admin_set_dice_channel_active",{p_channel_id:id,p_active:active});renderAdmin()};
 window.adminDelete=async(id,name)=>{if(!confirm(`Supprimer définitivement « ${name} » et tout son historique ?`))return;await supabase.rpc("admin_delete_dice_channel",{p_channel_id:id});renderAdmin()};
