@@ -51,8 +51,65 @@ function targetFor(n){return n<=6?'soloAlly':n<=11?'soloEnemy':n<=16?'allAllies'
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
 function drawDice(){const n=Number($('count').value);$('dice').replaceChildren();for(let i=0;i<n;i++){const wrapper=el('div','die'),label=el('label','',`D${i+1}`);wrapper.append(label);if(mode==='manual'){let input=el('input');input.type='number';input.inputMode='numeric';input.min=1;input.max=20;input.step=1;input.value=values[i];input.id=`die${i}`;input.setAttribute('aria-label',`Résultat du D20 numéro ${i+1}`);label.htmlFor=input.id;input.addEventListener('input',()=>{values[i]=input.value;clearResults()});wrapper.append(input)}else{wrapper.append(el('div','face',values[i]||'—'))}$('dice').append(wrapper)}$('go').textContent=mode==='manual'?'Voir les combinaisons ✦':'Lancer les dés ✦'}
 function clearResults(){$('results').className='empty';$('results').textContent='Entrez ou lancez vos dés.';$('summary').replaceChildren();$('error').textContent=''}
-function combinations(ds){const found=new Map();function add(t,id,title,description,source){const key=t+'|'+id;if(!found.has(key))found.set(key,{t,id,title,description,sources:[]});const item=found.get(key);if(!item.sources.includes(source))item.sources.push(source)}for(let i=0;i<ds.length;i++){const t=targetFor(ds[i]);for(let j=0;j<ds.length;j++){if(i===j)continue;const e=TABLE[ds[j]-1];add(t,'e'+(ds[j]===17?16:ds[j]),e[0],e[1],`D${i+1} cible · D${j+1} effet`)}for(const e of UNIVERSAL)add(t,'u'+e.id,e.title,e.description,`D${i+1} cible · effet universel`)}return [...found.values()]}
-function display(ds){const options=combinations(ds);$('results').className='';$('results').replaceChildren();$('summary').replaceChildren();ds.forEach((v,i)=>$('summary').append(el('span','pill',`D${i+1} : ${v}`)));$('summary').append(el('span','pill count',`${options.length} possibilités`));for(const t of TARGETS){let choices=options.filter(p=>p.t===t.id);if(!choices.length)continue;const group=el('section','group'),head=el('div','group-head'),h=el('h3');h.append(el('span','range',t.range),document.createTextNode(t.title));head.append(h,el('span','pill',`${choices.length}`));group.append(head);const cards=el('div','cards');for(const p of choices){const card=el('article','card'+(p.id.startsWith('u')?' universal':''));if(p.id.startsWith('u'))card.append(el('div','flag','Effet universel'));card.append(el('h4','',p.title),el('p','',p.description),el('div','pairs',p.sources.join(' · ')));cards.append(card)}group.append(cards);$('results').append(group)}}
+function combinations(ds){
+  // Un même dé ne peut jamais remplir les deux rôles.
+  // Les résultats égaux donnent une seule option, et non des cartes répétées.
+  const found=new Map();
+  function add(t,id,title,description,source){
+    const key=t+'|'+id;
+    if(!found.has(key))found.set(key,{t,id,title,description,sources:[],isUniversal:id.startsWith('u')});
+    const item=found.get(key);
+    if(!item.sources.includes(source))item.sources.push(source);
+  }
+  for(let i=0;i<ds.length;i++){
+    const t=targetFor(ds[i]);
+    for(let j=0;j<ds.length;j++){
+      if(i===j)continue;
+      const effectRoll=ds[j];
+      const e=TABLE[effectRoll-1];
+      // Les résultats 16 et 17 renvoient au même effet dans la table.
+      const effectId=(effectRoll===17?16:effectRoll);
+      add(t,'e'+effectId,e[0],e[1],`D${i+1} → D${j+1}`);
+    }
+    for(const e of UNIVERSAL)
+      add(t,'u'+e.id,e.title,e.description,`D${i+1}`);
+  }
+  return [...found.values()];
+}
+function sourcesText(p,ds){
+  const allSame=ds.every(v=>v===ds[0]);
+  if(allSame){
+    return p.isUniversal
+      ? 'N’importe quel dé pour la cible · effet universel'
+      : 'Deux dés distincts au choix : un pour la cible, un pour l’effet';
+  }
+  if(p.isUniversal){
+    return 'Cible : '+p.sources.join(' / ')+' · effet universel';
+  }
+  // Si les jets sont différents, montrer les affectations légales, sans répéter les cartes.
+  return p.sources.join(' · ');
+}
+function display(ds){
+  const options=combinations(ds);
+  $('results').className='';$('results').replaceChildren();$('summary').replaceChildren();
+  ds.forEach((v,i)=>$('summary').append(el('span','pill',`D${i+1} : ${v}`)));
+  $('summary').append(el('span','pill count',`${options.length} possibilités`));
+  for(const t of TARGETS){
+    const choices=options.filter(p=>p.t===t.id);
+    if(!choices.length)continue;
+    const group=el('section','group'),head=el('div','group-head'),h=el('h3');
+    h.append(el('span','range',t.range),document.createTextNode(t.title));
+    head.append(h,el('span','pill',`${choices.length}`));group.append(head);
+    const cards=el('div','cards');
+    for(const p of choices){
+      const card=el('article','card'+(p.isUniversal?' universal':''));
+      if(p.isUniversal)card.append(el('div','flag','Effet universel'));
+      card.append(el('h4','',p.title),el('p','',p.description),el('div','pairs',sourcesText(p,ds)));
+      cards.append(card);
+    }
+    group.append(cards);$('results').append(group);
+  }
+}
 function setMode(next){mode=next;for(const m of ['manual','auto']){$(m).classList.toggle('selected',m===mode);$(m).setAttribute('aria-pressed',String(m===mode))}drawDice();clearResults()}
 $('manual').addEventListener('click',()=>setMode('manual'));
 $('auto').addEventListener('click',()=>setMode('auto'));
