@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Universal Dice Roller</title>
+<!-- Correctif de réaffectation MJ v1.62 -->
 <style>
 :root{
   --bg:#081018;--panel:#101a25;--panel2:#162332;--line:#26384a;--text:#f3f6f8;--muted:#93a4b5;
@@ -1251,6 +1252,7 @@ async function enterRoom(id,code,name,system,role){
 
  renderSystemControls();
  await ensurePersistentParticipant();
+ await supabase.rpc("touch_my_dice_participant_connection",{p_channel_id:channelId});
  await Promise.all([loadPeople(),loadHistory(),loadFavorites(),loadCounters()]);
  await startRealtime();
 }
@@ -2737,138 +2739,77 @@ function participantLabel(p){
 function participantStatus(p){
  const online=participantIsOnline(p);
  if(p.pending_assignment) return {label:online?"Nouveau participant connecté":"Nouveau participant hors ligne",cls:"pending"};
- return {label:online?"Connecté":"Hors ligne",cls:online?"online":"offline"};
+ return {label:online?"En ligne":"Hors ligne",cls:online?"online":"offline"};
 }
-
+function participantLastSeen(p){
+ const raw=p.last_seen_at||p.created_at;
+ if(!raw) return "Connexion inconnue";
+ const date=new Date(raw);
+ return Number.isNaN(date.getTime())?"Connexion inconnue":`Dernière connexion : ${date.toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}`;
+}
 function sortedParticipants(){
  return participants.slice().sort((a,b)=>{
-   const ra=a.pending_assignment?0:(participantIsOnline(a)?1:2);
-   const rb=b.pending_assignment?0:(participantIsOnline(b)?1:2);
-   if(ra!==rb) return ra-rb;
-   if(a.role!==b.role) return a.role==="gm"?-1:1;
-   return participantLabel(a).localeCompare(participantLabel(b),"fr",{sensitivity:"base"});
+  const ra=participantIsOnline(a)?0:1, rb=participantIsOnline(b)?0:1;
+  if(ra!==rb) return ra-rb;
+  if(a.role!==b.role) return a.role==="gm"?-1:1;
+  return (a.display_name||"").localeCompare(b.display_name||"","fr",{sensitivity:"base"});
  });
 }
-
 function renderPeople(){
  const list=sortedParticipants();
- if(!list.length){
-   $("people").innerHTML='<div class="muted">Aucun participant.</div>';
-   $("mobilePeople").innerHTML='';
-   return;
- }
-
- $("people").innerHTML=list.map(p=>{
-   const isMe=String(p.assigned_user_id||"")===String(session?.user?.id||"");
-   const hasAvatar=!!p.avatar_url;
-   const st=participantStatus(p);
-   const offline=!participantIsOnline(p);
-   const canMatch=myRole==="gm" && p.pending_assignment;
-   const hasPendingOnline=participants.some(x=>x.pending_assignment && participantIsOnline(x) && x.id!==p.id && x.role===p.role);
-   const canReassign=myRole==="gm" && !p.pending_assignment && offline && hasPendingOnline;
-   const controls=canMatch
-     ? `<div class="participant-actions"><button class="btn primary small" onclick="openParticipantMatch('${p.id}')">Associer…</button><button class="btn small" onclick="confirmNewParticipant('${p.id}')">Nouveau joueur</button></div>`
-     : canReassign
-       ? `<div class="participant-actions"><button class="btn small" onclick="openReassignParticipant('${p.id}')">Réattribuer</button></div>`
-       : "";
-
-   if(p.role==="gm"){
-     return `<div class="person ${offline?"offline":""} ${p.pending_assignment?"pending":""}"><div class="person-info">
-       <div class="presence-line"><span class="presence-dot ${st.cls}"></span>${esc(st.label)}</div>
-       <div style="display:flex;align-items:center;gap:7px"><span class="gm-tag" style="margin:0">MJ</span><div><div class="char">Maître de jeu</div><div class="player">(${esc(p.display_name||"Joueur")}) ${isMe?`<button class="profile-mini" onclick="openMyProfile()">Modifier</button>`:""}</div></div></div>
-       ${p.pending_assignment?'<div class="pending-note">À rapprocher d’un ancien participant ou à valider.</div>':""}
-       ${controls}
-     </div></div>`;
-   }
-
-   return `<div class="person ${offline?"offline":""} ${p.pending_assignment?"pending":""}">
-     <div class="portrait ${isMe&&!hasAvatar?"editable":""}" ${isMe&&!hasAvatar?'onclick="openMyProfile()" title="Ajouter une image à mon personnage"':""}>
-       ${hasAvatar
-         ? `<img src="${esc(p.avatar_url)}" onerror="this.outerHTML='<div class=&quot;portrait-fallback&quot;>♟</div>'">`
-         : `<div class="portrait-fallback">♟</div>`}
-     </div>
-     <div class="person-info">
-       <div class="presence-line"><span class="presence-dot ${st.cls}"></span>${esc(st.label)}</div>
-       <div class="char">${esc(p.character_name||"Personnage")}</div>
-       <div class="player">(${esc(p.display_name||"Joueur")}) ${isMe?`<button class="profile-mini" onclick="openMyProfile()">Modifier</button>`:""}</div>
-       ${p.pending_assignment?'<div class="pending-note">À rapprocher d’un ancien participant ou à valider.</div>':""}
-       ${controls}
-     </div>
-   </div>`;
+ if(!list.length){$("people").innerHTML='<div class="muted">Aucun participant.</div>';$("mobilePeople").innerHTML='';return;}
+ const manage=myRole==="gm"?`<div class="participant-actions" style="margin-bottom:12px"><button class="btn primary small" onclick="openParticipantManager()">Gérer les profils et historiques</button></div>`:"";
+ $("people").innerHTML=manage+list.map(p=>{
+  const isMe=String(p.assigned_user_id||"")===String(session?.user?.id||"");
+  const st=participantStatus(p), offline=!participantIsOnline(p);
+  const details=`<div class="presence-line"><span class="presence-dot ${st.cls}"></span>${esc(st.label)}</div><div style="font-size:.67rem;color:var(--muted);margin:4px 0">${esc(participantLastSeen(p))}</div>`;
+  const actions=myRole==="gm"&&participantIsOnline(p)?`<div class="participant-actions"><button class="btn small" onclick="openParticipantManager('${p.id}')">Récupérer un historique</button>${p.pending_assignment?`<button class="btn small" onclick="confirmNewParticipant('${p.id}')">Nouveau joueur</button>`:""}</div>`:"";
+  if(p.role==="gm") return `<div class="person ${offline?"offline":""}"><div class="person-info">${details}<span class="gm-tag">MJ</span> <strong>${esc(p.display_name||"MJ")}</strong>${isMe?` <button class="profile-mini" onclick="openMyProfile()">Modifier</button>`:""}${actions}</div></div>`;
+  return `<div class="person ${offline?"offline":""}"><div class="portrait">${p.avatar_url?`<img src="${esc(p.avatar_url)}" onerror="this.outerHTML='♟'">`:`<div class="portrait-fallback">♟</div>`}</div><div class="person-info">${details}<div class="char">${esc(p.character_name||"Personnage")}</div><div class="player">(${esc(p.display_name||"Joueur")}) ${isMe?`<button class="profile-mini" onclick="openMyProfile()">Modifier</button>`:""}</div>${actions}</div></div>`;
  }).join("");
-
- $("mobilePeople").innerHTML=list.map(p=>{
-   const isMe=String(p.assigned_user_id||"")===String(session?.user?.id||"");
-   const st=participantStatus(p);
-   const offline=!participantIsOnline(p);
-   return `<div class="mobile-person ${offline?"offline":""} ${p.pending_assignment?"pending":""}">
-     <span class="presence-dot ${st.cls}" title="${esc(st.label)}"></span>
-     ${p.role==="gm"?`<span class="gm-tag">MJ</span> `:`<strong>${esc(p.character_name||"Personnage")}</strong> `}
-     <span class="muted">(${esc(p.display_name||"Joueur")})</span>
-     ${p.pending_assignment?` <span style="color:var(--accent2);font-weight:900">?</span>`:""}
-     ${isMe?`<button class="profile-mini" onclick="openMyProfile()">Modifier</button>`:""}
-   </div>`;
+ $("mobilePeople").innerHTML=(myRole==="gm"?`<button class="btn primary small" onclick="openParticipantManager()">Gérer les profils</button>`:"")+list.map(p=>{
+  const st=participantStatus(p);
+  return `<div class="mobile-person ${participantIsOnline(p)?"":"offline"}"><span class="presence-dot ${st.cls}"></span> <strong>${esc(p.display_name||"Joueur")}</strong> ${p.role==="gm"?"(MJ)":`(${esc(p.character_name||"Personnage")})`} <span class="muted">— ${esc(participantLastSeen(p))}</span></div>`;
  }).join("");
 }
-
 async function loadPeople(){
- const {data,error}=await supabase.rpc("get_dice_channel_persistent_participants",{p_channel_id:channelId});
- if(error){toast("Participants indisponibles");return}
+ const {data,error}=await supabase.rpc("get_dice_participants_with_last_seen",{p_channel_id:channelId});
+ if(error){console.error(error);toast("Participants indisponibles : vérifier le SQL v1.63");return;}
  participants=(data||[]).map(p=>({...p,assigned_user_id:p.assigned_user_id?String(p.assigned_user_id):null}));
  myProfile=participants.find(p=>String(p.assigned_user_id||"")===String(session?.user?.id||""))||null;
  if(myProfile) myProfile={...myProfile,user_id:myProfile.assigned_user_id};
- if(myProfile?.role && myRole!==myProfile.role){
-   myRole=myProfile.role;
-   saveRoom();
-   renderCounters();
- }
+ if(myProfile?.role && myRole!==myProfile.role){myRole=myProfile.role;saveRoom();renderCounters();}
  renderPeople();
 }
-
-window.openParticipantMatch=sourceId=>{
+window.openParticipantManager=(preselectedId=null)=>{
  if(myRole!=="gm") return;
- const source=participants.find(p=>String(p.id)===String(sourceId));
- if(!source) return;
- const targets=participants.filter(p=>
-   p.id!==source.id && !p.pending_assignment && !participantIsOnline(p) && p.role===source.role
- );
- modal("Associer ce participant",`
-   <div style="margin-bottom:12px"><strong>${esc(source.display_name||"Nouveau participant")}</strong> est en réalité :</div>
-   ${targets.length?targets.map(p=>`<button class="btn participant-choice" onclick="matchParticipant('${source.id}','${p.id}')"><span><strong>${esc(participantLabel(p))}</strong><span>${esc(p.display_name||"Joueur")} · hors ligne</span></span><b>Associer</b></button>`).join(""):`<div class="muted">Aucun ancien participant hors ligne avec le même rôle n’est disponible.</div>`}
-   <div class="actions"><button class="btn" onclick="closeModal()">Annuler</button></div>`);
+ const online=sortedParticipants().filter(participantIsOnline);
+ const offline=sortedParticipants().filter(p=>!participantIsOnline(p));
+ const selected=online.find(p=>p.id===preselectedId)||online[0];
+ modal("Récupération d'un historique",`
+ <p class="muted">Sélectionnez d'abord la personne actuellement <b>en ligne</b>. Elle conserve son identité et récupère les favoris et les jets de l'ancien participant.</p>
+ <label>Participant en ligne (conservé)</label>
+ <select id="mergeOnline" style="width:100%;margin-bottom:12px" onchange="renderMergeTargetOptions()">${online.map(p=>`<option value="${p.id}" ${selected?.id===p.id?"selected":""}>${esc(p.display_name||"Joueur")} ${p.role==="gm"?"(MJ)":""} — ${esc(p.character_name||"")}</option>`).join("")}</select>
+ <label>Historique d'un participant hors ligne (à fusionner)</label>
+ <select id="mergeOffline" style="width:100%;margin-bottom:12px">${offline.map(p=>`<option value="${p.id}">${esc(p.display_name||"Joueur")} — ${esc(p.character_name||"")} — ${esc(participantLastSeen(p))}</option>`).join("")}</select>
+ <p class="muted" style="font-size:.75rem">Le profil hors ligne sera archivé et retiré de la liste. Les favoris et les jets historiques identifiables seront associés au profil en ligne. Cette action ne peut pas être annulée automatiquement.</p>
+ <div class="actions"><button class="btn primary" ${online.length&&offline.length?"":"disabled"} onclick="mergeParticipantHistory()">Fusionner l'historique</button><button class="btn" onclick="closeModal()">Annuler</button></div>
+ ${!online.length?'<p class="muted">Aucun participant en ligne.</p>':""}${!offline.length?'<p class="muted">Aucun participant hors ligne.</p>':""}`);
 };
-
-window.openReassignParticipant=targetId=>{
+window.renderMergeTargetOptions=()=>{};
+window.mergeParticipantHistory=async()=>{
  if(myRole!=="gm") return;
- const target=participants.find(p=>String(p.id)===String(targetId));
- if(!target) return;
- const sources=participants.filter(p=>
-   p.id!==target.id && p.pending_assignment && participantIsOnline(p) && p.role===target.role
- );
- modal("Réattribuer ce participant",`
-   <div style="margin-bottom:12px"><strong>${esc(participantLabel(target))}</strong> doit être repris par :</div>
-   ${sources.length?sources.map(p=>`<button class="btn participant-choice" onclick="matchParticipant('${p.id}','${target.id}')"><span><strong>${esc(p.display_name||"Nouveau participant")}</strong><span>Nouveau participant connecté</span></span><b>Réattribuer</b></button>`).join(""):`<div class="muted">Aucun nouveau participant compatible n’est actuellement connecté.</div>`}
-   <div class="actions"><button class="btn" onclick="closeModal()">Annuler</button></div>`);
-};
-
-window.matchParticipant=async(sourceId,targetId)=>{
- if(myRole!=="gm") return;
- const source=participants.find(p=>String(p.id)===String(sourceId));
- const target=participants.find(p=>String(p.id)===String(targetId));
- if(!source||!target) return;
- if(!confirm(`Associer « ${source.display_name||"Nouveau participant"} » à « ${participantLabel(target)} » ?`)) return;
+ const sourceId=$("mergeOnline")?.value,targetId=$("mergeOffline")?.value;
+ const source=participants.find(p=>p.id===sourceId),target=participants.find(p=>p.id===targetId);
+ if(!source||!target||!participantIsOnline(source)||participantIsOnline(target)){alert("Choisissez un participant réellement en ligne et un profil hors ligne.");return;}
+ if(!confirm(`Fusionner les données de « ${target.display_name} » (hors ligne) dans « ${source.display_name} » (en ligne) ?\n\nSeul « ${source.display_name} » restera dans la liste des profils actifs. Le profil historique sera archivé, sans effacement physique des sauvegardes.`))return;
  try{
-   const {error}=await supabase.rpc("reassign_dice_channel_participant",{
-     p_source_participant_id:sourceId,
-     p_target_participant_id:targetId
-   });
-   if(error) throw error;
-   closeModal();
-   await loadPeople();
-   toast(`${participantLabel(target)} réattribué`);
- }catch(e){alert("Rapprochement impossible : "+(e.message||e))}
+  const {error}=await supabase.rpc("merge_dice_participant_history",{p_online_participant_id:sourceId,p_offline_participant_id:targetId});
+  if(error)throw error;
+  closeModal();await loadPeople();await loadFavorites();await loadHistory();
+  toast("Historique récupéré par "+(source.display_name||"le participant"));
+ }catch(e){alert("Fusion impossible : "+(e.message||e));}
 };
-
 window.confirmNewParticipant=async id=>{
  if(myRole!=="gm") return;
  const p=participants.find(x=>String(x.id)===String(id));
@@ -2951,7 +2892,10 @@ window.saveMyProfile=async()=>{
 
 async function loadHistory(){
  const {data,error}=await supabase.from("dice_rolls").select("*").eq("channel_id",channelId).order("created_at",{ascending:false}).limit(50);if(error)return;
- const normalized=(data||[]).map(normalizeStoredRollRecord).map(normalizeRollForDisplay).filter(canViewRollLocally);
+ const normalized=(data||[]).map(normalizeStoredRollRecord).map(normalizeRollForDisplay).map(r=>{
+   const owner=participants.find(p=>String(p.id)===String(r.metadata?.participant_id||""));
+   return owner?{...r,player_name:owner.display_name,character_name:owner.character_name||r.character_name}:r;
+ }).filter(canViewRollLocally);
  const seenExplosionChains=new Set();
  history=normalized.filter(r=>{
    const chain=r.metadata?.vampire_explosion_chain_id;
@@ -3258,6 +3202,7 @@ async function startRealtime(){
      // Les favoris appartiennent au participant persistant. Une réattribution de
      // personnage peut donc changer instantanément la bibliothèque du navigateur.
      await loadFavorites();
+     await loadHistory();
    })
    .on("postgres_changes",{event:"*",schema:"public",table:"dice_channel_members",filter:`channel_id=eq.${channelId}`},()=>loadPeople())
    .subscribe();
