@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les Vestiges — Tirage de cristal</title>
+<style>
+:root{
+  --bg:#0b101a;
+  --bg2:#131d2d;
+  --panel:#142033cc;
+  --panel-2:#0f1827cc;
+  --line:#5c4a28;
+  --line-soft:#334766;
+  --text:#f6f3ea;
+  --muted:#c9c2b1;
+  --gold:#dfbd74;
+  --gold-2:#9b7431;
+  --common:#78e39b;
+  --rare:#8fd0ff;
+  --epic:#d6a5ff;
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--text);
+  font:16px/1.4 Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(118,165,255,.12), transparent 25%),
+    radial-gradient(circle at 80% 15%, rgba(214,165,255,.10), transparent 25%),
+    radial-gradient(circle at 50% 100%, rgba(223,189,116,.08), transparent 30%),
+    linear-gradient(180deg, #18253b 0%, var(--bg) 55%, #080c14 100%);
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    radial-gradient(circle at center, transparent 0 55%, rgba(223,189,116,.03) 56%, transparent 58%),
+    radial-gradient(circle at center, transparent 0 68%, rgba(223,189,116,.025) 69%, transparent 70%),
+    radial-gradient(circle at center, rgba(255,255,255,.045) 1px, transparent 1.7px);
+  background-size:auto, auto, 26px 26px;
+  pointer-events:none;
+  opacity:.55;
+}
+main{
+  min-height:100%;
+  display:grid;
+  place-items:center;
+  padding:28px 18px 42px;
+}
+.app{
+  width:min(720px,100%);
+}
+.frame{
+  position:relative;
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  border:1px solid rgba(223,189,116,.35);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  backdrop-filter: blur(8px);
+}
+.frame::before,
+.frame::after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border:1px solid rgba(223,189,116,.12);
+  border-radius:22px;
+  pointer-events:none;
+}
+.frame::after{
+  inset:22px;
+  border-color:rgba(255,255,255,.05);
+  border-radius:16px;
+}
+.header{
+  text-align:center;
+  padding:32px 24px 10px;
+}
+.kicker{
+  color:var(--gold);
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  font-size:11px;
+  margin-bottom:10px;
+}
+h1{
+  margin:0;
+  font-size:clamp(30px,5vw,46px);
+  font-weight:700;
+  letter-spacing:.02em;
+}
+.sub{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+.rarity-bar{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  padding:18px 24px 8px;
+}
+.rarity-chip{
+  text-align:center;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border-radius:16px;
+  padding:10px 8px;
+}
+.rarity-chip .label{display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.rarity-chip strong{display:block; font-size:22px; margin-top:2px}
+.controls{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:20px 24px 8px;
+}
+button{
+  appearance:none; border:0; cursor:pointer;
+  border-radius:16px;
+  padding:14px 22px;
+  font:700 16px/1.1 inherit;
+  transition:transform .12s ease, filter .12s ease, background .2s ease;
+}
+button:hover{transform:translateY(-1px); filter:brightness(1.06)}
+button:active{transform:translateY(1px) scale(.99)}
+button:focus-visible, summary:focus-visible{outline:3px solid #fff; outline-offset:3px}
+.btn-primary{
+  min-width:230px;
+  color:#1a1a18;
+  background:linear-gradient(180deg,#f2d692 0%, #dfbd74 50%, #c59647 100%);
+  box-shadow:0 8px 22px rgba(223,189,116,.25);
+}
+.btn-secondary{
+  color:var(--text);
+  background:linear-gradient(180deg,#22324d,#182438);
+  border:1px solid rgba(255,255,255,.08);
+}
+.result-wrap{padding:18px 24px 28px}
+.result{
+  position:relative;
+  min-height:350px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:34px 18px 30px;
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(223,189,116,.10), transparent 26%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  border:1px solid rgba(255,255,255,.08);
+  overflow:hidden;
+}
+.result::before{
+  content:"";
+  position:absolute; inset:auto 12% 18px;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(223,189,116,.35), transparent);
+}
+.gem-area{display:grid; gap:12px; justify-items:center}
+.gem{
+  font-size:78px;
+  line-height:1;
+  filter:drop-shadow(0 0 14px rgba(255,255,255,.12));
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:146px;
+  padding:7px 14px;
+  border-radius:999px;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-weight:700;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06);
+}
+.badge.common{color:var(--common)}
+.badge.rare{color:var(--rare)}
+.badge.epic{color:var(--epic)}
+.result h2{
+  margin:0;
+  font-size:clamp(28px,4.5vw,42px);
+  line-height:1.08;
+  max-width:10ch;
+}
+.cost{
+  color:var(--gold);
+  font-size:24px;
+  margin-top:4px;
+}
+.effect{
+  max-width:520px;
+  color:#f0ebdd;
+  font-size:17px;
+}
+.meta{
+  color:var(--muted);
+  font-size:13px;
+}
+.result.idle h2{max-width:none}
+.result.idle .effect{font-size:15px;color:var(--muted)}
+.corner{
+  position:absolute; width:12px; height:12px; border:2px solid rgba(223,189,116,.38);
+}
+.c1{top:16px;left:16px;border-right:0;border-bottom:0}
+.c2{top:16px;right:16px;border-left:0;border-bottom:0}
+.c3{bottom:16px;left:16px;border-right:0;border-top:0}
+.c4{bottom:16px;right:16px;border-left:0;border-top:0}
+.side-tools{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+details{
+  background:rgba(8,14,24,.4);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  overflow:hidden;
+}
+summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px 16px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+summary::-webkit-details-marker{display:none}
+summary small{color:var(--muted); font-weight:400; letter-spacing:.04em}
+.inner{padding:0 14px 14px}
+.history{
+  margin:0; padding-left:22px; color:var(--muted); font-size:14px;
+}
+.history li{margin:6px 0}
+.tables{display:grid; gap:12px}
+.table-card{
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  overflow:hidden;
+  background:rgba(255,255,255,.025);
+}
+.table-head{
+  padding:10px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-weight:700;
+}
+.table-head span{color:var(--muted); font-size:12px; font-weight:400}
+.scroll{overflow:auto}
+table{width:100%; border-collapse:collapse; font-size:13px}
+th,td{padding:9px 10px; text-align:left; border-top:1px solid rgba(255,255,255,.055)}
+th{color:var(--muted); font-weight:700; background:rgba(255,255,255,.03)}
+tr:hover td{background:rgba(255,255,255,.03)}
+.hidden-note{display:none}
+@media (max-width:640px){
+  .header{padding:28px 18px 8px}
+  .rarity-bar{padding:16px 18px 8px; gap:8px}
+  .controls{padding:18px 18px 8px}
+  .result-wrap{padding:16px 18px 22px}
+  .result{min-height:320px; padding:28px 14px}
+  .gem{font-size:68px}
+  .effect{font-size:16px}
+}
+
+/* Révélation magique */
+.result{isolation:isolate;transition:border-color .45s ease, box-shadow .45s ease}
+.result.revealed{border-color:var(--crystal-color);box-shadow:inset 0 0 40px var(--crystal-glow),0 0 26px var(--crystal-glow)}
+.result.revealed::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 50% 32%,var(--crystal-glow),transparent 64%);animation:ambientReveal 1.4s ease-out both}
+.result.revealed .gem{color:var(--crystal-color)!important;text-shadow:0 0 18px var(--crystal-color),0 0 54px var(--crystal-color);animation:crystalAppear .95s cubic-bezier(.15,.7,.2,1) both, float 3s 1s ease-in-out infinite}
+.result.revealed .gem-area>:not(.gem){animation:detailAppear .65s ease-out .45s both}
+.result.revealed .badge{border-color:var(--crystal-color);box-shadow:0 0 16px var(--crystal-glow)}
+.result.revealing .gem{animation:chargeCrystal 1.05s ease-in-out infinite;color:var(--gold)!important}
+.result.revealing .effect{color:var(--muted)}
+.result.revealing{box-shadow:inset 0 0 70px rgba(223,189,116,.1)}
+.sparkles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.sparkles span{position:absolute;left:50%;top:30%;width:5px;height:5px;border-radius:50%;background:var(--crystal-color);box-shadow:0 0 14px var(--crystal-color);animation:burst .95s ease-out both;animation-delay:var(--delay)}
+@keyframes burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}18%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.15)}}
+@keyframes chargeCrystal{0%,100%{transform:scale(.8) rotate(-5deg);opacity:.45;filter:blur(2px)}50%{transform:scale(1.16) rotate(5deg);opacity:1;filter:drop-shadow(0 0 20px var(--gold))}}
+@keyframes crystalAppear{0%{opacity:0;transform:scale(.12) rotate(-35deg);filter:blur(12px)}55%{opacity:1;transform:scale(1.35) rotate(12deg);filter:blur(0)}75%{transform:scale(.9) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes detailAppear{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ambientReveal{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.result.revealed .gem,.result.revealed .gem-area>:not(.gem),.result.revealed::after,.result.revealing .gem,.sparkles span{animation:none!important}button{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="app">
+    <section class="frame">
+      <div class="header">
+        <div class="kicker">Fabula Ultima · Les Vestiges</div>
+        <h1>Tirage de cristal</h1>
+        <p class="sub">Commun · Rare · Épique</p>
+      </div>
+
+      <div class="controls">
+        <button class="btn-primary" id="draw">✦ Tirer un cristal</button>
+        <button class="btn-secondary" id="clear">Effacer l’historique</button>
+      </div>
+
+      <div class="result-wrap">
+        <section class="result idle" id="result" aria-live="polite">
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+          <div class="gem-area">
+            <div class="gem" style="color:var(--gold)">◇</div>
+            <div class="badge">En attente</div>
+            <h2>Prêt pour le tirage</h2>
+            <div class="effect">Appuie sur le bouton pour révéler un cristal.</div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="side-tools">
+      <details>
+        <summary>Historique <small>20 derniers tirages</small></summary>
+        <div class="inner">
+          <ol class="history" id="history"><li>Aucun tirage.</li></ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>Tables <small>D100 pondéré</small></summary>
+        <div class="inner tables" id="tables"></div>
+      </details>
+    </div>
+  </div>
+</main>
+
+<script>
+'use strict';
+const ITEMS=[
+{name:'Type de dégâts non physiques',cost:100,gear:'Arme',effect:'Remplace les dégâts physiques par un type non physique choisi.'},
+{name:'Précision de l’arme',cost:100,gear:'Arme',effect:'+1 aux tests de précision effectués avec cette arme.'},
+{name:'Puissance',cost:200,gear:'Arme',effect:'+4 aux dégâts de l’arme.'},
+{name:'Magique',cost:100,gear:'Arme',effect:'L’arme cible la Défense magique.'},
+{name:'Chasseresse',cost:300,gear:'Arme',effect:'+5 dégâts contre une espèce choisie.'},
+{name:'Perforante',cost:400,gear:'Arme',effect:'Les dégâts ignorent les résistances.'},
+{name:'Chasseresse double',cost:500,gear:'Arme',effect:'+5 dégâts contre deux espèces choisies.'},
+{name:'Multi (2)',cost:1000,gear:'Arme',effect:'Les attaques gagnent multi (2).'},
+{name:'État',cost:1500,gear:'Arme',effect:'Inflige un état choisi parmi étourdi, traumatisé, ralenti et affaibli.'},
+{name:'État plus',cost:2000,gear:'Arme',effect:'Inflige enragé ou empoisonné (un état choisi).'},
+{name:'Anti-état',cost:500,gear:'Arme / Armure / Bouclier',effect:'Immunité à un état choisi.'},
+{name:'Résistance',cost:700,gear:'Arme / Armure / Bouclier',effect:'Résistance à un type de dégâts non physiques choisi.'},
+{name:'Amulette',cost:800,gear:'Arme',effect:'+1 en Défense magique.'},
+{name:'Rempart',cost:800,gear:'Arme',effect:'+1 en Défense.'},
+{name:'Brise-lame',cost:1000,gear:'Arme / Armure / Bouclier',effect:'Résistance aux dégâts physiques.'},
+{name:'Résistance double',cost:1000,gear:'Arme / Armure / Bouclier',effect:'Résistance à deux types de dégâts non physiques choisis.'},
+{name:'Immunité',cost:1500,gear:'Arme / Armure / Bouclier',effect:'Immunité à un type de dégâts non physiques choisi.'},
+{name:'Omnibouclier',cost:2000,gear:'Arme',effect:'+1 en Défense et en Défense magique.'},
+{name:'Santé absolue',cost:2000,gear:'Arme / Armure / Bouclier',effect:'Immunité à tous les états.'},
+{name:'Gain d’initiative',cost:500,gear:'Armure / Bouclier',effect:'+4 au modificateur d’initiative.'},
+{name:'Gain de magie',cost:1000,gear:'Armure / Bouclier',effect:'+1 aux tests de magie.'},
+{name:'Gain de précision',cost:1000,gear:'Armure / Bouclier',effect:'+1 aux tests de précision.'},
+{name:'Gain de vitalité',cost:1000,gear:'Armure / Bouclier',effect:'+5 PV quand vous récupérez des PV.'},
+{name:'Gain de soin',cost:1500,gear:'Armure / Bouclier',effect:'+5 PV restaurés par les sorts de soin.'},
+{name:'Gain d’armement',cost:2000,gear:'Armure / Bouclier',effect:'+5 dégâts avec les armes de corps à corps ou à distance (une catégorie choisie).'},
+{name:'Gain d’incantation',cost:2000,gear:'Armure / Bouclier',effect:'+5 dégâts avec les sorts.'}
+];
+// Sous-tables équiprobables : un cristal obtenu est toujours entièrement défini.
+const TYPES=['Air','Terre','Feu','Glace','Foudre','Lumière','Ténèbres','Poison'];
+const STATES=['Affaibli','Enragé','Empoisonné','Étourdi','Ralenti','Traumatisé'];
+const SPECIES=['Bête','Créature artificielle','Démon','Élémentaire','Humanoïde','Monstre','Mort-vivant','Plante'];
+const STATE_SIMPLE=['Étourdi','Traumatisé','Ralenti','Affaibli'];
+const STATE_PLUS=['Enragé','Empoisonné'];
+const ARMAMENT=['Corps à corps','Distance'];
+function pairs(list){const result=[];for(let a=0;a<list.length;a++)for(let b=a+1;b<list.length;b++)result.push([list[a],list[b]]);return result;}
+const SUBTABLES={
+ 'Type de dégâts non physiques':{options:TYPES, label:'Type'},
+ 'Chasseresse':{options:SPECIES, label:'Espèce'},
+ 'Chasseresse double':{options:pairs(SPECIES), label:'Espèces'},
+ 'État':{options:STATE_SIMPLE,label:'État'},
+ 'État plus':{options:STATE_PLUS,label:'État'},
+ 'Anti-état':{options:STATES,label:'État'},
+ 'Résistance':{options:TYPES,label:'Type'},
+ 'Résistance double':{options:pairs(TYPES),label:'Types'},
+ 'Immunité':{options:TYPES,label:'Type'},
+ 'Gain d’armement':{options:ARMAMENT,label:'Catégorie'}
+};
+function chooseSpecific(item){
+  const sub=SUBTABLES[item.name];
+  if(!sub)return {name:item.name,effect:item.effect,subroll:null};
+  const d=randomInt(sub.options.length);
+  const selected=sub.options[d-1];
+  const value=Array.isArray(selected)?selected.join(' + '):selected;
+  let effect=item.effect;
+  switch(item.name){
+    case 'Type de dégâts non physiques':effect=`L’arme inflige des dégâts de ${value.toLowerCase()} à la place de ses dégâts physiques.`;break;
+    case 'Chasseresse':effect=`+5 dégâts contre les ${value.toLowerCase()}s.`;break;
+    case 'Chasseresse double':effect=`+5 dégâts contre ces deux espèces : ${value}.`;break;
+    case 'État':case 'État plus':effect=`Les attaques infligent l’état ${value.toLowerCase()}.`;break;
+    case 'Anti-état':effect=`Immunité à l’état ${value.toLowerCase()}.`;break;
+    case 'Résistance':effect=`Résistance aux dégâts de ${value.toLowerCase()}.`;break;
+    case 'Résistance double':effect=`Résistance aux dégâts de ${selected[0].toLowerCase()} et de ${selected[1].toLowerCase()}.`;break;
+    case 'Immunité':effect=`Immunité aux dégâts de ${value.toLowerCase()}.`;break;
+    case 'Gain d’armement':effect=`+5 dégâts avec les armes de ${value.toLowerCase()}.`;break;
+  }
+  return {name:`${item.name} (${value})`,effect,subroll:{die:sub.options.length,roll:d,label:sub.label}};
+}
+const CATS=[
+  {key:'common', name:'Commun', min:0, max:400, color:'var(--common)', gem:'◆'},
+  {key:'rare', name:'Rare', min:401, max:1000, color:'var(--rare)', gem:'◆'},
+  {key:'epic', name:'Épique', min:1001, max:Infinity, color:'var(--epic)', gem:'◆'}
+];
+
+function buildTable(cat){
+  const arr=ITEMS.filter(i=>i.cost>=cat.min&&i.cost<=cat.max).map(i=>({...i}));
+  const weights=arr.map(i=>1/i.cost);
+  const sum=weights.reduce((a,b)=>a+b,0);
+  const exact=weights.map(w=>w/sum*100);
+  const counts=exact.map(Math.floor);
+  let left=100-counts.reduce((a,b)=>a+b,0);
+  const order=arr.map((_,i)=>i).sort((a,b)=>(exact[b]-counts[b])-(exact[a]-counts[a])||a-b);
+  for(let i=0;i<left;i++) counts[order[i]]++;
+  let next=1;
+  return arr.map((item,i)=>{
+    const start=next;
+    next+=counts[i];
+    return {...item, chance:counts[i], start, end:next-1};
+  });
+}
+const TABLES=CATS.map(buildTable);
+
+function randomInt(max){
+  if(window.crypto && crypto.getRandomValues){
+    const arr=new Uint32Array(1);
+    const limit=4294967296-(4294967296%max);
+    let n;
+    do{ crypto.getRandomValues(arr); n=arr[0]; } while(n>=limit);
+    return (n%max)+1;
+  }
+  return Math.floor(Math.random()*max)+1;
+}
+
+function renderTables(){
+  const root=document.getElementById('tables');
+  root.innerHTML='';
+  CATS.forEach((cat,idx)=>{
+    const items=TABLES[idx];
+    const card=document.createElement('section');
+    card.className='table-card';
+    card.innerHTML=`<div class="table-head">${cat.name}<span>${cat.min===0?100:cat.min}–${Number.isFinite(cat.max)?cat.max:'2000'} z</span></div>`;
+    const scroll=document.createElement('div');
+    scroll.className='scroll';
+    const table=document.createElement('table');
+    table.innerHTML='<thead><tr><th>D100</th><th>Cristal</th><th>z</th><th>%</th></tr></thead>';
+    const tbody=document.createElement('tbody');
+    items.forEach(item=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${String(item.start).padStart(2,'0')}–${String(item.end).padStart(2,'0')}</td><td>${item.name}</td><td>${item.cost.toLocaleString('fr-FR')}</td><td>${item.chance}</td>`;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    scroll.appendChild(table);
+    card.appendChild(scroll);
+    root.appendChild(card);
+  });
+}
+function renderSubtables(){
+ const root=document.getElementById('tables');
+ const section=document.createElement('section');section.className='table-card';
+ const title=document.createElement('div');title.className='table-head';title.textContent='Sous-tables de propriétés';section.append(title);
+ const body=document.createElement('div');body.className='inner';
+ for(const [name,table] of Object.entries(SUBTABLES)){
+   const d=document.createElement('details');
+   const summary=document.createElement('summary');summary.textContent=`${name} · D${table.options.length}`;d.append(summary);
+   const tableEl=document.createElement('table');
+   const tbody=document.createElement('tbody');
+   table.options.forEach((option,i)=>{const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=String(i+1);const b=document.createElement('td');b.textContent=Array.isArray(option)?option.join(' + '):option;tr.append(a,b);tbody.append(tr)});
+   tableEl.append(tbody);d.append(tableEl);body.append(d);
+ }
+ section.append(body);root.append(section);
+}
+renderTables();
+renderSubtables();
+
+const result=document.getElementById('result');
+let history=[];
+
+function setIdle(){
+  result.className='result idle';
+  result.innerHTML=`
+    <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+    <div class="gem-area">
+      <div class="gem" style="color:var(--gold)">◇</div>
+      <div class="badge">En attente</div>
+      <h2>Prêt pour le tirage</h2>
+      <div class="effect">Appuie sur le bouton pour révéler un cristal.</div>
+    </div>`;
+}
+
+function renderHistory(){
+  const list=document.getElementById('history');
+  list.innerHTML='';
+  if(!history.length){
+    list.innerHTML='<li>Aucun tirage.</li>';
+    return;
+  }
+  history.forEach(text=>{
+    const li=document.createElement('li');
+    li.textContent=text;
+    list.appendChild(li);
+  });
+}
+
+let busy=false;
+function draw(){
+  if(busy)return;
+  busy=true;
+  const drawButton=document.getElementById('draw');
+  drawButton.disabled=true;
+  const d10=randomInt(10);
+  const catIndex=d10<=6?0:d10<=9?1:2;
+  const cat=CATS[catIndex];
+  const d100=randomInt(100);
+  const item=TABLES[catIndex].find(i=>d100>=i.start && d100<=i.end);
+  const specific=chooseSpecific(item);
+  result.className='result revealing';
+  result.removeAttribute('style');
+  result.innerHTML=`
+    <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+    <div class="gem-area">
+      <div class="gem">◇</div>
+      <div class="badge">Cristal en formation…</div>
+    </div>`;
+  window.setTimeout(()=>{
+    result.style.setProperty('--crystal-color',catIndex===0?'#78e39b':catIndex===1?'#8fd0ff':'#d6a5ff');
+    result.style.setProperty('--crystal-glow',catIndex===0?'rgba(70,224,122,.23)':catIndex===1?'rgba(76,168,255,.23)':'rgba(174,95,255,.27)');
+    result.className='result revealed';
+    result.innerHTML=`
+      <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+      <div class="sparkles" aria-hidden="true"></div>
+      <div class="gem-area">
+        <div class="gem">${cat.gem}</div>
+        <div class="badge ${cat.key}">Cristal ${cat.name}</div>
+        <h2>${specific.name}</h2>
+        <div class="cost">${item.cost.toLocaleString('fr-FR')} zénits</div>
+        <div class="effect">${specific.effect}</div>
+        <div class="meta">Compatible : ${item.gear}</div>
+        <div class="meta">D10 ${d10} · D100 ${String(d100).padStart(2,'0')}${specific.subroll ? ` · D${specific.subroll.die} ${specific.subroll.roll}` : ''}</div>
+      </div>`;
+    const sparks=result.querySelector('.sparkles');
+    for(let i=0;i<22;i++){
+      const sp=document.createElement('span');
+      const theta=2*Math.PI*i/22;
+      const radius=90+Math.random()*135;
+      sp.style.setProperty('--x',Math.round(Math.cos(theta)*radius)+'px');
+      sp.style.setProperty('--y',Math.round(Math.sin(theta)*radius)+'px');
+      sp.style.setProperty('--delay',Math.round(Math.random()*120)+'ms');
+      sparks.append(sp);
+    }
+    history.unshift(`${cat.name} · ${specific.name} (${item.cost} z)`);
+    history=history.slice(0,20);
+    renderHistory();
+    drawButton.disabled=false;
+    busy=false;
+  },950);
+}
+
+document.getElementById('draw').addEventListener('click', draw);
+document.getElementById('clear').addEventListener('click', ()=>{history=[];renderHistory();});
+renderHistory();
+setIdle();
+</script>
+</body>
+</html>
