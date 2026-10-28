@@ -2780,7 +2780,7 @@ function renderPeople(){
 }
 async function loadPeople(){
  const {data,error}=await supabase.rpc("get_dice_participants_with_last_seen",{p_channel_id:channelId});
- if(error){console.error(error);toast("Participants indisponibles : vérifier le SQL v1.63");return;}
+ if(error){console.error(error);toast("Participants indisponibles : vérifier le SQL v1.64");return;}
  participants=(data||[]).map(p=>({...p,assigned_user_id:p.assigned_user_id?String(p.assigned_user_id):null}));
  myProfile=participants.find(p=>String(p.assigned_user_id||"")===String(session?.user?.id||""))||null;
  if(myProfile) myProfile={...myProfile,user_id:myProfile.assigned_user_id};
@@ -2789,32 +2789,44 @@ async function loadPeople(){
 }
 window.openParticipantManager=(preselectedId=null)=>{
  if(myRole!=="gm") return;
- const online=sortedParticipants().filter(participantIsOnline);
- const offline=sortedParticipants().filter(p=>!participantIsOnline(p));
+ const online=sortedParticipants().filter(p=>participantIsOnline(p)&&p.role!=="gm");
+ const offline=sortedParticipants().filter(p=>!participantIsOnline(p)&&p.role!=="gm");
  const selected=online.find(p=>p.id===preselectedId)||online[0];
- modal("Récupération d'un historique",`
- <p class="muted">Sélectionnez d'abord la personne actuellement <b>en ligne</b>. Elle conserve son identité et récupère les favoris et les jets de l'ancien participant.</p>
- <label>Participant en ligne (conservé)</label>
- <select id="mergeOnline" style="width:100%;margin-bottom:12px" onchange="renderMergeTargetOptions()">${online.map(p=>`<option value="${p.id}" ${selected?.id===p.id?"selected":""}>${esc(p.display_name||"Joueur")} ${p.role==="gm"?"(MJ)":""} — ${esc(p.character_name||"")}</option>`).join("")}</select>
- <label>Historique d'un participant hors ligne (à fusionner)</label>
+ modal("Gestion des profils et historiques",`
+ <p class="muted">Réaffecter le passé d’un personnage hors ligne à un joueur en ligne, ou archiver un profil hors ligne sans héritier.</p>
+ <label>Joueur connecté destinataire</label>
+ <select id="mergeOnline" style="width:100%;margin-bottom:12px">${online.map(p=>`<option value="${p.id}" ${selected?.id===p.id?"selected":""}>${esc(p.display_name||"Joueur")} — ${esc(p.character_name||"")}</option>`).join("")}</select>
+ <label>Profil hors ligne</label>
  <select id="mergeOffline" style="width:100%;margin-bottom:12px">${offline.map(p=>`<option value="${p.id}">${esc(p.display_name||"Joueur")} — ${esc(p.character_name||"")} — ${esc(participantLastSeen(p))}</option>`).join("")}</select>
- <p class="muted" style="font-size:.75rem">Le profil hors ligne sera archivé et retiré de la liste. Les favoris et les jets historiques identifiables seront associés au profil en ligne. Cette action ne peut pas être annulée automatiquement.</p>
- <div class="actions"><button class="btn primary" ${online.length&&offline.length?"":"disabled"} onclick="mergeParticipantHistory()">Fusionner l'historique</button><button class="btn" onclick="closeModal()">Annuler</button></div>
- ${!online.length?'<p class="muted">Aucun participant en ligne.</p>':""}${!offline.length?'<p class="muted">Aucun participant hors ligne.</p>':""}`);
+ <p class="muted" style="font-size:.75rem">La réaffectation conserve les favoris actuels et ajoute ceux de l'ancien profil, rattache les jets historiques et récupère son portrait. La suppression archive le profil et efface ses favoris, mais conserve les jets dans le journal collectif.</p>
+ <div class="actions"><button class="btn primary" ${online.length&&offline.length?"":"disabled"} onclick="mergeParticipantHistory()">Réaffecter au joueur connecté</button><button class="btn red" ${offline.length?"":"disabled"} onclick="deleteOfflineParticipant()">Supprimer le profil hors ligne</button><button class="btn" onclick="closeModal()">Annuler</button></div>
+ ${!online.length?'<p class="muted">Aucun joueur connecté éligible à la réaffectation.</p>':""}${!offline.length?'<p class="muted">Aucun profil joueur hors ligne.</p>':""}`);
 };
-window.renderMergeTargetOptions=()=>{};
 window.mergeParticipantHistory=async()=>{
  if(myRole!=="gm") return;
  const sourceId=$("mergeOnline")?.value,targetId=$("mergeOffline")?.value;
  const source=participants.find(p=>p.id===sourceId),target=participants.find(p=>p.id===targetId);
- if(!source||!target||!participantIsOnline(source)||participantIsOnline(target)){alert("Choisissez un participant réellement en ligne et un profil hors ligne.");return;}
- if(!confirm(`Fusionner les données de « ${target.display_name} » (hors ligne) dans « ${source.display_name} » (en ligne) ?\n\nSeul « ${source.display_name} » restera dans la liste des profils actifs. Le profil historique sera archivé, sans effacement physique des sauvegardes.`))return;
+ if(!source||!target||source.role==="gm"||target.role==="gm"||!participantIsOnline(source)||participantIsOnline(target)){alert("Choisissez un joueur en ligne et un personnage hors ligne.");return;}
+ if(!confirm(`Réaffecter l'historique, les favoris et le portrait de « ${target.display_name} » à « ${source.display_name} » ?\n\nLe profil historique sera archivé.`))return;
  try{
   const {error}=await supabase.rpc("merge_dice_participant_history",{p_online_participant_id:sourceId,p_offline_participant_id:targetId});
   if(error)throw error;
   closeModal();await loadPeople();await loadFavorites();await loadHistory();
-  toast("Historique récupéré par "+(source.display_name||"le participant"));
- }catch(e){alert("Fusion impossible : "+(e.message||e));}
+  toast("Profil et historique réaffectés");
+ }catch(e){alert("Réaffectation impossible : "+(e.message||e));}
+};
+window.deleteOfflineParticipant=async()=>{
+ if(myRole!=="gm") return;
+ const id=$("mergeOffline")?.value;
+ const p=participants.find(x=>x.id===id);
+ if(!p||p.role==="gm"||participantIsOnline(p)){alert("Sélectionnez un personnage hors ligne.");return;}
+ if(!confirm(`Supprimer « ${p.display_name} » (${p.character_name||"personnage"}) de cette partie ?\n\nSes favoris seront supprimés. Ses jets resteront dans l'historique sans être réaffectés. Cette action ne peut pas être annulée depuis l'interface.`))return;
+ try{
+  const {error}=await supabase.rpc("delete_dice_offline_participant",{p_participant_id:id});
+  if(error)throw error;
+  closeModal();await loadPeople();await loadFavorites();await loadHistory();
+  toast("Profil hors ligne supprimé de la liste");
+ }catch(e){alert("Suppression impossible : "+(e.message||e));}
 };
 window.confirmNewParticipant=async id=>{
  if(myRole!=="gm") return;
@@ -3335,9 +3347,44 @@ async function renderAdmin(){
 }
 window.adminToggle=async(id,active)=>{if(!confirm(active?"Réactiver cette table ?":"Désactiver cette table ?"))return;await supabase.rpc("admin_set_dice_channel_active",{p_channel_id:id,p_active:active});renderAdmin()};
 window.adminDelete=async(id,name)=>{if(!confirm(`Supprimer définitivement « ${name} » et tout son historique ?`))return;await supabase.rpc("admin_delete_dice_channel",{p_channel_id:id});renderAdmin()};
+window.adminParticipantManager=async cid=>{
+ try{
+  const {data,error}=await supabase.rpc("admin_get_dice_participant_profiles",{p_channel_id:cid});
+  if(error)throw error;
+  const profiles=data||[];
+  const eligible=profiles.filter(p=>p.role!=="gm"&&p.assigned_user_id);
+  const archivedCandidates=profiles.filter(p=>p.role!=="gm" && (String(cid)===String(channelId)?!participantIsOnline(p):(!p.last_seen_at || Date.now()-new Date(p.last_seen_at).getTime()>120000)));
+  modal("Administration — profils persistants",`
+   <p class="muted">Le statut hors ligne est vérifié via Presence dans la partie actuellement ouverte. Pour une autre partie, il est estimé par la dernière connexion enregistrée : vérifiez avant de confirmer.</p>
+   <label>Joueur destinataire (compte attribué)</label>
+   <select id="adminMergeLive">${eligible.map(p=>`<option value="${p.id}">${esc(p.display_name)} — ${esc(p.character_name||"")}</option>`).join("")}</select>
+   <label>Profil source hors ligne</label>
+   <select id="adminMergeOld">${archivedCandidates.map(p=>`<option value="${p.id}">${esc(p.display_name)} — ${esc(p.character_name||"")}</option>`).join("")}</select>
+   <p class="muted" style="font-size:.75rem">Réaffecter transfère le portrait, les favoris et les jets. Supprimer archive le profil et retire ses favoris, sans transférer ses jets.</p>
+   <div class="actions"><button class="btn primary" ${eligible.length&&archivedCandidates.length?"":"disabled"} onclick="adminProfileMerge('${cid}')">Réaffecter</button><button class="btn red" ${archivedCandidates.length?"":"disabled"} onclick="adminProfileDelete('${cid}')">Supprimer le profil</button><button class="btn" onclick="renderAdmin()">Retour</button></div>`);
+ }catch(e){alert("Profils indisponibles : "+(e.message||e));}
+};
+window.adminProfileMerge=async cid=>{
+ const liveId=$("adminMergeLive")?.value,oldId=$("adminMergeOld")?.value;
+ if(!liveId||!oldId||liveId===oldId){alert("Choisissez deux profils différents.");return;}
+ if(!confirm("Réaffecter définitivement historique, favoris et portrait au compte destinataire ?"))return;
+ const {error}=await supabase.rpc("admin_merge_dice_participant_history",{p_online_participant_id:liveId,p_offline_participant_id:oldId});
+ if(error){alert("Réaffectation impossible : "+error.message);return;}
+ if(String(cid)===String(channelId)){await loadPeople();await loadFavorites();await loadHistory();}
+ await adminParticipantManager(cid);
+};
+window.adminProfileDelete=async cid=>{
+ const oldId=$("adminMergeOld")?.value;
+ if(!oldId)return;
+ if(!confirm("Archiver ce profil hors ligne et supprimer ses favoris ? Les jets restent dans le journal collectif."))return;
+ const {error}=await supabase.rpc("admin_delete_dice_offline_participant",{p_participant_id:oldId});
+ if(error){alert("Suppression impossible : "+error.message);return;}
+ if(String(cid)===String(channelId)){await loadPeople();await loadFavorites();await loadHistory();}
+ await adminParticipantManager(cid);
+};
 window.adminMembers=async id=>{
  const {data,error}=await supabase.rpc("admin_list_dice_channel_members",{p_channel_id:id});if(error)return;
- $("am-"+id).innerHTML=(data||[]).map(m=>`<div class="member-row"><div><strong>${esc(m.role==="gm"?"MJ":m.character_name||"Joueur")}</strong> <span class="muted">(${esc(m.display_name)})</span></div><div><button class="btn small" onclick="adminRole('${id}','${m.user_id}','${m.role==="gm"?"player":"gm"}')">${m.role==="gm"?"→ Joueur":"→ MJ"}</button> <button class="btn red small" onclick="adminRemove('${id}','${m.user_id}')">Retirer</button></div></div>`).join("");
+ $("am-"+id).innerHTML=`<div class="actions"><button class="btn small primary" onclick="adminParticipantManager('${id}')">Gérer les profils persistants</button></div>`+(data||[]).map(m=>`<div class="member-row"><div><strong>${esc(m.role==="gm"?"MJ":m.character_name||"Joueur")}</strong> <span class="muted">(${esc(m.display_name)})</span></div><div><button class="btn small" onclick="adminRole('${id}','${m.user_id}','${m.role==="gm"?"player":"gm"}')">${m.role==="gm"?"→ Joueur":"→ MJ"}</button> <button class="btn red small" onclick="adminRemove('${id}','${m.user_id}')">Retirer l’accès</button></div></div>`).join("");
 };
 window.adminRole=async(cid,uid,role)=>{await supabase.rpc("admin_set_dice_channel_member_role",{p_channel_id:cid,p_user_id:uid,p_role:role});adminMembers(cid)};
 window.adminRemove=async(cid,uid)=>{if(!confirm("Retirer ce participant ?"))return;await supabase.rpc("admin_remove_dice_channel_member",{p_channel_id:cid,p_user_id:uid});adminMembers(cid)};
