@@ -8060,7 +8060,7 @@ function renderXP(){
   const faithUp=$("#faithUp"),faithDown=$("#faithDown");
   if(faithUp) faithUp.onclick=()=>{character.meritsFlaws.faith=Math.min(10,character.meritsFlaws.faith+1);saveCharacter();renderXP();};
   if(faithDown) faithDown.onclick=()=>{character.meritsFlaws.faith=Math.max(1,character.meritsFlaws.faith-1);saveCharacter();renderXP();};
-  $$(".xpBuy").forEach(b=>b.onclick=()=>purchaseXP(b.dataset.kind,b.dataset.id||null));
+  $$(".xpBuyq").forEach(b=>b.onclick=()=>purchaseXP(b.dataset.kind,b.dataset.id||null));
   bindValerenOrientation(s,()=>renderXP());
   const valerenRaiseBtn=$(".valerenRaise",s); if(valerenRaiseBtn) valerenRaiseBtn.onclick=()=>buyValerenRating();
   $$(".valerenSecondaryBuy",s).forEach(b=>b.onclick=()=>buyValerenSecondary(b.dataset.id));
