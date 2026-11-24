@@ -739,6 +739,13 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
             <button class="btn-circle" style="width:24px;height:24px;font-size:13px;" onclick="adjustStatInGame('taint', 0.1)">+</button>
           </div>
 
+          <div class="stat-pill-editable" title="Points de Vide courants (cliquer - / + pour dépenser ou récupérer)" style="border-color:var(--c-void);">
+            <span style="color:var(--c-void);">Vide Actuel</span>
+            <button class="btn-circle" style="width:24px;height:24px;font-size:13px;" type="button" onclick="adjustCurrentVoid(-1)">-</button>
+            <strong id="liveCurrentVoidVal" style="color:var(--c-void);">2 / 2</strong>
+            <button class="btn-circle" style="width:24px;height:24px;font-size:13px;" type="button" onclick="adjustCurrentVoid(1)">+</button>
+          </div>
+
           <div class="stat-pill-editable" title="Réputation (Insight) calculée" style="border-color:var(--gold);">
             <span>Réputation</span>
             <strong id="liveInsightVal" style="color:var(--gold);">120</strong>
@@ -752,6 +759,20 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
 
       <!-- LES 8 TRAITS ASSOCIÉS EN CARTES ÉLÉMENTAIRES AVEC CONTRÔLES EN JEU -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;" class="grid-two-mobile" id="sheetTraitsGrid"></div>
+    </div>
+
+    <!-- TECHNIQUES & POUVOIRS DE L'ÉCOLE (RANGS 1 À 5) -->
+    <div class="card" id="schoolTechniquesSection" style="margin-top:14px;">
+      <div class="card-header" style="flex-wrap:wrap;gap:8px;">
+        <div>
+          <h2>Techniques & Pouvoirs de l'École : <span id="sheetSchoolNameHeader" style="color:var(--gold);">École</span></h2>
+          <small class="card-sub" id="sheetSchoolAffinitySub">Type & Affinité de l'école</small>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="badge gold" id="sheetSchoolRankBadgeTechniques">Rang 1</span>
+        </div>
+      </div>
+      <div id="sheetSchoolTechniquesContainer" style="display:flex;flex-direction:column;gap:10px;margin-top:10px;"></div>
     </div>
 
     <!-- LA GRANDE TABLE COMPLETE DES COMPETENCES DIRECTEMENT SOUS LES ANNEAUX -->
@@ -903,42 +924,87 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
 
   <!-- 4. VUE PROGRESSION XP -->
   <section id="screen-xp" class="screen">
+    <!-- CARTE 1 : SOLDE & ATTRIBUTION D'EXPÉRIENCE -->
+    <div class="card">
+      <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2>Progression & Expérience</h2>
+          <small class="card-sub">Système officiel de progression L5A 1ère Édition (Livre de Base p. 64)</small>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:22px;font-weight:bold;color:var(--gold);" id="xpAvailableDisplay">0 XP disponibles</div>
+          <small style="color:var(--ink-muted);" id="xpTotalsSub">Total acquis : 0 XP · Total dépensé : 0 XP</small>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;background:var(--panel-sub);padding:14px;border-radius:8px;border:1px solid var(--line);">
+        <h3 style="margin-bottom:10px;font-size:15px;color:#fff;">Ajouter des Points d'Expérience (Attribution MJ)</h3>
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:12px;" class="grid-two-mobile">
+          <div>
+            <label style="display:block;margin-bottom:4px;font-size:12px;color:var(--ink-muted);">Nombre d'XP</label>
+            <input type="number" id="xpAward" min="1" value="1" style="width:100%;padding:8px;background:#111;border:1px solid var(--gold);border-radius:6px;color:#fff;font-size:15px;font-weight:bold;">
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:4px;font-size:12px;color:var(--ink-muted);">Commentaire / Motif d'attribution</label>
+            <input type="text" id="xpComment" placeholder="Session 1, duel d'honneur gagné, récompense du daimyō..." style="width:100%;padding:8px;background:#111;border:1px solid var(--line);border-radius:6px;color:#fff;font-size:13.5px;">
+          </div>
+        </div>
+        <button class="btn primary" type="button" style="width:100%;margin-top:12px;" id="xpAddBtn" onclick="addExperienceAward()">Ajouter au suivi d'expérience</button>
+      </div>
+
+      <div class="notice-box" style="margin-top:14px;">
+        <strong>Barème officiel des coûts en Points d'Expérience (Livre de Base p. 64) :</strong><br>
+        • <strong>Acquérir une nouvelle compétence au rang 1 :</strong> 1 XP<br>
+        • <strong>Augmenter le rang d'une compétence :</strong> Nombre de points égal au nouveau rang souhaité (ex. rang 1 ➔ 2 = 2 XP, rang 2 ➔ 3 = 3 XP)<br>
+        • <strong>Augmenter un Trait ou l'Anneau du Vide :</strong> Nombre de points égal au nouveau rang souhaité × 4 (ex. rang 2 ➔ 3 = 12 XP, rang 3 ➔ 4 = 16 XP)<br>
+        • <strong>Montée de Rang d'École :</strong> Automatique dès que la Réputation (Insight) atteint les seuils (Rang 2 à 150, Rang 3 à 175, Rang 4 à 200, Rang 5 à 225).
+      </div>
+    </div>
+
+    <!-- CARTE 2 : DÉPENSES D'XP SUR LES TRAITS ET COMPÉTENCES -->
     <div class="card">
       <div class="card-header">
-        <h2>Progression & Dépenses d'Expérience (XP)</h2>
-        <div>
-          <button class="btn sm gold" type="button" onclick="promptAddXp()">➕ Ajouter de l'XP</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-        <div class="badge gold" style="font-size:14px;padding:6px 12px;">XP Total Gagné : <strong id="xpTotalEarned">0</strong></div>
-        <div class="badge crimson" style="font-size:14px;padding:6px 12px;">XP Dépensé : <strong id="xpTotalSpent">0</strong></div>
-        <div class="badge" style="font-size:14px;padding:6px 12px;border-color:var(--gold);color:#fff;">XP DISPONIBLE : <strong id="xpAvailVal">0</strong></div>
+        <h2>Dépenser de l'Expérience</h2>
+        <span class="badge gold">Amélioration du Samouraï</span>
       </div>
 
-      <div class="notice-box">
-        <strong>Barème officiel des Coûts d'XP (Livre de Base p. 64) :</strong><br>
-        • Nouvelle compétence au rang 1 : <strong>1 XP</strong><br>
-        • Augmenter une compétence : <strong>Nouveau rang en XP</strong> (ex. rang 1 ➔ 2 = 2 XP)<br>
-        • Augmenter un Trait ou le Vide : <strong>Nouveau rang × 4 en XP</strong> (ex. rang 2 ➔ 3 = 12 XP)<br>
-        • Dès que votre Réputation atteint 150 points, vous accédez au <strong>Rang de Maîtrise 2</strong> !
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="grid-two-mobile">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="grid-two-mobile">
+        <!-- AMÉLIORER UN TRAIT -->
         <div>
-          <h3>Améliorer un Trait ou le Vide</h3>
-          <div id="xpTraitBuyList"></div>
+          <h3 style="margin-bottom:10px;font-size:16px;color:var(--gold);">Augmenter un Trait ou le Vide</h3>
+          <small style="color:var(--ink-muted);display:block;margin-bottom:10px;">Coût = (Nouveau Score × 4) XP</small>
+          <div id="xpTraitsUpgradeList" style="display:flex;flex-direction:column;gap:8px;"></div>
         </div>
-        <div>
-          <h3>Améliorer une Compétence</h3>
-          <div id="xpSkillBuyList"></div>
-        </div>
-      </div>
 
-      <div style="margin-top:16px;">
-        <h3>Historique des Dépenses d'XP</h3>
-        <div id="xpLedgerHistory" style="font-size:13px;color:var(--ink-muted);"></div>
+        <!-- AMÉLIORER OU ACQUÉRIR UNE COMPÉTENCE -->
+        <div>
+          <h3 style="margin-bottom:10px;font-size:16px;color:var(--gold);">Augmenter ou Acquérir une Compétence</h3>
+          <small style="color:var(--ink-muted);display:block;margin-bottom:10px;">Coût = 1 XP (rang 1) ou Nouveau Rang en XP</small>
+
+          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+            <input type="text" id="xpSkillFilterInput" placeholder="Rechercher une compétence..." style="flex:1;min-width:140px;padding:6px 8px;background:#111;border:1px solid var(--line);border-radius:6px;color:#fff;font-size:12.5px;" oninput="renderXpSkillsList()">
+            <select id="xpSkillCategorySelect" style="padding:6px 8px;background:#111;border:1px solid var(--line);border-radius:6px;color:#fff;font-size:12px;" onchange="renderXpSkillsList()">
+              <option value="all">Toutes (38)</option>
+              <option value="trained">Acquises uniquement</option>
+              <option value="bugei">Bugei</option>
+              <option value="valorisante">Valorisante</option>
+              <option value="marchand">Marchande</option>
+              <option value="devalorisante">Dévalorisante</option>
+            </select>
+          </div>
+
+          <div id="xpSkillsUpgradeList" style="display:flex;flex-direction:column;gap:8px;max-height:480px;overflow-y:auto;padding-right:4px;"></div>
+        </div>
       </div>
+    </div>
+
+    <!-- CARTE 3 : HISTORIQUE COMPLET (LEDGER) -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Suivi d'Expérience (Historique)</h2>
+        <span class="badge" style="color:var(--ink-muted);">Journal des attributions & dépenses</span>
+      </div>
+      <div id="xpLedgerContainer" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
     </div>
   </section>
 
@@ -1485,7 +1551,36 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Voie du Crabe",
       "techniqueSummary": "Ignore les malus d'armure lourde et ajoute sa Terre aux jets de dommages.",
       "techniqueDesc": "Les guerriers Hida s'entraînent jour et nuit en armure de fer. En conséquence :\n1. Ils ne subissent aucun des malus habituels de fatigue ou de mobilité liés au port d'une armure lourde (qui confère son plein bonus de +10 au ND pour être touché sans pénalité physique).\n2. Quand il combat avec une arme lourde ou un sabre, le Bushi Hida ajoute son Rang de Terre à ses jets de dommages (en points bruts de dégâts).",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "affinity": "Bushi",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie du Crabe",
+          "desc": "Le bushi ajoute son rang de Terre à tous ses jets d'attaque et de dégâts. De plus, il n'est pas ralenti par le port des armures lourdes."
+        },
+        {
+          "rank": 2,
+          "name": "La Montagne ne tremble pas",
+          "desc": "Le bushi ignore un niveau de malus de blessures égal à son rang de Terre. Il ne peut être jeté à terre ou déséquilibré par un coup ordinaire."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "L'entraînement impitoyable sur le Mur permet au bushi de porter deux attaques complètes par tour de combat."
+        },
+        {
+          "rank": 4,
+          "name": "La Poigne du Crabe",
+          "desc": "Le bushi garde un dé supplémentaire (+1g0) sur tous ses jets de dommages avec des armes lourdes ou au corps à corps."
+        },
+        {
+          "rank": 5,
+          "name": "L'Inébranlable rempart",
+          "desc": "Une fois par combat, le bushi peut dépenser un point de Vide pour annuler intégralement les dommages d'une attaque subie."
+        }
+      ]
     },
     {
       "id": "crabe_shugenja",
@@ -1531,7 +1626,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "Magie Inquisitrice des Kuni",
       "techniqueSummary": "Affinité Terre (1 augmentation gratuite), Déficience Air.",
       "techniqueDesc": "Les prêtres Kuni bénéficient d'une Augmentation gratuite pour tous les sorts de l'élément Terre. En revanche, ils ont une Déficience en Air : les sorts d'Air requièrent un dé de moins ou augmentent le ND d'incantation de +5.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Pouvoir des Kamis de la Terre",
+          "desc": "Une augmentation gratuite sur tous les sorts de l'élément Terre. Le shugenja peut sentir la présence de la Souillure de l'Outremonde à portée de vue."
+        },
+        {
+          "rank": 2,
+          "name": "Résistance aux Ténèbres",
+          "desc": "Le Kuni ajoute son rang de Maîtrise à tous ses jets de résistance contre la Souillure, la magie maho et les poisons."
+        },
+        {
+          "rank": 3,
+          "name": "Pacte de la Pierre",
+          "desc": "Le shugenja peut dépenser un point de Vide pour doubler la portée ou la durée d'un sort de Terre."
+        },
+        {
+          "rank": 4,
+          "name": "L'Écorce d'obsidienne",
+          "desc": "Les sorts de protection de Terre accordent +5 d'armure naturelle supplémentaire contre les créatures souillées."
+        },
+        {
+          "rank": 5,
+          "name": "La Colère de Jigoku réprimée",
+          "desc": "Le shugenja peut chasser la corruption en consacrant une zone sacrée infranchissable par les oni mineurs."
+        }
+      ]
     },
     {
       "id": "grue_bushi",
@@ -1578,6 +1700,35 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "filter": "valorisante",
           "default": "Musique"
         }
+      ],
+      "affinity": "Bushi",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie de la Grue",
+          "desc": "Le bushi ajoute son rang d'Iaijutsu à son initiative. Lors d'un duel ou au premier tour de combat, il peut utiliser Iaijutsu à la place de Kenjutsu."
+        },
+        {
+          "rank": 2,
+          "name": "La Frappe soudaine",
+          "desc": "Le bushi ajoute son rang de Maîtrise d'école à tous ses jets de dommages au sabre lorsqu'il attaque avec rapidité."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "La perfection du geste Kakita permet au bushi de porter deux attaques complètes par tour de combat."
+        },
+        {
+          "rank": 4,
+          "name": "La Lame de l'harmonie",
+          "desc": "Le bushi peut ajouter son rang de Vide au résultat de ses jets d'attaque en Kenjutsu ou Iaijutsu."
+        },
+        {
+          "rank": 5,
+          "name": "La Frappe sans pensée (Musha Shugyo)",
+          "desc": "En duel d'Iaijutsu, l'adversaire ne peut focaliser plus de fois que le score de Réflexes du Kakita."
+        }
       ]
     },
     {
@@ -1589,7 +1740,7 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "bonusLabel": "+1 Intelligence",
       "honor": 3.5,
       "affinity": "Air",
-      "deficiency": "Terre",
+      "deficiency": "Feu",
       "outfit": "Robes de soie blanches, sacoche à parchemins avec rubans de prière, wakizashi, nécessaire de calligraphie, éventail noble, 8 koku.",
       "skills": [
         {
@@ -1624,7 +1775,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "Bénédiction Céleste des Asahina",
       "techniqueSummary": "Affinité Air (1 augmentation gratuite), Déficience Terre.",
       "techniqueDesc": "Les shugenjas Asahina bénéficient d'une Augmentation gratuite pour tous les sorts de l'élément Air (protection, communication, apaisement). En revanche, ils ont une Déficience en Terre (difficulté à manier les sorts destructeurs de pierre et de métal).",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Bénédiction des Vents doux",
+          "desc": "Une augmentation gratuite sur tous les sorts de l'Air. Capacité de fabriquer des fétiches pacifiques (tsangusuri)."
+        },
+        {
+          "rank": 2,
+          "name": "Souffle de sérénité",
+          "desc": "Le shugenja peut calmer les esprits agités et dissiper les effets de Peur dans un rayon de son rang d'Air x 5 mètres."
+        },
+        {
+          "rank": 3,
+          "name": "Murmures célestes",
+          "desc": "Peut communiquer par télépathie avec un allié visible en dépensant un point de Vide."
+        },
+        {
+          "rank": 4,
+          "name": "Le Bouclier de brume",
+          "desc": "Les sorts d'Air défensifs augmentent le ND pour être touché des alliés protégés de +5."
+        },
+        {
+          "rank": 5,
+          "name": "L'Envol de la Grue",
+          "desc": "Le shugenja peut invoquer les grands vents pour léviter ou transporter un groupe en douceur sur de longues distances."
+        }
+      ]
     },
     {
       "id": "dragon_bushi",
@@ -1670,6 +1848,35 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "label": "Compétence valorisante d'école au choix",
           "filter": "valorisante",
           "default": "Poésie"
+        }
+      ],
+      "affinity": "Bushi",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Technique du Daisho (Niten)",
+          "desc": "Le bushi manie le katana et le wakizashi simultanément. Son ND pour être touché est augmenté de 5 quand il utilise cette posture à deux sabres."
+        },
+        {
+          "rank": 2,
+          "name": "Le Tranchant d'Acier",
+          "desc": "Le bushi ignore les malus d'obscurité ou de terrain difficile et réduit les pénalités de visée."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "Le bushi peut porter deux attaques par tour : une avec le katana et une avec le wakizashi."
+        },
+        {
+          "rank": 4,
+          "name": "L'Harmonie des Deux Lames",
+          "desc": "Le bushi ajoute son rang de Feu à ses jets d'attaque et de défense lorsqu'il combat avec ses deux armes."
+        },
+        {
+          "rank": 5,
+          "name": "La Danse des Dragons jumeaux",
+          "desc": "Le bushi peut porter ses deux attaques sur deux cibles distinctes sans malus et bénéficie d'une augmentation gratuite sur chacune."
         }
       ]
     },
@@ -1717,7 +1924,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "Secrets Alchimiques des Agasha",
       "techniqueSummary": "Affinité Feu (1 augmentation gratuite), Déficience Eau.",
       "techniqueDesc": "Les shugenjas Agasha bénéficient d'une Augmentation gratuite pour tous les sorts de l'élément Feu. En revanche, ils ont une Déficience en Eau.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Le Souffle du Dragon Ardent",
+          "desc": "Une augmentation gratuite sur tous les sorts de Feu. Connaissance des mélanges alchimiques et transmutation des éléments."
+        },
+        {
+          "rank": 2,
+          "name": "La Forge de l'Esprit",
+          "desc": "Peut altérer l'élément d'un sort mineur pour le lancer via un autre élément sans malus de déficience."
+        },
+        {
+          "rank": 3,
+          "name": "Le Regard incandescent",
+          "desc": "Les sorts offensifs de Feu infligent +1 dé gardé de dommages supplémentaires."
+        },
+        {
+          "rank": 4,
+          "name": "L'Harmonie minérale",
+          "desc": "Peut fondre ou modeler le métal et la pierre par simple contact rituel."
+        },
+        {
+          "rank": 5,
+          "name": "Le Cœur de la Montagne de feu",
+          "desc": "Immunité totale aux flammes naturelles et résistance magique accrue contre les sorts élémentaires opposés."
+        }
+      ]
     },
     {
       "id": "dragon_monk",
@@ -1764,6 +1998,35 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "filter": "marchand",
           "default": "Survie"
         }
+      ],
+      "affinity": "Moine Tatoué",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Premiers Tatouages du Dragon",
+          "desc": "L'Ise Zumi commence avec 2 tatouages magiques (ex. Aiguille, Dragon, Nuage, Flamme, Épée, Singe) activables par points de Vide."
+        },
+        {
+          "rank": 2,
+          "name": "Éveil corporel",
+          "desc": "Reçoit 1 nouveau tatouage. Les attaques à mains nues infligent 0g2 de dégâts et comptent comme des armes magiques."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "Reçoit 1 nouveau tatouage. L'Ise Zumi peut porter deux attaques à mains nues par tour."
+        },
+        {
+          "rank": 4,
+          "name": "Communion du Tao",
+          "desc": "Reçoit 1 nouveau tatouage. Peut maintenir l'effet d'un tatouage pour deux fois sa durée normale."
+        },
+        {
+          "rank": 5,
+          "name": "Transcendance de Togashi",
+          "desc": "Reçoit 1 nouveau tatouage. Peut activer deux tatouages simultanément en dépensant un unique point de Vide."
+        }
       ]
     },
     {
@@ -1808,7 +2071,36 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Voie du Lion",
       "techniqueSummary": "Relance 1 attaque ratée par tour et ajoute son Kenjutsu à l'initiative.",
       "techniqueDesc": "L'école Akodo enseigne la perfection du timing et le commandement :\n1. Une fois par round de combat, le Bushi Akodo peut relancer un jet d'attaque au corps à corps qui vient d'échouer (il garde le second résultat).\n2. Il ajoute son Rang dans la compétence Kenjutsu à tous ses jets d'Initiative en combat.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "affinity": "Bushi",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie du Lion",
+          "desc": "L'école Akodo enseigne la précision. Le bushi ne tient pas compte de l'armure de son adversaire OU (s'il préfère) bénéficie d'une augmentation gratuite à son attaque."
+        },
+        {
+          "rank": 2,
+          "name": "La Force de la pureté",
+          "desc": "Un cœur juste guide la lame. Le bushi ajoute son rang d'Honneur au résultat de son jet d'attaque."
+        },
+        {
+          "rank": 3,
+          "name": "Par la force de mes ancêtres",
+          "desc": "Le bushi peut attaquer deux fois par tour : une fois pour lui-même et une fois pour la gloire de ses aïeux."
+        },
+        {
+          "rank": 4,
+          "name": "L'Onde de choc tactique",
+          "desc": "Le bushi ajoute son rang de Maîtrise d'école à tous ses jets de dommages avec une arme de bugei."
+        },
+        {
+          "rank": 5,
+          "name": "L'Ultime clarté d'Akodo",
+          "desc": "Le bushi peut relancer un dé raté sur n'importe quel jet d'attaque ou de manœuvre de combat."
+        }
+      ]
     },
     {
       "id": "lion_bushi_matsu",
@@ -1852,7 +2144,36 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Fureur de Matsu",
       "techniqueSummary": "Charge dévastatrice : ajoute sa Force aux jets d'attaque et ignore la peur.",
       "techniqueDesc": "Les guerriers Matsu canalisent la rage du Lion :\n1. Ils sont totalement immunisés aux effets de Peur de rang 1 et 2.\n2. Lorsqu'ils adoptent une posture d'Attaque Totale ou chargent, ils ajoutent leur Rang de Force à leurs jets d'attaque au sabre.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "affinity": "Bushi Berserker",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Le Rugissement du Lion",
+          "desc": "Le bushi génère un effet de Peur égal à (Rang de Maîtrise + 1). Au premier round de combat, il ajoute +1g0 à son jet d'attaque."
+        },
+        {
+          "rank": 2,
+          "name": "La Fureur guerrière",
+          "desc": "Ajoute son score de Force aux dégâts infligés au katana ou no-dachi lorsqu'il est en posture d'attaque totale."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "Le guerrier Matsu peut porter deux attaques complètes par tour de combat."
+        },
+        {
+          "rank": 4,
+          "name": "L'Inextinguible bravoure",
+          "desc": "Ignore tous les malus de blessures tant qu'il se trouve dans les trois premiers niveaux de dommage (Indemne, Égratigné, Blessé)."
+        },
+        {
+          "rank": 5,
+          "name": "La Tempête Matsu",
+          "desc": "Si une attaque du berserker touche et inflige des dégâts, il peut déclencher immédiatement une frappe supplémentaire gratuite."
+        }
+      ]
     },
     {
       "id": "lion_shugenja",
@@ -1862,8 +2183,8 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "bonusTrait": "willpower",
       "bonusLabel": "+1 Volonté",
       "honor": 3.5,
-      "affinity": "Terre",
-      "deficiency": "Air",
+      "affinity": "Eau",
+      "deficiency": "Feu",
       "outfit": "Robes de soie jaune safran, sacoche à parchemins gravée du mon du Lion, wakizashi, nécessaire de calligraphie, 6 koku.",
       "skills": [
         {
@@ -1898,7 +2219,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Voix des Ancêtres",
       "techniqueSummary": "Affinité Terre (1 augmentation gratuite), Déficience Air. Communion avec les ancêtres.",
       "techniqueDesc": "Les prêtres Kitsu bénéficient d'une Augmentation gratuite pour tous les sorts de Terre. De plus, ils peuvent dépenser un point de Vide pour interroger l'esprit d'un ancêtre de la famille lors d'une méditation de 10 minutes.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "L'Appel des Ancêtres",
+          "desc": "Une augmentation gratuite sur les sorts d'Eau. Les Kitsu peuvent voir et communiquer avec les esprits de leurs ancêtres honorés."
+        },
+        {
+          "rank": 2,
+          "name": "La Voix du Sang",
+          "desc": "Peut demander conseil à un ancêtre une fois par jour pour recevoir un bonus de +2g1 sur un jet de compétence noble ou martiale."
+        },
+        {
+          "rank": 3,
+          "name": "La Vague protectrice",
+          "desc": "Les sorts d'Eau de guérison soignent un niveau de blessure supplémentaire sans dépense additionnelle."
+        },
+        {
+          "rank": 4,
+          "name": "Bénédiction du Fleuve éternel",
+          "desc": "Peut purifier l'eau ou dissiper la fatigue d'un régiment entier lors des marches militaires."
+        },
+        {
+          "rank": 5,
+          "name": "L'Armée spirituelle de Kitsu",
+          "desc": "Peut manifester temporairement la présence guerrière d'un ancêtre héroïque sur le champ de bataille."
+        }
+      ]
     },
     {
       "id": "phenix_bushi",
@@ -1942,7 +2290,36 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Voie du Phénix",
       "techniqueSummary": "Sacrifice protecteur : utilise ses points de Vide pour augmenter les jets d'un allié ou sa défense.",
       "techniqueDesc": "Le garde du corps Shiba voue son existence à la protection d'autrui :\n1. Il peut dépenser ses propres points de Vide au bénéfice d'un shugenja ou d'un allié proche pour augmenter le jet de celui-ci (+1g1).\n2. En posture de Défense, il ajoute son Rang de Volonté à son ND pour être touché.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "affinity": "Bushi Gardien",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie du Phénix",
+          "desc": "Le bushi ajoute son rang de Vide à ses jets d'attaque et de dommages. Il peut dépenser un point de Vide pour encaisser une attaque à la place de son shugenja protégé."
+        },
+        {
+          "rank": 2,
+          "name": "La Sérénité du Gardien",
+          "desc": "Le ND pour parer et défendre les autres est réduit de 5. Le bushi reste calme face aux provocations."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "Le bushi peut porter deux attaques par tour de combat."
+        },
+        {
+          "rank": 4,
+          "name": "La Flamme régénératrice",
+          "desc": "Peut dépenser un point de Vide pour guérir immédiatement un niveau de blessure au terme d'un combat."
+        },
+        {
+          "rank": 5,
+          "name": "Le Bouclier de l'Âme",
+          "desc": "Peut consacrer sa vie pour ériger une barrière spirituelle impénétrable par toute arme ou sort hostile pendant plusieurs minutes."
+        }
+      ]
     },
     {
       "id": "phenix_shugenja",
@@ -1952,7 +2329,7 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "bonusTrait": "willpower",
       "bonusLabel": "+1 Volonté",
       "honor": 2.5,
-      "affinity": "Tous (Maîtres Élémentaires)",
+      "affinity": "Tous les 4 Éléments (Terre, Eau, Feu, Air)",
       "deficiency": "Aucune",
       "outfit": "Robes de soie écarlate brodées des symboles des cinq éléments, sacoche à parchemins précieuse, wakizashi cérémoniel, nécessaire de calligraphie d'ébène, 10 koku.",
       "skills": [
@@ -1990,6 +2367,33 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "label": "Compétence de Connaissance au choix",
           "filter": "connaissance",
           "default": "Connaissance : Ancêtres"
+        }
+      ],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Maîtrise Universelle des Éléments",
+          "desc": "Les Isawa n'ont aucune déficience élémentaire. Ils peuvent dépenser tous leurs points de Vide disponibles pour faciliter le lancement d'un sort."
+        },
+        {
+          "rank": 2,
+          "name": "Harmonie supérieure",
+          "desc": "Une augmentation gratuite sur tous les rituels et sorts où au moins deux shugenja Isawa coopèrent."
+        },
+        {
+          "rank": 3,
+          "name": "Pénétration des Arcanes",
+          "desc": "Réduit de 5 le ND de lancement de n'importe quel sort élémentaire maîtrisé."
+        },
+        {
+          "rank": 4,
+          "name": "Les Mystères du Vide (Ishiken)",
+          "desc": "Accès à la magie du Vide et capacité de manipuler le flux cosmique entre les dimensions."
+        },
+        {
+          "rank": 5,
+          "name": "L'Unité Primordiale",
+          "desc": "Peut relancer l'ensemble des dés ratés sur n'importe quel jet de magie élémentaire."
         }
       ]
     },
@@ -2035,7 +2439,36 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Voie du Scorpion",
       "techniqueSummary": "Frappe sournoise : ajoute son Iaijutsu à l'initiative et feinte mortelle au combat.",
       "techniqueDesc": "Les bretteurs Bayushi combattent sans fausse pudeur :\n1. Ils ajoutent leur Rang de Iaijutsu à leur jet d'Initiative.\n2. Au premier round de combat, ils peuvent effectuer une feinte : l'adversaire voit son ND pour être touché réduit de la valeur de Sincérité/Tromperie du Bushi Bayushi pour la première attaque.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "affinity": "Bushi",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie du Scorpion",
+          "desc": "Jetez et gardez deux dés supplémentaires (+2g2) pour déterminer l'Initiative. Le bushi n'a aucun scrupule à attaquer par surprise."
+        },
+        {
+          "rank": 2,
+          "name": "La Feinte perfide",
+          "desc": "Si le bushi rate une attaque de 5 ou moins, son adversaire est déstabilisé et subit un malus de -5 à son ND de défense au tour suivant."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "La vivacité insidieuse de l'école Bayushi permet au bushi de porter deux attaques complètes par tour de combat."
+        },
+        {
+          "rank": 4,
+          "name": "La Morsure du Dard",
+          "desc": "L'adversaire touché perd 1 dé sur ses jets d'initiative et d'attaque lors du tour suivant en raison de la douleur vive."
+        },
+        {
+          "rank": 5,
+          "name": "L'Ombre trompeuse",
+          "desc": "Le bushi peut rediriger une attaque ennemie qui l'a manqué sur une autre créature ou adversaire adjacent."
+        }
+      ]
     },
     {
       "id": "scorpion_shugenja",
@@ -2081,7 +2514,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Magie des Ombres",
       "techniqueSummary": "Affinité Air (1 augmentation gratuite pour les sorts d'illusion et de discrétion), Déficience Terre.",
       "techniqueDesc": "Les prêtres Soshi bénéficient d'une Augmentation gratuite pour tous les sorts de l'élément Air, en particulier les illusions et manipulations sensorielles. Déficience en Terre.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Le Voile des Ombres",
+          "desc": "Une augmentation gratuite sur tous les sorts de l'Air. Les sorts de dissimulation et de silence sont particulièrement puissants et indétectables."
+        },
+        {
+          "rank": 2,
+          "name": "Les Yeux de la Nuit",
+          "desc": "Peut voir dans l'obscurité totale et à travers les illusions magiques ou brumes ordinaires."
+        },
+        {
+          "rank": 3,
+          "name": "Murmures empoisonnés",
+          "desc": "Les sorts d'illusion peuvent tromper à la fois la vue, l'ouïe et le toucher sans augmentation requise."
+        },
+        {
+          "rank": 4,
+          "name": "Le Manteau du Fantôme",
+          "desc": "Peut devenir immatériel pendant un round complet en dépensant un point de Vide."
+        },
+        {
+          "rank": 5,
+          "name": "L'Éclipse de Soshi",
+          "desc": "Peut plonger une zone entière dans un silence et une obscurité magique annulant tout lancer de sort adverse."
+        }
+      ]
     },
     {
       "id": "licorne_bushi",
@@ -2128,6 +2588,35 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "filter": "all",
           "default": "Survie"
         }
+      ],
+      "affinity": "Bushi Cavalier",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie de la Licorne",
+          "desc": "Lorsque le bushi monte à cheval, il ajoute son rang d'Équitation au résultat de tous ses autres jets de compétences (y compris combat et tir)."
+        },
+        {
+          "rank": 2,
+          "name": "La Danse de la Lame nomade",
+          "desc": "Le bushi peut frapper tout en continuant son déplacement. Son ND pour être touché augmente de (Réflexes + Équitation) lorsqu'il est à cheval."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "Le bushi peut porter deux attaques complètes par tour (à pied ou monté)."
+        },
+        {
+          "rank": 4,
+          "name": "La Charge des Steppes",
+          "desc": "Les dégâts infligés au premier round d'une charge montée sont multipliés par deux."
+        },
+        {
+          "rank": 5,
+          "name": "L'Âme équestre",
+          "desc": "Le cavalier et sa monture ne font qu'un : la monture gagne les bénéfices des points de Vide dépensés par le cavalier."
+        }
       ]
     },
     {
@@ -2139,7 +2628,7 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "bonusLabel": "+1 Perception",
       "honor": 2.5,
       "affinity": "Eau",
-      "deficiency": "Feu",
+      "deficiency": "Terre",
       "outfit": "Robes de voyage pourpres et blanches, chapeau de feutre des steppes, sacoche à parchemins étanche, wakizashi, cheval de voyage Licorne, 7 koku.",
       "skills": [
         {
@@ -2174,7 +2663,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       "techniqueName": "La Magie Nomade des Iuchi",
       "techniqueSummary": "Affinité Eau (1 augmentation gratuite), Déficience Feu.",
       "techniqueDesc": "Les shugenjas Iuchi bénéficient d'une Augmentation gratuite pour tous les sorts de l'élément Eau (guérison, mouvement, pureté). Déficience en Feu.",
-      "choiceSlots": []
+      "choiceSlots": [],
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Le Pas du Nomade",
+          "desc": "Une augmentation gratuite sur tous les sorts d'Eau. Les Iuchi bénissent leurs montures pour voyager deux fois plus vite sans fatigue."
+        },
+        {
+          "rank": 2,
+          "name": "La Voie des Éléments libres",
+          "desc": "Peut lancer des sorts en galopant à pleine vitesse sans malus de concentration."
+        },
+        {
+          "rank": 3,
+          "name": "La Source vivifiante",
+          "desc": "Peut créer de l'eau pure et potable pour ravitailler une troupe entière dans le désert ou les steppes."
+        },
+        {
+          "rank": 4,
+          "name": "La Chevauchée du Vent et des Flots",
+          "desc": "Les sorts de déplacement et de traversée des cours d'eau affectent tous les alliés proches."
+        },
+        {
+          "rank": 5,
+          "name": "Le Voyage instantané",
+          "desc": "Peut ouvrir un passage élémentaire pour téléporter son groupe d'un point d'eau à un autre à plusieurs lieues de distance."
+        }
+      ]
     },
     {
       "id": "ronin_bushi",
@@ -2223,6 +2739,35 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "filter": "bugei_marchand",
           "default": "Tir à l'arc"
         }
+      ],
+      "affinity": "Guerrier sans maître",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "La Voie de la Lame Errante",
+          "desc": "Le ronin a appris à survivre seul dans les bas-fonds et sur les routes de campagne. Il ne subit pas de malus lorsqu'il combat avec des armes de fortune ou dans des ruelles étroites."
+        },
+        {
+          "rank": 2,
+          "name": "Le Réflexe du Mercenaire",
+          "desc": "Ajoute +1g0 à ses jets d'initiative et peut évaluer la valeur militaire d'un adversaire au premier coup d'œil."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "L'expérience des escarmouches sanglantes permet au ronin de porter deux attaques par tour de combat."
+        },
+        {
+          "rank": 4,
+          "name": "La Ruse du Renégat",
+          "desc": "Peut dépenser un point de Vide pour convertir une attaque réussie en coup critique (dés de dégâts supplémentaires)."
+        },
+        {
+          "rank": 5,
+          "name": "Le Vétéran des Mille Batailles",
+          "desc": "Immunisé à la Peur ordinaire. Lorsqu'il est blessé, il garde un dé d'attaque supplémentaire par rage de survie."
+        }
       ]
     },
     {
@@ -2269,6 +2814,35 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
           "label": "Compétence artisanale au choix",
           "filter": "marchand",
           "default": "Artisanat"
+        }
+      ],
+      "affinity": "Disciple de Shinsei",
+      "deficiency": null,
+      "techniques": [
+        {
+          "rank": 1,
+          "name": "Sagesse du Tao",
+          "desc": "Le moine combat à mains nues ou au bâton (Bojutsu) avec une grâce spirituelle. Ses coups au bâton infligent des dégâts de 2g2 et son ND pour être touché augmente de son rang de Méditation."
+        },
+        {
+          "rank": 2,
+          "name": "L'Éveil intérieur",
+          "desc": "Peut entrer en méditation profonde pendant une heure pour récupérer tous ses points de Vide d'un coup (ND 15 en Méditation)."
+        },
+        {
+          "rank": 3,
+          "name": "Deux attaques par tour",
+          "desc": "Le moine peut porter deux frappes par tour au bâton ou à mains nues."
+        },
+        {
+          "rank": 4,
+          "name": "Le Souffle du Vide (Kiho)",
+          "desc": "Peut canaliser son Vide pour repousser un adversaire de plusieurs mètres ou briser des armes ordinaires à l'impact."
+        },
+        {
+          "rank": 5,
+          "name": "L'Illumination Shinseiste",
+          "desc": "L'âme du moine est inaltérable : immunité aux poisons, aux maladies et résistance absolue aux sortilèges de corruption mentale."
         }
       ]
     }
@@ -4128,11 +4702,17 @@ function renderSheetView() {
   const insight = calcInsight();
   const schoolRank = getSchoolRank();
 
+  // S'assurer que le Vide courant est initialisé
+  if (character.status.currentVoid === undefined) {
+    character.status.currentVoid = rings.void;
+  }
+  const curVoid = character.status.currentVoid;
+
   // En-tête
   document.getElementById("sheetCharTitle").textContent = character.identity.name || "Samouraï sans nom";
   document.getElementById("sheetCharSubTitle").textContent = `${clan ? clan.name : ""} · Famille ${fam ? fam.name : ""} · ${sch ? sch.name : ""} · Rang d'École ${schoolRank}`;
 
-  // Valeurs éditables en direct
+  // Valeurs éditables en direct (Honneur, Gloire, Statut, Souillure)
   document.getElementById("liveHonorVal").textContent = (character.status.honor || 2.5).toFixed(1);
   document.getElementById("liveGloryVal").textContent = (character.status.glory || 1.0).toFixed(1);
   document.getElementById("liveStatusVal").textContent = (character.status.statusRank || 1.0).toFixed(1);
@@ -4140,74 +4720,102 @@ function renderSheetView() {
   document.getElementById("liveInsightVal").textContent = insight;
   document.getElementById("liveSchoolRankBadge").textContent = `Rang ${schoolRank}`;
 
-  // Les 5 Anneaux
+  // Mise à jour de la pastille de Vide courant dans l'en-tête
+  const liveVoidEl = document.getElementById("liveCurrentVoidVal");
+  if (liveVoidEl) {
+    liveVoidEl.textContent = `${curVoid} / ${rings.void}`;
+  }
+
+  // Les 5 Anneaux avec gestion interactive des points de Vide
   document.getElementById("sheetRingsGrid").innerHTML = `
     <div class="ring-card earth"><div class="ring-title" style="color:var(--c-earth)">Terre</div><div class="ring-val">${rings.earth}</div><small style="color:var(--ink-muted)">Const ${rings.stamina} · Vol ${rings.willpower}</small></div>
     <div class="ring-card water"><div class="ring-title" style="color:var(--c-water)">Eau</div><div class="ring-val">${rings.water}</div><small style="color:var(--ink-muted)">Force ${rings.strength} · Perc ${rings.perception}</small></div>
     <div class="ring-card fire"><div class="ring-title" style="color:var(--c-fire)">Feu</div><div class="ring-val">${rings.fire}</div><small style="color:var(--ink-muted)">Agil ${rings.agility} · Int ${rings.intelligence}</small></div>
     <div class="ring-card air"><div class="ring-title" style="color:var(--c-air)">Air</div><div class="ring-val">${rings.air}</div><small style="color:var(--ink-muted)">Réfl ${rings.reflexes} · Intui ${rings.awareness}</small></div>
-    <div class="ring-card void"><div class="ring-title" style="color:var(--c-void)">Vide</div><div class="ring-val">${rings.void}</div><small style="color:var(--ink-muted)">Énergie spirituelle</small></div>
+    <div class="ring-card void">
+      <div class="ring-title" style="color:var(--c-void)">Vide</div>
+      <div class="ring-val">${rings.void}</div>
+      <div style="font-size:12px;color:var(--gold);margin:4px 0 2px;">
+        <strong>Actuel : ${curVoid} / ${rings.void}</strong>
+      </div>
+      <div style="display:flex;justify-content:center;gap:5px;margin:6px 0;">
+        ${Array.from({ length: rings.void }).map((_, i) => `
+          <span style="font-size:16px;cursor:pointer;" onclick="adjustCurrentVoid(${i < curVoid ? -1 : 1})" title="${i < curVoid ? 'Dépenser ce point de Vide' : 'Récupérer ce point de Vide'}">
+            ${i < curVoid ? '⚪' : '⚫'}
+          </span>
+        `).join("")}
+      </div>
+      <div style="display:flex;gap:4px;justify-content:center;margin-top:4px;">
+        <button class="btn sm" style="padding:2px 8px;font-size:11px;" type="button" onclick="adjustCurrentVoid(-1)" ${curVoid <= 0 ? 'disabled' : ''} title="Dépenser 1 point de Vide">-1</button>
+        <button class="btn sm" style="padding:2px 8px;font-size:11px;" type="button" onclick="adjustCurrentVoid(1)" ${curVoid >= rings.void ? 'disabled' : ''} title="Récupérer 1 point de Vide">+1</button>
+        <button class="btn sm ghost" style="padding:2px 8px;font-size:11px;" type="button" onclick="resetVoidPoints()" title="Méditation : restaurer tous les points">Plein</button>
+      </div>
+    </div>
   `;
 
-  // Traits avec boutons d'ajustement direct en cours de jeu
+  // Traits élémentaires (AFFICHAGE STRICT EN LECTURE SEULE - PROGRESSION PAR XP)
   const traitsLeft = [
-    { key: "stamina", name: "Constitution", val: rings.stamina },
-    { key: "willpower", name: "Volonté", val: rings.willpower },
-    { key: "strength", name: "Force", val: rings.strength },
-    { key: "perception", name: "Perception", val: rings.perception }
+    { key: "stamina", name: "Constitution", ring: "Terre", val: rings.stamina },
+    { key: "willpower", name: "Volonté", ring: "Terre", val: rings.willpower },
+    { key: "strength", name: "Force", ring: "Eau", val: rings.strength },
+    { key: "perception", name: "Perception", ring: "Eau", val: rings.perception }
   ];
   const traitsRight = [
-    { key: "agility", name: "Agilité", val: rings.agility },
-    { key: "intelligence", name: "Intelligence", val: rings.intelligence },
-    { key: "reflexes", name: "Réflexes", val: rings.reflexes },
-    { key: "awareness", name: "Intuition", val: rings.awareness }
+    { key: "agility", name: "Agilité", ring: "Feu", val: rings.agility },
+    { key: "intelligence", name: "Intelligence", ring: "Feu", val: rings.intelligence },
+    { key: "reflexes", name: "Réflexes", ring: "Air", val: rings.reflexes },
+    { key: "awareness", name: "Intuition", ring: "Air", val: rings.awareness }
   ];
 
   document.getElementById("sheetTraitsGrid").innerHTML = `
-    <div style="background:var(--panel-sub);padding:10px;border-radius:8px;border:1px solid var(--line);">
+    <div style="background:var(--panel-sub);padding:12px;border-radius:8px;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px;">
       ${traitsLeft.map(t => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-          <span>${t.name}</span>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <button class="btn-circle" style="width:24px;height:24px;font-size:12px;" onclick="adjustTraitInGame('${t.key}', -1)">-</button>
-            <strong style="min-width:20px;text-align:center;font-size:16px;color:#fff;">${t.val}</strong>
-            <button class="btn-circle" style="width:24px;height:24px;font-size:12px;" onclick="adjustTraitInGame('${t.key}', 1)">+</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <div>
+            <strong style="color:#fff;font-size:14px;">${t.name}</strong>
+            <small style="color:var(--ink-muted);font-size:11px;margin-left:6px;">[${t.ring}]</small>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <strong style="font-size:18px;color:var(--gold);min-width:24px;text-align:right;">${t.val}</strong>
+            <small style="color:var(--ink-dim);font-size:10px;">(XP)</small>
           </div>
         </div>
       `).join("")}
     </div>
-    <div style="background:var(--panel-sub);padding:10px;border-radius:8px;border:1px solid var(--line);">
+    <div style="background:var(--panel-sub);padding:12px;border-radius:8px;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px;">
       ${traitsRight.map(t => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-          <span>${t.name}</span>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <button class="btn-circle" style="width:24px;height:24px;font-size:12px;" onclick="adjustTraitInGame('${t.key}', -1)">-</button>
-            <strong style="min-width:20px;text-align:center;font-size:16px;color:#fff;">${t.val}</strong>
-            <button class="btn-circle" style="width:24px;height:24px;font-size:12px;" onclick="adjustTraitInGame('${t.key}', 1)">+</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <div>
+            <strong style="color:#fff;font-size:14px;">${t.name}</strong>
+            <small style="color:var(--ink-muted);font-size:11px;margin-left:6px;">[${t.ring}]</small>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <strong style="font-size:18px;color:var(--gold);min-width:24px;text-align:right;">${t.val}</strong>
+            <small style="color:var(--ink-dim);font-size:10px;">(XP)</small>
           </div>
         </div>
       `).join("")}
     </div>
   `;
 
-  // Grande table de toutes les compétences
-  renderMasterSkillsTable();
+  // Rendu des Techniques d'École (Rangs 1 à 5)
+  renderSchoolTechniquesView();
 
-  // Technique d'école
-  if (sch) {
-    document.getElementById("sheetTechTitle").textContent = `Technique : ${sch.techniqueName}`;
-    document.getElementById("sheetTechText").textContent = sch.techniqueDesc;
-    document.getElementById("sheetVocationBadge").textContent = character.vocationId.toUpperCase();
-  }
+  // Grande table de toutes les compétences (sans boutons arbitraires)
+  renderMasterSkillsTable();
 
   // Avantages et désavantages
   const advList = document.getElementById("sheetAdvList");
-  const advs = (character.purchases.advantages || []).map(id => DATA.advantages.find(a => a.id === id)).filter(Boolean);
-  advList.innerHTML = advs.length ? advs.map(a => `<div style="margin-bottom:6px;"><strong style="color:var(--gold);">${a.name} :</strong> ${a.summary}</div>`).join("") : `<em style="color:var(--ink-dim);">Aucun avantage.</em>`;
+  if (advList) {
+    const advs = (character.purchases.advantages || []).map(id => DATA.advantages.find(a => a.id === id)).filter(Boolean);
+    advList.innerHTML = advs.length ? advs.map(a => `<div style="margin-bottom:6px;"><strong style="color:var(--gold);">${a.name} :</strong> ${a.summary}</div>`).join("") : `<em style="color:var(--ink-dim);">Aucun avantage.</em>`;
+  }
 
   const disadvList = document.getElementById("sheetDisadvList");
-  const disadvs = (character.purchases.disadvantages || []).map(id => DATA.disadvantages.find(d => d.id === id)).filter(Boolean);
-  disadvList.innerHTML = disadvs.length ? disadvs.map(d => `<div style="margin-bottom:6px;"><strong style="color:#ff8888;">${d.name} :</strong> ${d.summary}</div>`).join("") : `<em style="color:var(--ink-dim);">Aucun désavantage.</em>`;
+  if (disadvList) {
+    const disadvs = (character.purchases.disadvantages || []).map(id => DATA.disadvantages.find(d => d.id === id)).filter(Boolean);
+    disadvList.innerHTML = disadvs.length ? disadvs.map(d => `<div style="margin-bottom:6px;"><strong style="color:#ff8888;">${d.name} :</strong> ${d.summary}</div>`).join("") : `<em style="color:var(--ink-dim);">Aucun désavantage.</em>`;
+  }
 }
 
 // Table maîtresse de TOUTES les compétences
@@ -4218,13 +4826,11 @@ function renderMasterSkillsTable() {
   const query = (document.getElementById("skillsFilterInput")?.value || "").toLowerCase().trim();
 
   const skills = DATA.skills.filter(sk => {
-    // Filtre par catégorie
     if (currentSkillCategoryFilter === "trained") {
       if (getSkillRank(sk.name) <= 0) return false;
     } else if (currentSkillCategoryFilter !== "all") {
       if (sk.type !== currentSkillCategoryFilter) return false;
     }
-    // Filtre par mot-clé
     if (query) {
       const match = sk.name.toLowerCase().includes(query) || sk.traitLabel.toLowerCase().includes(query) || sk.ring.toLowerCase().includes(query) || sk.typeLabel.toLowerCase().includes(query);
       if (!match) return false;
@@ -4254,11 +4860,9 @@ function renderMasterSkillsTable() {
           <span class="badge ${ringBadgeClass}">${sk.traitLabel} · ${sk.ring}</span>
         </td>
         <td style="text-align:center;">
-          <div style="display:inline-flex;align-items:center;gap:6px;">
-            <button class="btn-circle" style="width:24px;height:24px;font-size:12px;" onclick="adjustSkillInGame('${sk.name}', -1)">-</button>
-            <strong style="min-width:24px;text-align:center;font-size:15px;color:${isTrained ? 'var(--gold)' : 'var(--ink-dim)'};">${rank}</strong>
-            <button class="btn-circle" style="width:24px;height:24px;font-size:12px;" onclick="adjustSkillInGame('${sk.name}', 1)">+</button>
-          </div>
+          <span class="badge ${isTrained ? 'gold' : ''}" style="font-size:14px;font-weight:bold;min-width:32px;display:inline-block;">
+            ${rank}
+          </span>
         </td>
         <td style="text-align:right;">
           ${isTrained ? `
@@ -4533,90 +5137,338 @@ function promptAddSpellToGrimoire() {
 }
 
 // -------------------------------------------------------------
-// VUE PROGRESSION XP
+// GESTION DU VIDE EN COURS DE JEU & TECHNIQUES D'ÉCOLE
 // -------------------------------------------------------------
-function renderXpView() {
-  const earned = character.xp.totalEarned || 0;
-  const spent = character.xp.totalSpent || 0;
-  const avail = earned - spent;
-
-  document.getElementById("xpTotalEarned").textContent = earned;
-  document.getElementById("xpTotalSpent").textContent = spent;
-  document.getElementById("xpAvailVal").textContent = avail;
-
-  const traitBuyList = document.getElementById("xpTraitBuyList");
-  const traitsMeta = [
-    { key: "stamina", name: "Constitution" }, { key: "willpower", name: "Volonté" },
-    { key: "strength", name: "Force" }, { key: "perception", name: "Perception" },
-    { key: "agility", name: "Agilité" }, { key: "intelligence", name: "Intelligence" },
-    { key: "reflexes", name: "Réflexes" }, { key: "awareness", name: "Intuition" },
-    { key: "void", name: "Vide" }
-  ];
-
-  traitBuyList.innerHTML = traitsMeta.map(tm => {
-    const score = getTraitScore(tm.key);
-    const nextScore = score + 1;
-    const cost = nextScore * 4;
-    const canAfford = avail >= cost;
-
-    return `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;margin-bottom:6px;">
-        <span>${tm.name} (Rang ${score})</span>
-        <button class="btn sm" type="button" onclick="buyXpTrait('${tm.key}', ${cost})" ${canAfford ? '' : 'disabled'}>Passer à ${nextScore} (${cost} XP)</button>
-      </div>
-    `;
-  }).join("");
-
-  const skillBuyList = document.getElementById("xpSkillBuyList");
-  const allMap = getAllSkillsMap();
-  skillBuyList.innerHTML = Object.keys(allMap).map(skName => {
-    const rank = allMap[skName];
-    const nextRank = rank + 1;
-    const cost = nextRank;
-    const canAfford = avail >= cost;
-
-    return `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;margin-bottom:6px;">
-        <span>${skName} (Rang ${rank})</span>
-        <button class="btn sm" type="button" onclick="buyXpSkill('${skName}', ${cost})" ${canAfford ? '' : 'disabled'}>Passer au rang ${nextRank} (${cost} XP)</button>
-      </div>
-    `;
-  }).join("");
-
-  const ledger = document.getElementById("xpLedgerHistory");
-  const hist = character.xp.ledger || [];
-  ledger.innerHTML = hist.length ? hist.map(h => `<div>• ${h}</div>`).join("") : "<em>Aucune dépense enregistrée.</em>";
+function adjustCurrentVoid(delta) {
+  const rings = getRings();
+  const maxVoid = rings.void;
+  const current = (character.status.currentVoid !== undefined) ? character.status.currentVoid : maxVoid;
+  character.status.currentVoid = Math.max(0, Math.min(maxVoid, current + delta));
+  saveCharacter();
+  renderSheetView();
+  renderCombatView();
 }
 
-function promptAddXp() {
-  const input = prompt("Combien de points d'expérience (XP) souhaitez-vous attribuer au personnage ?");
-  if (!input) return;
-  const num = parseInt(input, 10);
-  if (!isNaN(num) && num > 0) {
-    character.xp.totalEarned = (character.xp.totalEarned || 0) + num;
-    saveCharacter();
-    renderXpView();
+function resetVoidPoints() {
+  const rings = getRings();
+  character.status.currentVoid = rings.void;
+  saveCharacter();
+  renderSheetView();
+  renderCombatView();
+}
+
+function renderSchoolTechniquesView() {
+  const container = document.getElementById("sheetSchoolTechniquesContainer");
+  const titleEl = document.getElementById("sheetSchoolNameHeader");
+  const subEl = document.getElementById("sheetSchoolAffinitySub");
+  const badgeEl = document.getElementById("sheetSchoolRankBadgeTechniques");
+  if (!container) return;
+
+  const sch = DATA.schools.find(s => s.id === character.schoolId);
+  if (!sch) {
+    container.innerHTML = `<div style="color:var(--ink-dim);padding:10px;">Aucune école sélectionnée.</div>`;
+    return;
+  }
+
+  const currentRank = getSchoolRank();
+  if (titleEl) titleEl.textContent = sch.name;
+  if (badgeEl) badgeEl.textContent = `Rang de Maîtrise actuel : Rang ${currentRank}`;
+
+  let metaText = `Type : ${sch.affinity || 'Bushi'}`;
+  if (sch.deficiency) metaText += ` · Déficience élémentaire : ${sch.deficiency}`;
+  if (subEl) subEl.textContent = metaText;
+
+  const techs = sch.techniques || [];
+  if (techs.length === 0) {
+    container.innerHTML = `<div style="color:var(--ink-muted);padding:10px;">Technique de l'école : ${sch.technique || 'Aucune technique répertoriée'}.</div>`;
+    return;
+  }
+
+  container.innerHTML = techs.map(t => {
+    const isMastered = (currentRank >= t.rank);
+    return `
+      <div style="background:var(--panel-sub);border:1px solid ${isMastered ? 'var(--gold)' : 'var(--line)'};border-radius:8px;padding:12px;${!isMastered ? 'opacity:0.6;' : ''}">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge ${isMastered ? 'gold' : ''}" style="${!isMastered ? 'border-color:var(--line);color:var(--ink-dim);' : ''}">
+              ${isMastered ? `Maîtrisé · Rang ${t.rank}` : `À débloquer au Rang ${t.rank}`}
+            </span>
+            <strong style="color:${isMastered ? 'var(--gold)' : '#fff'};font-size:15px;">${t.name}</strong>
+          </div>
+          ${isMastered ? `<span class="badge gold" style="font-size:11px;">Actif en jeu</span>` : `<span class="badge" style="color:var(--ink-dim);font-size:11px;">Requis : ${150 + (t.rank - 2) * 25} Réputation</span>`}
+        </div>
+        <p style="margin:0;font-size:13px;line-height:1.5;color:${isMastered ? 'var(--ink)' : 'var(--ink-muted)'};">${t.desc}</p>
+      </div>
+    `;
+  }).join("");
+}
+
+// -------------------------------------------------------------
+// VUE PROGRESSION XP (STYLE VAMPIRE : CHIFFRE + MOTIF + HISTORIQUE)
+// -------------------------------------------------------------
+function ensureExperienceLedger() {
+  if (!character.experience) character.experience = { ledger: [] };
+  if (!character.experience.ledger) character.experience.ledger = [];
+}
+
+function getAvailableXp() {
+  ensureExperienceLedger();
+  return character.experience.ledger.reduce((s, x) => s + (x.type === "award" ? x.amount : -x.cost), 0);
+}
+
+function getTotalEarnedXp() {
+  ensureExperienceLedger();
+  return character.experience.ledger.reduce((s, x) => s + (x.type === "award" ? x.amount : 0), 0);
+}
+
+function getTotalSpentXp() {
+  ensureExperienceLedger();
+  return character.experience.ledger.reduce((s, x) => s + (x.type === "purchase" ? x.cost : 0), 0);
+}
+
+function addExperienceAward() {
+  const inputAmount = document.getElementById("xpAward");
+  const inputComment = document.getElementById("xpComment");
+  const amount = Math.max(1, parseInt(inputAmount?.value || "1", 10));
+  const comment = (inputComment?.value || "").trim();
+
+  ensureExperienceLedger();
+  character.experience.ledger.push({
+    id: "xp_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+    type: "award",
+    amount: amount,
+    comment: comment || "Attribution du Maître de Jeu",
+    at: new Date().toISOString()
+  });
+
+  if (inputComment) inputComment.value = "";
+  if (inputAmount) inputAmount.value = "1";
+
+  saveCharacter();
+  renderXpView();
+}
+
+function buyTraitWithXp(traitKey) {
+  const avail = getAvailableXp();
+  const curScore = getTraitScore(traitKey);
+  const nextScore = curScore + 1;
+  const cost = nextScore * 4;
+  if (avail < cost) {
+    alert("Points d'expérience insuffisants !");
+    return;
+  }
+
+  const tm = {
+    stamina: "Constitution", willpower: "Volonté",
+    strength: "Force", perception: "Perception",
+    agility: "Agilité", intelligence: "Intelligence",
+    reflexes: "Réflexes", awareness: "Intuition",
+    void: "Anneau du Vide"
+  };
+  const label = `${tm[traitKey] || traitKey} (${curScore} → ${nextScore})`;
+
+  if (!character.inGameTraits) character.inGameTraits = {};
+  character.inGameTraits[traitKey] = (character.inGameTraits[traitKey] || 0) + 1;
+
+  ensureExperienceLedger();
+  character.experience.ledger.push({
+    id: "xp_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+    type: "purchase",
+    kind: "trait",
+    targetId: traitKey,
+    cost: cost,
+    label: label,
+    comment: "Amélioration officielle (Nouveau Rang × 4)",
+    at: new Date().toISOString()
+  });
+
+  saveCharacter();
+  renderXpView();
+}
+
+function buySkillWithXp(skillName) {
+  const avail = getAvailableXp();
+  const curRank = getSkillRank(skillName);
+  const nextRank = curRank + 1;
+  const cost = (curRank === 0) ? 1 : nextRank;
+  if (avail < cost) {
+    alert("Points d'expérience insuffisants !");
+    return;
+  }
+
+  const label = `${skillName} (Rang ${curRank} → ${nextRank})`;
+
+  if (!character.inGameSkills) character.inGameSkills = {};
+  character.inGameSkills[skillName] = (character.inGameSkills[skillName] || 0) + 1;
+
+  ensureExperienceLedger();
+  character.experience.ledger.push({
+    id: "xp_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+    type: "purchase",
+    kind: "skill",
+    targetId: skillName,
+    cost: cost,
+    label: label,
+    comment: (curRank === 0) ? "Acquisition nouvelle compétence (1 XP)" : `Progression Rang ${nextRank} (${cost} XP)`,
+    at: new Date().toISOString()
+  });
+
+  saveCharacter();
+  renderXpView();
+}
+
+function deleteLedgerEntry(entryId) {
+  ensureExperienceLedger();
+  const idx = character.experience.ledger.findIndex(x => x.id === entryId);
+  if (idx === -1) return;
+  const entry = character.experience.ledger[idx];
+
+  if (entry.type === "award") {
+    const newAvail = getAvailableXp() - entry.amount;
+    if (newAvail < 0) {
+      alert("Impossible de supprimer ce gain : vous avez déjà dépensé ces points d'XP !");
+      return;
+    }
+    if (!confirm(`Supprimer le gain de +${entry.amount} XP ("${entry.comment}") ?`)) return;
+    character.experience.ledger.splice(idx, 1);
+  } else if (entry.type === "purchase") {
+    if (!confirm(`Annuler l'achat "${entry.label}" et vous faire rembourser ${entry.cost} XP ?`)) return;
+    // Revert stat
+    if (entry.kind === "trait" && character.inGameTraits && character.inGameTraits[entry.targetId]) {
+      character.inGameTraits[entry.targetId] = Math.max(0, character.inGameTraits[entry.targetId] - 1);
+    } else if (entry.kind === "skill" && character.inGameSkills && character.inGameSkills[entry.targetId]) {
+      character.inGameSkills[entry.targetId] = Math.max(0, character.inGameSkills[entry.targetId] - 1);
+    }
+    character.experience.ledger.splice(idx, 1);
+  }
+
+  saveCharacter();
+  renderXpView();
+}
+
+function renderXpView() {
+  const avail = getAvailableXp();
+  const earned = getTotalEarnedXp();
+  const spent = getTotalSpentXp();
+
+  const dispEl = document.getElementById("xpAvailableDisplay");
+  const subEl = document.getElementById("xpTotalsSub");
+  if (dispEl) dispEl.textContent = `${avail} XP disponibles`;
+  if (subEl) subEl.textContent = `Total acquis : ${earned} XP · Total dépensé : ${spent} XP`;
+
+  // 1. Liste des Traits à améliorer
+  const traitsContainer = document.getElementById("xpTraitsUpgradeList");
+  if (traitsContainer) {
+    const traitsMeta = [
+      { key: "stamina", name: "Constitution", ring: "Terre" },
+      { key: "willpower", name: "Volonté", ring: "Terre" },
+      { key: "strength", name: "Force", ring: "Eau" },
+      { key: "perception", name: "Perception", ring: "Eau" },
+      { key: "agility", name: "Agilité", ring: "Feu" },
+      { key: "intelligence", name: "Intelligence", ring: "Feu" },
+      { key: "reflexes", name: "Réflexes", ring: "Air" },
+      { key: "awareness", name: "Intuition", ring: "Air" },
+      { key: "void", name: "Anneau du Vide", ring: "Vide" }
+    ];
+
+    traitsContainer.innerHTML = traitsMeta.map(tm => {
+      const cur = getTraitScore(tm.key);
+      const next = cur + 1;
+      const cost = next * 4;
+      const canAfford = (avail >= cost);
+
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;">
+          <div>
+            <strong style="color:#fff;font-size:13.5px;">${tm.name}</strong>
+            <small style="color:var(--ink-muted);display:block;font-size:11px;">${tm.ring} · Score actuel : ${cur} ➔ ${next}</small>
+          </div>
+          <button class="btn sm ${canAfford ? 'primary' : ''}" type="button" onclick="buyTraitWithXp('${tm.key}')" ${!canAfford ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
+            Passer à ${next} (${cost} XP)
+          </button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // 2. Liste des Compétences à améliorer ou acquérir
+  renderXpSkillsList();
+
+  // 3. Suivi d'expérience (Ledger / Historique)
+  const ledgerContainer = document.getElementById("xpLedgerContainer");
+  if (ledgerContainer) {
+    ensureExperienceLedger();
+    const ledger = [...character.experience.ledger].reverse();
+
+    if (ledger.length === 0) {
+      ledgerContainer.innerHTML = `<div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12.5px;">Aucune entrée enregistrée dans le suivi d'expérience.</div>`;
+      return;
+    }
+
+    ledgerContainer.innerHTML = ledger.map(x => {
+      const isAward = (x.type === "award");
+      const dateStr = x.at ? new Date(x.at).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : "";
+
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <strong style="font-size:14px;color:${isAward ? 'var(--gold)' : '#ff8888'};">
+                ${isAward ? `+${x.amount} XP` : `-${x.cost} XP : ${x.label}`}
+              </strong>
+              <small style="color:var(--ink-dim);font-size:11px;">${dateStr}</small>
+            </div>
+            ${x.comment ? `<small style="color:var(--ink-muted);display:block;margin-top:2px;font-size:12px;">• ${x.comment}</small>` : ''}
+          </div>
+          <button class="btn sm danger" style="padding:2px 8px;min-height:26px;font-size:11.5px;" type="button" onclick="deleteLedgerEntry('${x.id}')" title="Supprimer ou annuler cette entrée">
+            ${isAward ? 'Supprimer' : 'Annuler / Rembourser'}
+          </button>
+        </div>
+      `;
+    }).join("");
   }
 }
 
-function buyXpTrait(traitKey, cost) {
-  if ((character.xp.totalEarned - character.xp.totalSpent) < cost) return;
-  character.xp.totalSpent += cost;
-  character.xp.purchases.traits[traitKey] = (character.xp.purchases.traits[traitKey] || 0) + 1;
-  const score = getTraitScore(traitKey);
-  character.xp.ledger.unshift(`Augmentation de ${traitKey.toUpperCase()} au rang ${score} (-${cost} XP)`);
-  saveCharacter();
-  renderXpView();
-}
+function renderXpSkillsList() {
+  const container = document.getElementById("xpSkillsUpgradeList");
+  if (!container) return;
+  const avail = getAvailableXp();
+  const query = (document.getElementById("xpSkillFilterInput")?.value || "").toLowerCase().trim();
+  const cat = document.getElementById("xpSkillCategorySelect")?.value || "all";
 
-function buyXpSkill(skName, cost) {
-  if ((character.xp.totalEarned - character.xp.totalSpent) < cost) return;
-  character.xp.totalSpent += cost;
-  character.xp.purchases.skills[skName] = (character.xp.purchases.skills[skName] || 0) + 1;
-  const rank = getSkillRank(skName);
-  character.xp.ledger.unshift(`Augmentation de ${skName} au rang ${rank} (-${cost} XP)`);
-  saveCharacter();
-  renderXpView();
+  const skills = DATA.skills.filter(sk => {
+    const curRank = getSkillRank(sk.name);
+    if (cat === "trained" && curRank <= 0) return false;
+    if (cat !== "all" && cat !== "trained" && sk.type !== cat) return false;
+    if (query) {
+      const match = sk.name.toLowerCase().includes(query) || sk.traitLabel.toLowerCase().includes(query) || sk.ring.toLowerCase().includes(query);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  container.innerHTML = skills.map(sk => {
+    const curRank = getSkillRank(sk.name);
+    const nextRank = curRank + 1;
+    const cost = (curRank === 0) ? 1 : nextRank;
+    const canAfford = (avail >= cost);
+    const ringBadgeClass = sk.ring === 'Feu' ? 'fire' : sk.ring === 'Air' ? 'air' : sk.ring === 'Terre' ? 'earth' : 'water';
+
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <strong style="color:#fff;font-size:13px;">${sk.name}</strong>
+            <span class="badge ${ringBadgeClass}" style="font-size:10px;">${sk.traitLabel}</span>
+            ${curRank > 0 ? `<span class="badge gold" style="font-size:10px;">Rang ${curRank}</span>` : `<span class="badge" style="font-size:10px;color:var(--ink-dim);">Non acquise</span>`}
+          </div>
+        </div>
+        <button class="btn sm ${canAfford ? 'primary' : ''}" type="button" onclick="buySkillWithXp('${sk.name}')" ${!canAfford ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
+          ${curRank === 0 ? `Acquérir (1 XP)` : `Passer à ${nextRank} (${cost} XP)`}
+        </button>
+      </div>
+    `;
+  }).join("");
 }
 
 // -------------------------------------------------------------
