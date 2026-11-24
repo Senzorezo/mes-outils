@@ -795,19 +795,6 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;" class="grid-two-mobile" id="sheetTraitsGrid"></div>
     </div>
 
-    <!-- TECHNIQUES & POUVOIRS DE L'ÉCOLE (RANGS 1 À 5) -->
-    <div class="card" id="schoolTechniquesSection" style="margin-top:14px;">
-      <div class="card-header" style="flex-wrap:wrap;gap:8px;">
-        <div>
-          <h2>Techniques & Pouvoirs de l'École : <span id="sheetSchoolNameHeader" style="color:var(--gold);">École</span></h2>
-          <small class="card-sub" id="sheetSchoolAffinitySub">Type & Affinité de l'école</small>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="badge gold" id="sheetSchoolRankBadgeTechniques">Rang 1</span>
-        </div>
-      </div>
-      <div id="sheetSchoolTechniquesContainer" style="display:flex;flex-direction:column;gap:10px;margin-top:10px;"></div>
-    </div>
 
     <!-- LA GRANDE TABLE COMPLETE DES COMPETENCES DIRECTEMENT SOUS LES ANNEAUX -->
     <div class="card">
@@ -934,6 +921,18 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
         </div>
       </div>
     </div>
+
+        <!-- TECHNIQUES & POUVOIRS DE L'ÉCOLE (RANGS 1 À 5) -->
+    <div class="card" id="schoolTechniquesSection">
+      <div class="card-header" style="flex-wrap:wrap;gap:8px;">
+        <div>
+          <h3>Techniques & Pouvoirs de l'École : <span id="sheetSchoolNameHeader" style="color:var(--gold);">École</span></h3>
+          <small class="card-sub" id="sheetSchoolAffinitySub">Type & Affinité de l'école</small>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="badge gold" id="sheetSchoolRankBadgeTechniques">Rang 1</span>
+        </div>
+      </div>
 
     <!-- Piste de Blessures Interactive à 8 Niveaux -->
     <div class="card">
@@ -5063,6 +5062,7 @@ function renderCombatView() {
 
   renderInteractiveWounds();
   renderCombatWeapons();
+  renderSchoolTechniquesView();
 }
 
 function changeArmorType(type) {
@@ -5292,8 +5292,27 @@ function resetVoidPoints() {
 }
 
 function scrollToSchoolTechniques() {
-  const el = document.getElementById("schoolTechniquesSection");
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  showScreen("screen-combat");
+  setTimeout(() => {
+    const el = document.getElementById("schoolTechniquesSection");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 60);
+}
+
+let isReputationFormulaExpanded = false;
+
+function toggleReputationFormula() {
+  isReputationFormulaExpanded = !isReputationFormulaExpanded;
+  const details = document.getElementById("reputationFormulaDetails");
+  const btn = document.getElementById("toggleReputationFormulaBtn");
+  if (details) {
+    details.style.display = isReputationFormulaExpanded ? "block" : "none";
+  }
+  if (btn) {
+    btn.innerHTML = isReputationFormulaExpanded
+      ? `<span>Masquer la formule ▲</span>`
+      : `<span>Afficher la formule ▼</span>`;
+  }
 }
 
 function renderSchoolTechniquesView() {
@@ -5320,79 +5339,95 @@ function renderSchoolTechniquesView() {
   metaText += ` · Seuil actuel : ${b.total} pts (Rang ${currentRank})`;
   if (subEl) subEl.textContent = metaText;
 
-  // BANNER EXPLICITANT LA REPUTATION ET LA PROGRESSION DE RANG D'ECOLE
+  // BANNER COMPACTE AVEC SCORE, RANG ET BOUTON COLLAPSE / EXPAND
   const reputationBannerHtml = `
-    <div style="background:var(--panel-sub);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:6px;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-        <div>
-          <span style="font-size:11.5px;text-transform:uppercase;color:var(--gold);letter-spacing:0.06em;font-weight:bold;display:block;">Score de Réputation (Insight)</span>
-          <div style="display:flex;align-items:baseline;gap:8px;margin-top:2px;">
-            <span style="font-size:32px;font-weight:bold;color:var(--gold);line-height:1;">${b.total}</span>
-            <span style="font-size:13.5px;color:var(--ink-muted);">points au total</span>
+    <div style="background:var(--panel-sub);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px;">
+      <!-- Bandeau résumé compact toujours visible : Score, Rang actuel et bouton Collapse/Expand -->
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <div>
+            <span style="font-size:11px;text-transform:uppercase;color:var(--gold);letter-spacing:0.06em;font-weight:bold;display:block;">Score de Réputation</span>
+            <div style="display:flex;align-items:baseline;gap:6px;margin-top:2px;">
+              <strong style="font-size:26px;color:var(--gold);line-height:1;">${b.total}</strong>
+              <span style="font-size:12px;color:var(--ink-muted);">pts</span>
+            </div>
+          </div>
+
+          <div style="height:32px;width:1px;background:var(--line);"></div>
+
+          <div>
+            <span style="font-size:11px;text-transform:uppercase;color:var(--ink-muted);letter-spacing:0.05em;display:block;">Maîtrise d'École</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+              <span class="badge gold" style="font-size:13px;padding:3px 10px;font-weight:bold;">Rang ${b.currentRank} / 5</span>
+              ${b.nextThreshold ? `<span style="font-size:11.5px;color:var(--ink-muted);">(Rang ${b.currentRank + 1} à ${b.nextThreshold} pts)</span>` : `<span style="font-size:11.5px;color:var(--gold);">Rang max</span>`}
+            </div>
           </div>
         </div>
-        
-        <div style="text-align:right;">
-          <span style="font-size:11.5px;text-transform:uppercase;color:var(--ink-muted);letter-spacing:0.05em;display:block;">Niveau d'École atteint</span>
-          <span class="badge gold" style="font-size:14px;padding:4px 12px;font-weight:bold;margin-top:4px;display:inline-block;">Rang ${b.currentRank} / 5</span>
-        </div>
+
+        <!-- Bouton Toggle Collapse / Expand (collapsed par défaut) -->
+        <button class="btn sm" id="toggleReputationFormulaBtn" type="button" onclick="toggleReputationFormula()" style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:6px 12px;border-color:var(--line);background:rgba(255,255,255,0.04);color:var(--gold);cursor:pointer;" title="Afficher ou masquer la formule de calcul détaillée et la progression">
+          <span>${isReputationFormulaExpanded ? 'Masquer la formule ▲' : 'Afficher la formule ▼'}</span>
+        </button>
       </div>
 
-      <!-- Formule officielle explicite en temps réel -->
-      <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);">
-        <strong style="color:#fff;display:block;margin-bottom:4px;">Formule de calcul officielle (Livre de Base p. 64) :</strong>
-        <div style="color:var(--ink);margin-bottom:8px;">
-          <code style="background:rgba(255,255,255,0.08);color:var(--gold);padding:3px 8px;border-radius:4px;font-size:12px;display:inline-block;">Réputation = (Somme des 5 Anneaux × 10) + Somme des Rangs de Compétences</code>
-        </div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;" class="grid-two-mobile">
-          <div style="background:rgba(255,255,255,0.03);padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);">
-            <span style="color:var(--ink-muted);display:block;font-size:11px;">1. Points des Anneaux élémentaires :</span>
-            <strong style="color:var(--gold);font-size:13.5px;">${b.sumRings} anneaux × 10 = ${b.ringsPoints} pts</strong>
-            <small style="display:block;color:var(--ink-dim);font-size:10.5px;margin-top:2px;">Terre (${b.rings.earth}) + Eau (${b.rings.water}) + Feu (${b.rings.fire}) + Air (${b.rings.air}) + Vide (${b.rings.void})</small>
+      <!-- Volet dépliable : Formule détaillée, calcul Anneaux & Compétences, Barre de progression et Paliers -->
+      <div id="reputationFormulaDetails" style="display:${isReputationFormulaExpanded ? 'block' : 'none'};margin-top:14px;padding-top:12px;border-top:1px solid var(--line);">
+        <!-- Formule officielle explicite en temps réel -->
+        <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);">
+          <strong style="color:#fff;display:block;margin-bottom:4px;">Formule de calcul officielle (Livre de Base p. 64) :</strong>
+          <div style="color:var(--ink);margin-bottom:8px;">
+            <code style="background:rgba(255,255,255,0.08);color:var(--gold);padding:3px 8px;border-radius:4px;font-size:11.5px;display:inline-block;">Réputation = (Somme des 5 Anneaux × 10) + Somme des Rangs de Compétences</code>
           </div>
-          <div style="background:rgba(255,255,255,0.03);padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);">
-            <span style="color:var(--ink-muted);display:block;font-size:11px;">2. Points des Compétences acquises :</span>
-            <strong style="color:var(--gold);font-size:13.5px;">+${b.sumSkills} pts</strong>
-            <small style="display:block;color:var(--ink-dim);font-size:10.5px;margin-top:2px;">Somme des rangs des ${b.trainedSkillsCount} compétences entraînées</small>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11.5px;" class="grid-two-mobile">
+            <div style="background:rgba(255,255,255,0.03);padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);">
+              <span style="color:var(--ink-muted);display:block;font-size:10.5px;">1. Points des Anneaux élémentaires :</span>
+              <strong style="color:var(--gold);font-size:13px;">${b.sumRings} anneaux × 10 = ${b.ringsPoints} pts</strong>
+              <small style="display:block;color:var(--ink-dim);font-size:10px;margin-top:2px;">Terre (${b.rings.earth}) + Eau (${b.rings.water}) + Feu (${b.rings.fire}) + Air (${b.rings.air}) + Vide (${b.rings.void})</small>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);">
+              <span style="color:var(--ink-muted);display:block;font-size:10.5px;">2. Points des Compétences acquises :</span>
+              <strong style="color:var(--gold);font-size:13px;">+${b.sumSkills} pts</strong>
+              <small style="display:block;color:var(--ink-dim);font-size:10px;margin-top:2px;">Somme des rangs des ${b.trainedSkillsCount} compétences entraînées</small>
+            </div>
           </div>
+          ${b.bonus !== 0 ? `<div style="margin-top:6px;font-size:11px;color:var(--gold);">Ajustement / Faveur accordée par le MJ : ${b.bonus > 0 ? '+' : ''}${b.bonus} pts</div>` : ''}
         </div>
-        ${b.bonus !== 0 ? `<div style="margin-top:6px;font-size:11.5px;color:var(--gold);">Ajustement / Faveur accordée par le MJ : ${b.bonus > 0 ? '+' : ''}${b.bonus} pts</div>` : ''}
-      </div>
 
-      <!-- Progression vers le prochain Rang de Maîtrise -->
-      ${b.nextThreshold ? `
-        <div style="margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:5px;">
-            <span style="color:var(--ink-muted);">Prochain niveau : <strong>Rang ${b.currentRank + 1}</strong> (seuil requis : ${b.nextThreshold} pts)</span>
-            <strong style="color:var(--gold);font-size:12.5px;">Encore ${b.neededForNext} pts nécessaires</strong>
+        <!-- Progression vers le prochain Rang de Maîtrise -->
+        ${b.nextThreshold ? `
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;margin-bottom:5px;">
+              <span style="color:var(--ink-muted);">Prochain niveau : <strong>Rang ${b.currentRank + 1}</strong> (seuil requis : ${b.nextThreshold} pts)</span>
+              <strong style="color:var(--gold);font-size:12px;">Encore ${b.neededForNext} pts nécessaires</strong>
+            </div>
+            <div style="width:100%;height:7px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;">
+              <div style="width:${b.progressPercent}%;height:100%;background:linear-gradient(90deg, var(--gold), #e59a42);border-radius:4px;transition:width 0.3s ease;"></div>
+            </div>
           </div>
-          <div style="width:100%;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;">
-            <div style="width:${b.progressPercent}%;height:100%;background:linear-gradient(90deg, var(--gold), #e59a42);border-radius:4px;transition:width 0.3s ease;"></div>
+        ` : `
+          <div style="text-align:center;color:var(--gold);font-weight:bold;font-size:12.5px;padding:6px 0;margin-bottom:8px;">
+            ✨ Rang 5 atteint — Vous incarnez le pinacle de la maîtrise martiale et spirituelle de votre École.
           </div>
-        </div>
-      ` : `
-        <div style="text-align:center;color:var(--gold);font-weight:bold;font-size:13px;padding:6px 0;margin-bottom:8px;">
-          ✨ Rang 5 atteint — Vous incarnez le pinacle de la maîtrise martiale et spirituelle de votre École.
-        </div>
-      `}
+        `}
 
-      <!-- Stepper visuel des 5 paliers officiels de Réputation -->
-      <div style="display:grid;grid-template-columns:repeat(5, 1fr);gap:4px;text-align:center;font-size:11px;">
-        <div style="padding:6px 2px;border-radius:4px;border:1px solid ${b.currentRank === 1 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 1 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 1 ? 'var(--gold)' : 'var(--ink-dim)'};">
-          <strong style="font-size:11.5px;">Rang 1</strong><br><small style="font-size:10px;">0 - 149</small>
-        </div>
-        <div style="padding:6px 2px;border-radius:4px;border:1px solid ${b.currentRank === 2 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 2 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 2 ? 'var(--gold)' : 'var(--ink-dim)'};">
-          <strong style="font-size:11.5px;">Rang 2</strong><br><small style="font-size:10px;">150 - 174</small>
-        </div>
-        <div style="padding:6px 2px;border-radius:4px;border:1px solid ${b.currentRank === 3 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 3 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 3 ? 'var(--gold)' : 'var(--ink-dim)'};">
-          <strong style="font-size:11.5px;">Rang 3</strong><br><small style="font-size:10px;">175 - 199</small>
-        </div>
-        <div style="padding:6px 2px;border-radius:4px;border:1px solid ${b.currentRank === 4 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 4 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 4 ? 'var(--gold)' : 'var(--ink-dim)'};">
-          <strong style="font-size:11.5px;">Rang 4</strong><br><small style="font-size:10px;">200 - 224</small>
-        </div>
-        <div style="padding:6px 2px;border-radius:4px;border:1px solid ${b.currentRank === 5 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 5 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 5 ? 'var(--gold)' : 'var(--ink-dim)'};">
-          <strong style="font-size:11.5px;">Rang 5</strong><br><small style="font-size:10px;">225+</small>
+        <!-- Stepper visuel des 5 paliers officiels de Réputation -->
+        <div style="display:grid;grid-template-columns:repeat(5, 1fr);gap:4px;text-align:center;font-size:10.5px;">
+          <div style="padding:5px 2px;border-radius:4px;border:1px solid ${b.currentRank === 1 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 1 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 1 ? 'var(--gold)' : 'var(--ink-dim)'};">
+            <strong style="font-size:11px;">Rang 1</strong><br><small style="font-size:9.5px;">0 - 149</small>
+          </div>
+          <div style="padding:5px 2px;border-radius:4px;border:1px solid ${b.currentRank === 2 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 2 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 2 ? 'var(--gold)' : 'var(--ink-dim)'};">
+            <strong style="font-size:11px;">Rang 2</strong><br><small style="font-size:9.5px;">150 - 174</small>
+          </div>
+          <div style="padding:5px 2px;border-radius:4px;border:1px solid ${b.currentRank === 3 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 3 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 3 ? 'var(--gold)' : 'var(--ink-dim)'};">
+            <strong style="font-size:11px;">Rang 3</strong><br><small style="font-size:9.5px;">175 - 199</small>
+          </div>
+          <div style="padding:5px 2px;border-radius:4px;border:1px solid ${b.currentRank === 4 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 4 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 4 ? 'var(--gold)' : 'var(--ink-dim)'};">
+            <strong style="font-size:11px;">Rang 4</strong><br><small style="font-size:9.5px;">200 - 224</small>
+          </div>
+          <div style="padding:5px 2px;border-radius:4px;border:1px solid ${b.currentRank === 5 ? 'var(--gold)' : 'var(--line)'};background:${b.currentRank === 5 ? 'rgba(200,160,80,0.18)' : 'transparent'};color:${b.currentRank === 5 ? 'var(--gold)' : 'var(--ink-dim)'};">
+            <strong style="font-size:11px;">Rang 5</strong><br><small style="font-size:9.5px;">225+</small>
+          </div>
         </div>
       </div>
     </div>
@@ -5424,7 +5459,6 @@ function renderSchoolTechniquesView() {
 
   container.innerHTML = reputationBannerHtml + techniquesListHtml;
 }
-
 // -------------------------------------------------------------
 // VUE PROGRESSION XP (STYLE VAMPIRE : CHIFFRE + MOTIF + HISTORIQUE)
 // -------------------------------------------------------------
