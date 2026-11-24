@@ -58,13 +58,17 @@ label{display:block;font-size:.72rem;font-weight:750;color:#c5d0d9;margin:9px 0 
   .litm-simple-grid{grid-template-columns:1fr 1fr}
   .card-h{padding:10px 12px}.card-b{padding:12px}.result-total{font-size:2.5rem}.history{max-height:none}.room-title{font-size:.98rem}
 }
+.l5-verdict{display:inline-block;margin-top:7px;padding:3px 10px;border:1px solid currentColor;border-radius:8px;font-weight:800}
+.l5-verdict.success{color:var(--good)}
+.l5-verdict.neutral{color:var(--muted)}
+.l5-verdict.failure{color:var(--bad)}
 </style>
 </head>
 <body>
 <header>
   <div class="brand">🎲 Universal Dice Roller<small id="headerSub"></small></div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
-    <span class="muted" style="font-size:.67rem;font-weight:800;letter-spacing:.04em;white-space:nowrap">Version 1.63</span>
+    <span class="muted" style="font-size:.67rem;font-weight:800;letter-spacing:.04em;white-space:nowrap">Version 1.64.1</span>
     <button class="icon-btn" id="adminBtn" title="Administration">⚙</button>
   </div>
 </header>
@@ -182,6 +186,7 @@ const CONFIG = {
 const SYSTEMS = {
   generic:{label:"Générique"},
   daggerheart:{label:"Daggerheart"},
+  l5a:{label:"L5A · La Légende des Cinq Anneaux"},
   legend_in_the_mist:{label:"Legend in the Mist"},
   vampire_dark_ages:{label:"Vampire : L’Âge des Ténèbres"},
   band_of_blades:{label:"Band of Blades"},
@@ -246,7 +251,10 @@ function showRollToast(r){
  const name=r.roll_name||"Jet de dés";
  const rollSystem=r.metadata?.game_system_key||r.roll_type||"generic";
 
- if(rollSystem==="daggerheart"){
+ if(rollSystem==="l5a"){
+   const o=l5Outcome(r);
+   t.innerHTML=`<div class="toast-total">${o.total}</div><div class="toast-name">${rerollPrefix(r)}${esc(name)}</div><div class="toast-who">${esc(who)} · L5A · ${esc(l5ConfigText(r))}</div>${l5Detail(r,o)}`;
+ }else if(rollSystem==="daggerheart"){
    const d=daggerheartOutcome(r);
    const extras=[
      ...d.advantage.map(v=>`<span class="die adv">${esc(v)}</span>`),
@@ -707,14 +715,14 @@ function clearDice3DOverlay(immediate=false){
 }
 window.clearDice3DOverlay=clearDice3DOverlay;
 
-function playDice3DFallback(r,items){
+function playDice3DFallback(r,items,onDone){
  const shown=items.slice(0,DICE3D_MAX_DICE);
  const overlay=dice3dEnsureOverlay(r,shown.length,items.length);
  const canvas=overlay.querySelector("canvas");if(canvas) canvas.remove();
  const box=document.createElement("div");box.className="dice3d-fallback";
  box.innerHTML=shown.map(i=>`<div class="dice3d-fallback-die" data-sides="${Number(i.sides)}" title="D${Number(i.sides)}" style="background:${dice3dColorCssFor(i)}">${esc(i.resultLabel)}</div>`).join("");
  overlay.appendChild(box);
- dice3dCleanupTimer=setTimeout(()=>clearDice3DOverlay(),3000);
+ dice3dCleanupTimer=setTimeout(()=>{clearDice3DOverlay();onDone?.();},3000);
 }
 
 async function loadDice3DThree(){
@@ -727,15 +735,23 @@ async function loadDice3DThree(){
  return dice3dThreePromise;
 }
 
-async function playDice3D(r){
+async function playDice3D(r,remaining=null){
  r=normalizeRollForDisplay(r);
  if(!shouldShowDice3D(r)) return;
+ if(rollSystemKey(r)==="l5a"){
+   const [wave,...rest]=remaining||l5Waves(r);
+   remaining=rest;
+   r={...r,dice:[{sides:10,results:wave}]};
+ }
+ const nextWave=()=>{
+   if(remaining?.length && channelId===r.channel_id && shouldShowDice3D(r)) playDice3D(r,remaining);
+ };
  const allItems=dice3dFilterItemsForReroll(r,dice3dItemsFromRoll(r));
  if(!allItems.length) return;
  clearDice3DOverlay(true);
  const items=allItems.slice(0,DICE3D_MAX_DICE);
  let THREE;
- try{THREE=await loadDice3DThree()}catch(e){console.warn("[UDR] Three.js indisponible, fallback 2D :",e);playDice3DFallback(r,allItems);return;}
+ try{THREE=await loadDice3DThree()}catch(e){console.warn("[UDR] Three.js indisponible, fallback 2D :",e);playDice3DFallback(r,allItems,nextWave);return;}
  if(!shouldShowDice3D(r)) return;
  const overlay=dice3dEnsureOverlay(r,items.length,allItems.length);
  const canvas=overlay.querySelector("canvas");
@@ -883,14 +899,14 @@ async function playDice3D(r){
            o.mesh.material?.dispose?.();
          });
          renderer.dispose();
-         if(document.body.contains(overlay)) overlay.remove();
+         if(document.body.contains(overlay)){overlay.remove();nextWave();}
        },280);
      },holdMs);
    };
    dice3dAnimFrame=requestAnimationFrame(animate);
  }catch(e){
    console.warn("[UDR] Animation 3D indisponible, fallback 2D :",e);
-   clearDice3DOverlay(true);playDice3DFallback(r,allItems);
+   clearDice3DOverlay(true);playDice3DFallback(r,allItems,nextWave);
  }
 }
 
@@ -1071,7 +1087,10 @@ function windowState(){return {
 function saveRoom(){
  localStorage.setItem("udr_room",JSON.stringify({channelId,joinCode,channelName,gameSystem,myRole}));
 }
+const displayedL5Rolls=new Set();
 function resetRoomVisualState(){
+ displayedL5Rolls.clear();
+ l5DraftNd="15";
  clearDice3DOverlay(true);
  // La grande carte du dernier résultat appartient à la table précédente :
  // elle doit disparaître dès que l'on change de table.
@@ -1134,7 +1153,7 @@ window.openCreate=()=>modal("Créer une table",`
 <label>Système de jeu</label><select id="createSystem">${systemOptions()}</select>
 <label>Nom du joueur</label><input id="createDisplayName" placeholder="Votre prénom / pseudo">
 <label><input id="createIsGm" type="checkbox" style="width:auto" onchange="toggleRoleFields('create')"> Je suis MJ</label>
-<div id="createPlayerFields"><label>Nom du personnage</label><input id="createCharacterName" placeholder="Nom du personnage"><label>Portrait du personnage (facultatif)</label><input id="createAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+<div id="createPlayerFields"><label>Nom du personnage</label><input id="createCharacterName" placeholder="Nom du personnage"><label>URL du portrait</label><input id="createAvatar" placeholder="https://..."></div>
 <div class="actions"><button class="btn primary" onclick="createRoom()">Créer</button><button class="btn" onclick="closeModal()">Annuler</button></div>`);
 
 window.openJoin=async()=>{
@@ -1152,7 +1171,7 @@ window.openJoin=async()=>{
  <label>Code de la table</label><input id="joinCodeInput" placeholder="ABC123" maxlength="12" oninput="clearOpenTableSelection()">
  <label>Nom du joueur</label><input id="joinDisplayName" placeholder="Votre prénom / pseudo">
  <label><input id="joinIsGm" type="checkbox" style="width:auto" onchange="toggleRoleFields('join')"> Je suis MJ</label>
- <div id="joinPlayerFields"><label>Nom du personnage</label><input id="joinCharacterName" placeholder="Nom du personnage"><label>Portrait du personnage (facultatif)</label><input id="joinAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+ <div id="joinPlayerFields"><label>Nom du personnage</label><input id="joinCharacterName" placeholder="Nom du personnage"><label>URL du portrait</label><input id="joinAvatar" placeholder="https://..."></div>
  <div class="actions"><button class="btn primary" onclick="joinRoom()">Rejoindre</button><button class="btn" onclick="closeModal()">Annuler</button></div>`);
  await loadOpenTables();
 };
@@ -1198,23 +1217,18 @@ window.toggleRoleFields=scope=>{
 
 window.createRoom=async()=>{
  try{
-   const portraitFile=$("createIsGm")?.checked?null:($("createAvatarFile")?.files?.[0]||null);
-   if(portraitFile) validatePortraitFile(portraitFile);
   await stopRealtime();
   clearRoomState({keepViews:true});
   const {data,error}=await supabase.rpc("create_dice_channel_v2",{
     p_name:$("createTableName").value.trim(),p_game_system_key:$("createSystem").value,p_display_name:$("createDisplayName").value.trim(),
-    p_is_gm:$("createIsGm").checked,p_character_name:$("createCharacterName")?.value.trim()||null,p_avatar_url:null,p_metadata:{source:"universal_dice_roller"}
+    p_is_gm:$("createIsGm").checked,p_character_name:$("createCharacterName")?.value.trim()||null,p_avatar_url:$("createAvatar")?.value.trim()||null,p_metadata:{source:"universal_dice_roller"}
   }); if(error) throw error;
   const r=Array.isArray(data)?data[0]:data; await enterRoom(r.result_channel_id,r.result_join_code,r.result_name,r.result_game_system_key,r.result_role);
-   if(portraitFile) await persistNewParticipantPortrait(portraitFile);
  }catch(e){alert("Création impossible : "+(e.message||e))}
 };
 
 window.joinRoom=async()=>{
  try{
-   const portraitFile=$("joinIsGm")?.checked?null:($("joinAvatarFile")?.files?.[0]||null);
-   if(portraitFile) validatePortraitFile(portraitFile);
   const selectedCode=($("joinOpenTable")?.value||"").trim();
   const typedCode=($("joinCodeInput")?.value||"").trim();
   const joinValue=(selectedCode||typedCode).toUpperCase();
@@ -1227,10 +1241,9 @@ window.joinRoom=async()=>{
 
   const {data,error}=await supabase.rpc("join_dice_channel_v2",{
     p_join_code:joinValue,p_display_name:$("joinDisplayName").value.trim(),p_is_gm:$("joinIsGm").checked,
-    p_character_name:$("joinCharacterName")?.value.trim()||null,p_avatar_url:null,p_metadata:{source:"universal_dice_roller"}
+    p_character_name:$("joinCharacterName")?.value.trim()||null,p_avatar_url:$("joinAvatar")?.value.trim()||null,p_metadata:{source:"universal_dice_roller"}
   }); if(error) throw error;
   const r=Array.isArray(data)?data[0]:data; await enterRoom(r.result_channel_id,r.result_join_code,r.result_name,r.result_game_system_key,r.result_role);
-   if(portraitFile) await persistNewParticipantPortrait(portraitFile);
  }catch(e){alert("Connexion impossible : "+(e.message||e))}
 };
 
@@ -1242,6 +1255,7 @@ async function enterRoom(id,code,name,system,role){
  joinCode=code;
  channelName=name;
  gameSystem=system||"generic";
+ if(gameSystem==="l5a") rollMode="system";
  myRole=role||"player";
 
  // L'état persistant est écrit uniquement après avoir reçu les données de la nouvelle table.
@@ -1328,6 +1342,7 @@ window.updateLitmRollHelp=kind=>{
  if(help) help.innerHTML=litmRollHelpHtml(kind==='reaction'?'reaction':'action');
 };
 
+let l5DraftNd="15";
 function renderSystemControls(){
  let h="";
  const builder=document.querySelector(".dice-builder");
@@ -1366,6 +1381,21 @@ function renderSystemControls(){
    return;
  }
 
+ if(gameSystem==="l5a"){
+   builder?.classList.add("fabula-top");
+   setBaseDiceFieldsVisibility(false,false,false);
+   if(topLaunch) topLaunch.style.display="none";
+   h+=`<label><input id="l5Untrained" type="checkbox" style="width:auto" onchange="updateL5Training()"> Action sans compétence (+10 au ND)</label>
+   <div class="litm-grid">
+     <div id="l5TraitField" class="hidden"><label for="l5Trait">Rang du Trait utilisé</label><input id="l5Trait" type="number" min="1" max="10" value="3"></div>
+     <div id="l5RollField"><label for="l5Roll">D10 lancés</label><input id="l5Roll" type="number" min="1" max="10" value="5"></div>
+     <div id="l5KeepField"><label for="l5Keep">Dés gardés</label><input id="l5Keep" type="number" min="1" max="10" value="3"></div>
+     <div><label for="l5Nd">ND annoncé (facultatif)</label><input id="l5Nd" type="number" min="0" value="${esc(l5DraftNd)}" oninput="rememberL5Nd(this.value)" placeholder="Non annoncé"></div>
+   </div>
+   <p id="l5TrainingHelp" class="litm-hint hidden">Lancez et gardez autant de D10 que le rang du Trait utilisé. Le lanceur ajoute 10 au ND annoncé.</p>
+   <p class="litm-hint">Comptez le Vide et les bonus dans vos dés. Incluez les augmentations annoncées dans le ND (+5 chacune). Les 10 explosent automatiquement.</p>
+   <div class="actions"><button class="btn primary" onclick="sendRoll()">Lancer les D10</button></div>`;
+ }
  if(gameSystem==="legend_in_the_mist"){
    if(builder) builder.classList.add("fabula-top");
    setBaseDiceFieldsVisibility(false,false,false);
@@ -1592,6 +1622,7 @@ function currentDice(){
    if(mode==="disadvantage") dice.push({label:"Désavantage",count,sides:6,sign:-1});
    return dice;
  }
+ if(gameSystem==="l5a") return [{label:"Réserve",count:Number($($("l5Untrained").checked?"l5Trait":"l5Roll").value),sides:10,sign:1}];
  if(gameSystem==="legend_in_the_mist") return [{label:$('litmRollKind')?.value==='reaction'?"Réaction":"Action",count:2,sides:6,sign:1}];
  if(gameSystem==="vampire_dark_ages") return [{label:"Réserve",count:Number($("diceCount").value),sides:10,sign:1}];
  if(gameSystem==="assassins_creed") return [{label:"Dés Match",count:6,sides:6,sign:1}];
@@ -1627,7 +1658,7 @@ window.sendRoll=async(diceOverride=null,nameOverride=null,modOverride=null,metad
         ? (metadataOverride.generic_groups||[]).reduce((sum,g)=>sum+(Number(g.modifier)||0),0)
         : genericTotalModifier())
     : 0;
-  const modifier=effectiveSystem==="vampire_dark_ages"||effectiveSystem==="band_of_blades"
+  const modifier=effectiveSystem==="l5a"||effectiveSystem==="vampire_dark_ages"||effectiveSystem==="band_of_blades"
     ? 0
     : (effectiveSystem==="generic"
         ? genericMod
@@ -1642,6 +1673,11 @@ window.sendRoll=async(diceOverride=null,nameOverride=null,modOverride=null,metad
     ...(litmConfig||{}),
     ...(metadataOverride||{})
   };
+  if(effectiveSystem==="l5a"){
+    if(!metadataOverride) Object.assign(metadata,l5ConfigFromDom());
+    validateL5(dice,metadata);
+  }
+  const roomAtLaunch=channelId;
   // Le participant persistant est l'identité fonctionnelle du lanceur. Cela
   // permet à un joueur réattribué par le MJ de retrouver aussi ses anciens jets privés.
   metadata.participant_id=myProfile?.id||metadata.participant_id||null;
@@ -1694,6 +1730,7 @@ window.sendRoll=async(diceOverride=null,nameOverride=null,modOverride=null,metad
   if(!data?.ok) throw new Error(data?.error||"Jet invalide");
 
   const initialRoll=normalizeStoredRollRecord(data.roll);
+  if(effectiveSystem==="l5a") return await finishL5(initialRoll,roomAtLaunch);
   const needsExplosion=effectiveSystem==="vampire_dark_ages" && metadata.specialty && vampireRollNeedsExplosion(initialRoll);
   if(needsExplosion){
     // Do not flash the unresolved root result. The final composite will be shown
@@ -1712,8 +1749,92 @@ window.sendRoll=async(diceOverride=null,nameOverride=null,modOverride=null,metad
  }catch(e){alert("Jet impossible : "+(e.message||e))}
 };
 
+window.rememberL5Nd=value=>{l5DraftNd=value};
+window.updateL5Training=()=>{
+ const active=$("l5Untrained").checked;
+ for(const id of ["l5RollField","l5KeepField"]) $(id).classList.toggle("hidden",active);
+ for(const id of ["l5TraitField","l5TrainingHelp"]) $(id).classList.toggle("hidden",!active);
+};
+function l5EffectiveNd(meta){
+ const raw=meta.l5_nd;
+ if(raw==null || String(raw).trim()==="") return null;
+ const nd=Number(raw);
+ return Number.isSafeInteger(nd) && nd>=0 ? nd+(meta.l5_untrained===true?10:0) : null;
+}
+function l5ConfigFromDom(){
+ const nd=$("l5Nd");
+ if(nd.validity.badInput) throw new Error("ND invalide.");
+ const untrained=!!$("l5Untrained").checked;
+ return {l5_untrained:untrained,l5_keep:Number($(untrained?"l5Trait":"l5Keep").value),l5_nd:nd.value===""?null:Number(nd.value)};
+}
+
+function validateL5(dice,meta){
+ const count=dice[0]?.count, keep=meta.l5_keep, nd=meta.l5_nd;
+ if(dice.length!==1 || dice[0].sides!==10 || !Number.isInteger(count) || count<1 || count>10)
+   throw new Error("Lancez de 1 à 10 D10.");
+ if(!Number.isInteger(keep) || keep<1 || keep>count)
+   throw new Error("Le nombre de dés gardés doit être compris entre 1 et le nombre de dés lancés.");
+ if(nd!=null && (!Number.isSafeInteger(nd) || nd<0)) throw new Error("Le ND doit être un entier positif ou nul.");
+}
+
+function l5Waves(r){
+ return [...(r.metadata.l5_prior||[]),r.dice[0].results.map(Number)];
+}
+
+function l5Outcome(r){
+ const waves=l5Waves(r);
+ const chains=waves[0].map(face=>[face]);
+ for(const wave of waves.slice(1)){
+   const active=chains.filter(chain=>chain.at(-1)===10);
+   active.forEach((chain,i)=>chain.push(wave[i]));
+ }
+ const pending=waves.at(-1).includes(10);
+ const ranked=chains.map((faces,index)=>({faces,index,value:faces.reduce((sum,n)=>sum+n,0)}))
+   .sort((a,b)=>b.value-a.value || a.index-b.index);
+ const kept=ranked.slice(0,r.metadata.l5_keep);
+ const total=kept.reduce((sum,die)=>sum+die.value,0);
+ const nd=l5EffectiveNd(r.metadata);
+ const verdict=pending || nd==null?"neutral":total>=nd?"success":"failure";
+ const status=pending?"Explosion en attente":nd==null?"ND non renseigné":verdict==="success"?"Réussite":"Échec";
+ return {pending,ranked,total,status,verdict};
+}
+
+function l5ConfigText(r){
+ const count=r.metadata.l5_prior?.[0]?.length??r.dice[0].count??r.dice[0].results?.length;
+ const nd=l5EffectiveNd(r.metadata);
+ const training=r.metadata.l5_untrained?" · Sans compétence (+10 au ND)":"";
+ return `${count}g${r.metadata.l5_keep}${training}`+(nd==null?"":` · ND ${nd}`);
+}
+
+function l5Detail(r,o){
+ return '<div class="dice-line">'+o.ranked.map(({faces,value},i)=>{
+   const kept=i<r.metadata.l5_keep;
+   return `<span class="die-wrap"><span class="die ${kept?"success":""}">${esc(value)}</span><span class="die-kind">${kept?"Gardé":"Écarté"}</span>${faces.length>1?`<small>${esc(faces.join(" + "))}</small>`:""}</span>`;
+ }).join("")+'</div>'+ (o.status?`<strong class="l5-verdict ${o.verdict}">${esc(o.status)}</strong>`:"");
+}
+
+async function finishL5(initial,room){
+ let r=initial;
+ while(r.dice[0].results.some(v=>Number(v)===10)){
+   const waves=l5Waves(r);
+   const count=waves.at(-1).filter(v=>v===10).length;
+   const {data,error}=await supabase.functions.invoke("roll-dice",{body:{
+     channel_id:room,project_key:"universal_dice_roller",roll_type:"l5a",
+     roll_name:initial.roll_name,modifier:0,dice:[{label:"Explosion",count,sides:10,sign:1}],
+     metadata:{...initial.metadata,l5_root:initial.id,l5_prior:waves}
+   }});
+   if(error || !data?.ok){
+     if(channelId===room) await loadHistory();
+     throw new Error("Explosion interrompue. Le jet reste incomplet dans l’historique.");
+   }
+   r=normalizeStoredRollRecord(data.roll);
+ }
+ if(channelId===room) processIncomingRoll(r,true);
+}
+
 function rollConfigText(r){
  const rollSystem=r.metadata?.game_system_key||r.roll_type||"generic";
+ if(rollSystem==="l5a") return l5ConfigText(r);
  if(rollSystem==="band_of_blades" && r.metadata?.zero_dice) return "0 dé → 2D6, garder le plus faible";
  if(rollSystem==="assassins_creed") return "6 dés Match";
  if(rollSystem==="fabula_ultima") return fabulaUltimaConfigText(r);
@@ -2107,6 +2228,10 @@ function normalizeStoredRollRecord(r){
    }
  }
  if(!out.metadata || typeof out.metadata!=="object" || Array.isArray(out.metadata)) out.metadata={};
+ if((!out.metadata.game_system_key || out.metadata.game_system_key==="generic")
+    && (out.roll_type==="l5a" || (out.metadata.l5_keep!=null && !out.metadata.generic_groups))){
+   out.metadata={...out.metadata,game_system_key:"l5a"};
+ }
  if(!Array.isArray(out.dice)) out.dice=[];
  return out;
 }
@@ -2478,6 +2603,10 @@ function processIncomingRoll(raw,showToastNow=true,options={}){
  // Défense locale supplémentaire : même si un événement Realtime privé arrivait
  // sur un client non autorisé, il n'est ni ajouté à l'historique ni affiché.
  if(!canViewRollLocally(r)) return r;
+ if(rollSystemKey(r)==="l5a"){
+   if(l5Outcome(r).pending) return r;
+   history=history.filter(x=>x.id===r.id || (x.metadata?.l5_root||x.id)!==(r.metadata.l5_root||r.id));
+ }
  // Specialty rolls containing a 10 are not final yet. Intermediate explosion
  // waves are likewise technical records and must never flash as final results.
  if(vampireResolutionIsPending(r) && options.forcePendingDisplay!==true) return r;
@@ -2497,6 +2626,14 @@ function processIncomingRoll(raw,showToastNow=true,options={}){
    history.unshift(r);
    history=history.slice(0,50);
    renderHistory();
+ }
+ // Une lecture de l’historique peut précéder la réponse du jet ou son événement Realtime.
+ const isL5=rollSystemKey(r)==="l5a";
+ if(isL5 ? !displayedL5Rolls.has(r.id) : !already){
+   if(isL5){
+     displayedL5Rolls.add(r.id);
+     if(displayedL5Rolls.size>100) displayedL5Rolls.delete(displayedL5Rolls.values().next().value);
+   }
    showResult(r);
 
    const pendingExplosion=r.metadata?.vampire_explosion && !r.metadata?.vampire_explosion_final;
@@ -2514,6 +2651,13 @@ function showResult(r){
  $("resultName").innerHTML=`${rerollPrefix(r)}${esc(r.roll_name||"Jet")}${isPrivateRoll(r)?'<span class="private-badge">PRIVÉ MJ</span>':""}<div class="vamp-detail" style="margin-top:4px">${esc(rollConfigText(r))}</div>`;
 
  const rollSystem=rollSystemKey(r);
+ if(rollSystem==="l5a"){
+   prepareRerollState(r);
+   const o=l5Outcome(r);
+   $("resultTotal").textContent=o.total;
+   $("resultInterpret").innerHTML=l5Detail(r,o);
+   return;
+ }
  const canReroll=prepareRerollState(r);
 
  if(rollSystem==="daggerheart"){
@@ -2780,7 +2924,7 @@ function renderPeople(){
 }
 async function loadPeople(){
  const {data,error}=await supabase.rpc("get_dice_participants_with_last_seen",{p_channel_id:channelId});
- if(error){console.error(error);toast("Participants indisponibles : vérifier le SQL v1.64");return;}
+ if(error){console.error(error);toast("Participants indisponibles : vérifier le SQL v1.63");return;}
  participants=(data||[]).map(p=>({...p,assigned_user_id:p.assigned_user_id?String(p.assigned_user_id):null}));
  myProfile=participants.find(p=>String(p.assigned_user_id||"")===String(session?.user?.id||""))||null;
  if(myProfile) myProfile={...myProfile,user_id:myProfile.assigned_user_id};
@@ -2789,44 +2933,32 @@ async function loadPeople(){
 }
 window.openParticipantManager=(preselectedId=null)=>{
  if(myRole!=="gm") return;
- const online=sortedParticipants().filter(p=>participantIsOnline(p)&&p.role!=="gm");
- const offline=sortedParticipants().filter(p=>!participantIsOnline(p)&&p.role!=="gm");
+ const online=sortedParticipants().filter(participantIsOnline);
+ const offline=sortedParticipants().filter(p=>!participantIsOnline(p));
  const selected=online.find(p=>p.id===preselectedId)||online[0];
- modal("Gestion des profils et historiques",`
- <p class="muted">Réaffecter le passé d’un personnage hors ligne à un joueur en ligne, ou archiver un profil hors ligne sans héritier.</p>
- <label>Joueur connecté destinataire</label>
- <select id="mergeOnline" style="width:100%;margin-bottom:12px">${online.map(p=>`<option value="${p.id}" ${selected?.id===p.id?"selected":""}>${esc(p.display_name||"Joueur")} — ${esc(p.character_name||"")}</option>`).join("")}</select>
- <label>Profil hors ligne</label>
+ modal("Récupération d'un historique",`
+ <p class="muted">Sélectionnez d'abord la personne actuellement <b>en ligne</b>. Elle conserve son identité et récupère les favoris et les jets de l'ancien participant.</p>
+ <label>Participant en ligne (conservé)</label>
+ <select id="mergeOnline" style="width:100%;margin-bottom:12px" onchange="renderMergeTargetOptions()">${online.map(p=>`<option value="${p.id}" ${selected?.id===p.id?"selected":""}>${esc(p.display_name||"Joueur")} ${p.role==="gm"?"(MJ)":""} — ${esc(p.character_name||"")}</option>`).join("")}</select>
+ <label>Historique d'un participant hors ligne (à fusionner)</label>
  <select id="mergeOffline" style="width:100%;margin-bottom:12px">${offline.map(p=>`<option value="${p.id}">${esc(p.display_name||"Joueur")} — ${esc(p.character_name||"")} — ${esc(participantLastSeen(p))}</option>`).join("")}</select>
- <p class="muted" style="font-size:.75rem">La réaffectation conserve les favoris actuels et ajoute ceux de l'ancien profil, rattache les jets historiques et récupère son portrait. La suppression archive le profil et efface ses favoris, mais conserve les jets dans le journal collectif.</p>
- <div class="actions"><button class="btn primary" ${online.length&&offline.length?"":"disabled"} onclick="mergeParticipantHistory()">Réaffecter au joueur connecté</button><button class="btn red" ${offline.length?"":"disabled"} onclick="deleteOfflineParticipant()">Supprimer le profil hors ligne</button><button class="btn" onclick="closeModal()">Annuler</button></div>
- ${!online.length?'<p class="muted">Aucun joueur connecté éligible à la réaffectation.</p>':""}${!offline.length?'<p class="muted">Aucun profil joueur hors ligne.</p>':""}`);
+ <p class="muted" style="font-size:.75rem">Le profil hors ligne sera archivé et retiré de la liste. Les favoris et les jets historiques identifiables seront associés au profil en ligne. Cette action ne peut pas être annulée automatiquement.</p>
+ <div class="actions"><button class="btn primary" ${online.length&&offline.length?"":"disabled"} onclick="mergeParticipantHistory()">Fusionner l'historique</button><button class="btn" onclick="closeModal()">Annuler</button></div>
+ ${!online.length?'<p class="muted">Aucun participant en ligne.</p>':""}${!offline.length?'<p class="muted">Aucun participant hors ligne.</p>':""}`);
 };
+window.renderMergeTargetOptions=()=>{};
 window.mergeParticipantHistory=async()=>{
  if(myRole!=="gm") return;
  const sourceId=$("mergeOnline")?.value,targetId=$("mergeOffline")?.value;
  const source=participants.find(p=>p.id===sourceId),target=participants.find(p=>p.id===targetId);
- if(!source||!target||source.role==="gm"||target.role==="gm"||!participantIsOnline(source)||participantIsOnline(target)){alert("Choisissez un joueur en ligne et un personnage hors ligne.");return;}
- if(!confirm(`Réaffecter l'historique, les favoris et le portrait de « ${target.display_name} » à « ${source.display_name} » ?\n\nLe profil historique sera archivé.`))return;
+ if(!source||!target||!participantIsOnline(source)||participantIsOnline(target)){alert("Choisissez un participant réellement en ligne et un profil hors ligne.");return;}
+ if(!confirm(`Fusionner les données de « ${target.display_name} » (hors ligne) dans « ${source.display_name} » (en ligne) ?\n\nSeul « ${source.display_name} » restera dans la liste des profils actifs. Le profil historique sera archivé, sans effacement physique des sauvegardes.`))return;
  try{
   const {error}=await supabase.rpc("merge_dice_participant_history",{p_online_participant_id:sourceId,p_offline_participant_id:targetId});
   if(error)throw error;
   closeModal();await loadPeople();await loadFavorites();await loadHistory();
-  toast("Profil et historique réaffectés");
- }catch(e){alert("Réaffectation impossible : "+(e.message||e));}
-};
-window.deleteOfflineParticipant=async()=>{
- if(myRole!=="gm") return;
- const id=$("mergeOffline")?.value;
- const p=participants.find(x=>x.id===id);
- if(!p||p.role==="gm"||participantIsOnline(p)){alert("Sélectionnez un personnage hors ligne.");return;}
- if(!confirm(`Supprimer « ${p.display_name} » (${p.character_name||"personnage"}) de cette partie ?\n\nSes favoris seront supprimés. Ses jets resteront dans l'historique sans être réaffectés. Cette action ne peut pas être annulée depuis l'interface.`))return;
- try{
-  const {error}=await supabase.rpc("delete_dice_offline_participant",{p_participant_id:id});
-  if(error)throw error;
-  closeModal();await loadPeople();await loadFavorites();await loadHistory();
-  toast("Profil hors ligne supprimé de la liste");
- }catch(e){alert("Suppression impossible : "+(e.message||e));}
+  toast("Historique récupéré par "+(source.display_name||"le participant"));
+ }catch(e){alert("Fusion impossible : "+(e.message||e));}
 };
 window.confirmNewParticipant=async id=>{
  if(myRole!=="gm") return;
@@ -2843,67 +2975,6 @@ window.confirmNewParticipant=async id=>{
 
 function profileDisplayNameField(){
  return `<label>Nom du joueur</label><input id="profileDisplayName" value="${esc(myProfile?.display_name||"")}">`;
-}
-
-// Portraits : stockage de fichiers, jamais de base64 dans la base de données.
-const PORTRAIT_BUCKET="character-portraits";
-function validatePortraitFile(file){
- if(!file || !["image/jpeg","image/png","image/webp"].includes(file.type)) throw new Error("Choisissez un fichier JPG, PNG ou WebP.");
- if(file.size>8*1024*1024) throw new Error("Le portrait doit peser 8 Mo maximum.");
-}
-async function optimizePortrait(file){
- validatePortraitFile(file);
- const bitmap=await createImageBitmap(file);
- try{
-  const side=512, ratio=Math.min(1,side/Math.max(bitmap.width,bitmap.height));
-  const canvas=document.createElement("canvas");
-  canvas.width=Math.max(1,Math.round(bitmap.width*ratio));
-  canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
-  const ctx=canvas.getContext("2d");
-  if(!ctx) throw new Error("Impossible de traiter cette image.");
-  ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
-  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Conversion du portrait impossible.")),"image/webp",.82));
-  if(blob.type!=="image/webp") throw new Error("Conversion WebP non prise en charge par ce navigateur.");
-  return blob;
- }finally{bitmap.close?.();}
-}
-async function uploadParticipantPortrait(file){
- if(!session?.user?.id) throw new Error("Connexion requise pour importer un portrait.");
- const blob=await optimizePortrait(file);
- const path=`${session.user.id}/${crypto.randomUUID()}.webp`;
- const {error}=await supabase.storage.from(PORTRAIT_BUCKET).upload(path,blob,{contentType:"image/webp",upsert:false,cacheControl:"3600"});
- if(error) throw new Error("Importation du portrait : "+error.message);
- const {data}=supabase.storage.from(PORTRAIT_BUCKET).getPublicUrl(path);
- return {path,url:data.publicUrl};
-}
-function ownedPathFromPortraitUrl(url){
- if(!url || !session?.user?.id) return null;
- const prefix=supabase.storage.from(PORTRAIT_BUCKET).getPublicUrl(`${session.user.id}/`).data.publicUrl;
- if(!url.startsWith(prefix)) return null;
- const path=`${session.user.id}/${url.slice(prefix.length)}`;
- return /^[-a-f0-9]{36}\/[-a-f0-9]{36}\.webp$/i.test(path)?path:null;
-}
-async function removeOwnedPortrait(path){
- if(!path?.startsWith(`${session?.user?.id}/`)) return;
- const {error}=await supabase.storage.from(PORTRAIT_BUCKET).remove([path]);
- if(error) console.warn("Nettoyage du portrait impossible",error);
-}
-async function persistNewParticipantPortrait(file){
- let uploaded=null;
- try{
-  if(!myProfile || myProfile.role==="gm") throw new Error("Profil de joueur introuvable.");
-  uploaded=await uploadParticipantPortrait(file);
-  const {error}=await supabase.rpc("update_my_dice_participant_profile",{
-   p_channel_id:channelId,p_display_name:myProfile.display_name,
-   p_character_name:myProfile.character_name,p_avatar_url:uploaded.url
-  });
-  if(error) throw error;
-  await loadPeople();
-  toast("Portrait enregistré");
- }catch(e){
-  if(uploaded) await removeOwnedPortrait(uploaded.path);
-  alert("La table est accessible, mais le portrait n'a pas été enregistré : "+(e.message||e));
- }
 }
 
 window.openMyProfile=()=>{
@@ -2924,10 +2995,12 @@ window.openMyProfile=()=>{
    <label>Nom du personnage</label>
    <input id="profileCharacterName" value="${esc(myProfile.character_name||"")}">
 
-   <label>Importer un nouveau portrait</label>
-   <input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp">
-   <div class="muted" style="font-size:.7rem;margin-top:7px">JPG, PNG ou WebP, 8 Mo maximum. L'image sera optimisée et conservée dans Supabase.</div>
-   <label style="display:flex;align-items:center;gap:8px"><input id="profileRemovePortrait" type="checkbox" style="width:auto"> Supprimer mon portrait actuel</label>
+   <label>URL de l'image</label>
+   <input id="profileAvatarUrl" value="${esc(myProfile.avatar_url||"")}" placeholder="https://...">
+
+   <div class="muted" style="font-size:.7rem;margin-top:7px">
+     L'image reste hébergée sur le site de votre choix. Universal Dice Roller n'enregistre que son URL.
+   </div>
 
    <div class="actions">
      <button class="btn primary" onclick="saveMyProfile()">Enregistrer</button>
@@ -2941,16 +3014,11 @@ window.saveMyProfile=async()=>{
 
    const displayName=$("profileDisplayName")?.value.trim()||"";
    const characterName=myProfile.role==="gm"?null:($("profileCharacterName")?.value.trim()||null);
-   const portraitFile=myProfile.role==="gm"?null:($("profileAvatarFile")?.files?.[0]||null);
-   const removePortrait=myProfile.role!=="gm" && !!$("profileRemovePortrait")?.checked;
-   if(portraitFile && removePortrait) throw new Error("Choisissez soit un nouveau portrait, soit sa suppression.");
-   if(portraitFile) validatePortraitFile(portraitFile);
-   let avatarUrl=myProfile.role==="gm"?null:(removePortrait?null:myProfile.avatar_url||null);
-   let uploadedPath=null;
-   if(portraitFile){const uploaded=await uploadParticipantPortrait(portraitFile);avatarUrl=uploaded.url;uploadedPath=uploaded.path;}
+   const avatarUrl=myProfile.role==="gm"?null:($("profileAvatarUrl")?.value.trim()||null);
 
    if(!displayName) throw new Error("Le nom du joueur est obligatoire.");
    if(myProfile.role!=="gm" && !characterName) throw new Error("Le nom du personnage est obligatoire.");
+   if(avatarUrl && !/^https?:\/\//i.test(avatarUrl)) throw new Error("L'URL de l'image doit commencer par http:// ou https://");
 
    const {data,error}=await supabase.rpc("update_my_dice_participant_profile",{
      p_channel_id:channelId,
@@ -2959,11 +3027,7 @@ window.saveMyProfile=async()=>{
      p_avatar_url:avatarUrl
    });
 
-   if(error){if(uploadedPath) await removeOwnedPortrait(uploadedPath);throw error;}
-   if(portraitFile || removePortrait){
-    const previous=ownedPathFromPortraitUrl(myProfile.avatar_url);
-    if(previous) await removeOwnedPortrait(previous);
-   }
+   if(error) throw error;
 
    const row=Array.isArray(data)?data[0]:data;
    if(row) myProfile={...row,user_id:row.assigned_user_id};
@@ -2984,6 +3048,11 @@ async function loadHistory(){
  }).filter(canViewRollLocally);
  const seenExplosionChains=new Set();
  history=normalized.filter(r=>{
+   if(rollSystemKey(r)==="l5a"){
+     const root=r.metadata.l5_root||r.id;
+     if(seenExplosionChains.has(root)) return false;
+     seenExplosionChains.add(root);
+   }
    const chain=r.metadata?.vampire_explosion_chain_id;
    if(!chain) return true;
    if(seenExplosionChains.has(chain)) return false;
@@ -3000,6 +3069,10 @@ function renderHistory(){
  if(!history.length){$("history").innerHTML=`<div class="muted">Aucun jet.</div>`;return;}
  $("history").innerHTML=history.map(r=>{
    const rollSystem=r.metadata?.game_system_key||r.roll_type||"generic";
+   if(rollSystem==="l5a"){
+     const o=l5Outcome(r);
+     return `<div class="roll"><div class="roll-head"><div><div class="roll-title">${rerollPrefix(r)}${esc(r.roll_name||"Jet")}</div><div class="roll-sub">${esc(r.character_name||r.player_name||"Participant")} · ${esc(l5ConfigText(r))} · ${new Date(r.created_at).toLocaleTimeString()}</div></div><div class="roll-total">${o.pending?"…":o.total}</div></div>${o.pending?esc(o.status):l5Detail(r,o)}</div>`;
+   }
    if(rollSystem==="daggerheart"){
      const d=daggerheartOutcome(r);
      return `<div class="roll">
@@ -3082,6 +3155,7 @@ function favoriteConfig(f){
  const mod=Number(f.modifier||0);
  let config=(parts.length?parts.join(" + ").replace("+ 1D","+ 1D"):"Jet")+(mod?` ${mod>0?"+":"−"} ${Math.abs(mod)}`:"");
  const fs=f.metadata?.game_system_key||f.roll_type||"generic";
+ if(fs==="l5a") config=l5ConfigText(f);
  if(fs==="vampire_dark_ages") config+=` · Diff. ${Number(f.metadata?.difficulty||6)}${f.metadata?.specialty?" · Spécialité":""}`;
  if(fs==="assassins_creed") config=`${f.metadata?.approach||"Action"} ${Number(f.metadata?.difficulty||2)} · 6 dés Match`;
  if(fs==="fabula_ultima"){
@@ -3139,6 +3213,10 @@ window.saveFavorite=async()=>{
     metadata.advantage_mode=$("dhAdvMode")?.value||"none";
     metadata.advantage_count=Math.max(1,Number($("dhAdvCount")?.value||1));
   }
+  if(effectiveSystem==="l5a"){
+    Object.assign(metadata,l5ConfigFromDom());
+    validateL5(currentDice(),metadata);
+  }
   let litmFavoriteConfig=null;
   if(effectiveSystem==="legend_in_the_mist"){
     litmFavoriteConfig=litmConfigFromDom(true);
@@ -3148,7 +3226,7 @@ window.saveFavorite=async()=>{
     syncBaseDiceToGeneric();
     metadata.generic_groups=genericGroups.map(g=>({count:Number(g.count),sides:Number(g.sides),modifier:Number(g.modifier)||0}));
   }
-  const modifier=effectiveSystem==="vampire_dark_ages"||effectiveSystem==="band_of_blades"
+  const modifier=effectiveSystem==="l5a"||effectiveSystem==="vampire_dark_ages"||effectiveSystem==="band_of_blades"
     ? 0
     : (effectiveSystem==="generic"
         ? genericTotalModifier()
@@ -3209,6 +3287,15 @@ window.runFavorite=id=>{
    if($("dhAdvCount")) $("dhAdvCount").value=Math.max(1,Number(f.metadata?.advantage_count||1));
    toggleDhAdvCount();
  }
+ if(favSystem==="l5a" && $("l5Roll")){
+   $("l5Untrained").checked=f.metadata?.l5_untrained===true;
+   if($("l5Untrained").checked) $("l5Trait").value=f.metadata.l5_keep;
+   updateL5Training();
+   $("l5Roll").value=f.dice[0].count;
+   $("l5Keep").value=f.metadata.l5_keep;
+   $("l5Nd").value=f.metadata.l5_nd??"";
+   l5DraftNd=$("l5Nd").value;
+ }
  if(favSystem==="legend_in_the_mist"){
    if($("litmRollKind")) $("litmRollKind").value=f.metadata?.litm_roll_kind==="reaction"?"reaction":"action";
    if($("litmFinalPower")) $("litmFinalPower").value=Number(f.metadata?.roll_power??f.modifier??0);
@@ -3226,6 +3313,7 @@ function rollToastText(r){
  const who=r.character_name||r.player_name||"Un participant";
  const name=r.roll_name||"Jet de dés";
  const rollSystem=r.metadata?.game_system_key||r.roll_type||"generic";
+ if(rollSystem==="l5a") return `${who} · ${name} · ${l5Outcome(r).total}`;
  if(rollSystem==="vampire_dark_ages"){
    const vals=(r.dice||[]).flatMap(g=>g.results||[]);
    const difficulty=Math.max(2,Math.min(10,Number(r.metadata?.difficulty||6)));
@@ -3256,6 +3344,7 @@ async function hydrateRealtimeRoll(row){
  // le même metadata JSONB que le lanceur, au lieu de dépendre du payload
  // minimal que Realtime peut fournir.
  const technical=!!(
+   base.metadata?.l5_root ||
    base.metadata?.reroll_partial ||
    base.metadata?.vampire_explosion_partial ||
    String(base.roll_name||"").startsWith("Relance ·") ||
@@ -3347,44 +3436,9 @@ async function renderAdmin(){
 }
 window.adminToggle=async(id,active)=>{if(!confirm(active?"Réactiver cette table ?":"Désactiver cette table ?"))return;await supabase.rpc("admin_set_dice_channel_active",{p_channel_id:id,p_active:active});renderAdmin()};
 window.adminDelete=async(id,name)=>{if(!confirm(`Supprimer définitivement « ${name} » et tout son historique ?`))return;await supabase.rpc("admin_delete_dice_channel",{p_channel_id:id});renderAdmin()};
-window.adminParticipantManager=async cid=>{
- try{
-  const {data,error}=await supabase.rpc("admin_get_dice_participant_profiles",{p_channel_id:cid});
-  if(error)throw error;
-  const profiles=data||[];
-  const eligible=profiles.filter(p=>p.role!=="gm"&&p.assigned_user_id);
-  const archivedCandidates=profiles.filter(p=>p.role!=="gm" && (String(cid)===String(channelId)?!participantIsOnline(p):(!p.last_seen_at || Date.now()-new Date(p.last_seen_at).getTime()>120000)));
-  modal("Administration — profils persistants",`
-   <p class="muted">Le statut hors ligne est vérifié via Presence dans la partie actuellement ouverte. Pour une autre partie, il est estimé par la dernière connexion enregistrée : vérifiez avant de confirmer.</p>
-   <label>Joueur destinataire (compte attribué)</label>
-   <select id="adminMergeLive">${eligible.map(p=>`<option value="${p.id}">${esc(p.display_name)} — ${esc(p.character_name||"")}</option>`).join("")}</select>
-   <label>Profil source hors ligne</label>
-   <select id="adminMergeOld">${archivedCandidates.map(p=>`<option value="${p.id}">${esc(p.display_name)} — ${esc(p.character_name||"")}</option>`).join("")}</select>
-   <p class="muted" style="font-size:.75rem">Réaffecter transfère le portrait, les favoris et les jets. Supprimer archive le profil et retire ses favoris, sans transférer ses jets.</p>
-   <div class="actions"><button class="btn primary" ${eligible.length&&archivedCandidates.length?"":"disabled"} onclick="adminProfileMerge('${cid}')">Réaffecter</button><button class="btn red" ${archivedCandidates.length?"":"disabled"} onclick="adminProfileDelete('${cid}')">Supprimer le profil</button><button class="btn" onclick="renderAdmin()">Retour</button></div>`);
- }catch(e){alert("Profils indisponibles : "+(e.message||e));}
-};
-window.adminProfileMerge=async cid=>{
- const liveId=$("adminMergeLive")?.value,oldId=$("adminMergeOld")?.value;
- if(!liveId||!oldId||liveId===oldId){alert("Choisissez deux profils différents.");return;}
- if(!confirm("Réaffecter définitivement historique, favoris et portrait au compte destinataire ?"))return;
- const {error}=await supabase.rpc("admin_merge_dice_participant_history",{p_online_participant_id:liveId,p_offline_participant_id:oldId});
- if(error){alert("Réaffectation impossible : "+error.message);return;}
- if(String(cid)===String(channelId)){await loadPeople();await loadFavorites();await loadHistory();}
- await adminParticipantManager(cid);
-};
-window.adminProfileDelete=async cid=>{
- const oldId=$("adminMergeOld")?.value;
- if(!oldId)return;
- if(!confirm("Archiver ce profil hors ligne et supprimer ses favoris ? Les jets restent dans le journal collectif."))return;
- const {error}=await supabase.rpc("admin_delete_dice_offline_participant",{p_participant_id:oldId});
- if(error){alert("Suppression impossible : "+error.message);return;}
- if(String(cid)===String(channelId)){await loadPeople();await loadFavorites();await loadHistory();}
- await adminParticipantManager(cid);
-};
 window.adminMembers=async id=>{
  const {data,error}=await supabase.rpc("admin_list_dice_channel_members",{p_channel_id:id});if(error)return;
- $("am-"+id).innerHTML=`<div class="actions"><button class="btn small primary" onclick="adminParticipantManager('${id}')">Gérer les profils persistants</button></div>`+(data||[]).map(m=>`<div class="member-row"><div><strong>${esc(m.role==="gm"?"MJ":m.character_name||"Joueur")}</strong> <span class="muted">(${esc(m.display_name)})</span></div><div><button class="btn small" onclick="adminRole('${id}','${m.user_id}','${m.role==="gm"?"player":"gm"}')">${m.role==="gm"?"→ Joueur":"→ MJ"}</button> <button class="btn red small" onclick="adminRemove('${id}','${m.user_id}')">Retirer l’accès</button></div></div>`).join("");
+ $("am-"+id).innerHTML=(data||[]).map(m=>`<div class="member-row"><div><strong>${esc(m.role==="gm"?"MJ":m.character_name||"Joueur")}</strong> <span class="muted">(${esc(m.display_name)})</span></div><div><button class="btn small" onclick="adminRole('${id}','${m.user_id}','${m.role==="gm"?"player":"gm"}')">${m.role==="gm"?"→ Joueur":"→ MJ"}</button> <button class="btn red small" onclick="adminRemove('${id}','${m.user_id}')">Retirer</button></div></div>`).join("");
 };
 window.adminRole=async(cid,uid,role)=>{await supabase.rpc("admin_set_dice_channel_member_role",{p_channel_id:cid,p_user_id:uid,p_role:role});adminMembers(cid)};
 window.adminRemove=async(cid,uid)=>{if(!confirm("Retirer ce participant ?"))return;await supabase.rpc("admin_remove_dice_channel_member",{p_channel_id:cid,p_user_id:uid});adminMembers(cid)};
