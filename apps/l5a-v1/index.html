@@ -263,15 +263,49 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
   width: 100%; border-collapse: collapse; margin-top: 10px;
 }
 .skills-master-table th {
-  text-align: left; padding: 8px 10px; font-size: 11px; text-transform: uppercase;
-  color: var(--ink-dim); border-bottom: 1px solid var(--line); letter-spacing: 0.04em;
+  text-align: left; padding: 10px 12px; font-size: 11.5px; text-transform: uppercase;
+  color: var(--ink-muted); border-bottom: 1px solid var(--line); letter-spacing: 0.05em;
+  background: rgba(0,0,0,0.25);
 }
 .skills-master-table td {
-  padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13.5px;
+  padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px;
+  vertical-align: middle;
 }
-.skill-row:hover td { background: rgba(255,255,255,0.02); }
-.skill-row.untrained td { opacity: 0.65; }
-.skill-row.trained td { opacity: 1; }
+.skill-row { transition: background 0.15s ease; }
+.skill-row:hover td { background: rgba(255,255,255,0.04); }
+.skill-row.trained {
+  background: rgba(200, 160, 80, 0.04);
+  border-left: 3px solid var(--gold);
+}
+.skill-row.trained td strong { color: #fff; font-size: 14.5px; }
+.skill-row.untrained {
+  border-left: 3px solid transparent;
+}
+.skill-row.untrained td {
+  opacity: 1; /* Pleine lisibilité et contraste net */
+}
+.skill-row.untrained td strong { color: #d8d0c5; }
+
+.roll-pill-trained {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(200, 160, 80, 0.12); border: 1px solid var(--gold);
+  color: var(--gold); font-size: 15px; font-weight: bold;
+  padding: 3px 10px; border-radius: 6px; letter-spacing: 0.5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.roll-pill-untrained {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5efe6; font-size: 15px; font-weight: bold;
+  padding: 3px 10px; border-radius: 6px; letter-spacing: 0.5px;
+}
+.roll-sub-trained {
+  font-size: 11px; color: var(--ink-muted); font-weight: 500;
+}
+.roll-sub-untrained {
+  font-size: 11px; color: #e59a42; font-weight: 600;
+  display: flex; align-items: center; gap: 4px;
+}
 
 /* BLESSURES ET TRACKER */
 .wound-track { display: grid; gap: 8px; margin: 12px 0; }
@@ -784,16 +818,34 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
         </div>
       </div>
 
-      <!-- Barre de recherche et filtres de compétences -->
-      <input type="text" id="skillsFilterInput" class="search-input" placeholder="🔍 Rechercher une compétence, un trait ou un anneau..." oninput="renderMasterSkillsTable()">
-      
+      <!-- Barre de recherche, tri et filtres de compétences -->
+      <div style="display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="skillsFilterInput" class="search-input" style="flex:1;min-width:200px;margin:0;" placeholder="🔍 Rechercher une compétence, un trait ou un anneau..." oninput="renderMasterSkillsTable()">
+        
+        <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-muted);cursor:pointer;user-select:none;background:var(--panel-sub);padding:8px 12px;border-radius:6px;border:1px solid var(--line);">
+          <input type="checkbox" id="sortTrainedFirst" checked onchange="renderMasterSkillsTable()" style="accent-color:var(--gold);width:16px;height:16px;cursor:pointer;">
+          <span>Compétences maîtrisées en premier</span>
+        </label>
+      </div>
+
       <div class="filter-tabs">
         <button class="filter-pill active" data-filter="all" onclick="setSkillFilter(this, 'all')">Toutes (38)</button>
-        <button class="filter-pill" data-filter="trained" onclick="setSkillFilter(this, 'trained')">Maîtrisées (Rang > 0)</button>
+        <button class="filter-pill" data-filter="trained" onclick="setSkillFilter(this, 'trained')">⭐ Maîtrisées</button>
+        <button class="filter-pill" data-filter="untrained" onclick="setSkillFilter(this, 'untrained')">Non maîtrisées</button>
         <button class="filter-pill" data-filter="bugei" onclick="setSkillFilter(this, 'bugei')">Bugei (Martiale)</button>
         <button class="filter-pill" data-filter="valorisante" onclick="setSkillFilter(this, 'valorisante')">Valorisante (Noble)</button>
         <button class="filter-pill" data-filter="marchand" onclick="setSkillFilter(this, 'marchand')">Marchande</button>
         <button class="filter-pill" data-filter="devalorisante" onclick="setSkillFilter(this, 'devalorisante')">Dévalorisante</button>
+      </div>
+
+      <!-- Aide-mémoire clair pour la lecture des dés -->
+      <div style="background:rgba(0,0,0,0.25);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin:10px 0;font-size:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div>
+          <span style="color:var(--gold);font-weight:bold;">● Compétence maîtrisée :</span> Jet = <strong>(Rang + Trait)g(Trait)</strong> · <em>Les 10 explosent (se relancent).</em>
+        </div>
+        <div>
+          <span style="color:#e59a42;font-weight:bold;">▲ Compétence non maîtrisée :</span> Jet = <strong>(Trait)g(Trait)</strong> · <em style="color:#e59a42;font-weight:600;">Les 10 NE relancent PAS.</em>
+        </div>
       </div>
 
       <div style="overflow-x:auto;">
@@ -803,8 +855,8 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
               <th>Compétence</th>
               <th>Catégorie</th>
               <th>Anneau & Trait</th>
-              <th style="text-align:center;">Rang en jeu</th>
-              <th style="text-align:right;">Formule Jet (XgY)</th>
+              <th style="text-align:center;">Rang</th>
+              <th style="text-align:right;">Formule Jet (Roll & Keep)</th>
             </tr>
           </thead>
           <tbody id="masterSkillsTableBody"></tbody>
@@ -4824,10 +4876,14 @@ function renderMasterSkillsTable() {
   if (!tbody) return;
   const rings = getRings();
   const query = (document.getElementById("skillsFilterInput")?.value || "").toLowerCase().trim();
+  const sortTrainedFirst = document.getElementById("sortTrainedFirst")?.checked !== false;
 
-  const skills = DATA.skills.filter(sk => {
+  let skills = DATA.skills.filter(sk => {
+    const rank = getSkillRank(sk.name);
     if (currentSkillCategoryFilter === "trained") {
-      if (getSkillRank(sk.name) <= 0) return false;
+      if (rank <= 0) return false;
+    } else if (currentSkillCategoryFilter === "untrained") {
+      if (rank > 0) return false;
     } else if (currentSkillCategoryFilter !== "all") {
       if (sk.type !== currentSkillCategoryFilter) return false;
     }
@@ -4837,6 +4893,17 @@ function renderMasterSkillsTable() {
     }
     return true;
   });
+
+  // Tri intelligent : compétences maîtrisées en premier (si coché et vue générale)
+  if (sortTrainedFirst && (currentSkillCategoryFilter === "all" || currentSkillCategoryFilter === "bugei" || currentSkillCategoryFilter === "valorisante" || currentSkillCategoryFilter === "marchand" || currentSkillCategoryFilter === "devalorisante")) {
+    skills.sort((a, b) => {
+      const rA = getSkillRank(a.name);
+      const rB = getSkillRank(b.name);
+      if (rA > 0 && rB === 0) return -1;
+      if (rA === 0 && rB > 0) return 1;
+      return a.name.localeCompare(b.name, "fr");
+    });
+  }
 
   tbody.innerHTML = skills.map(sk => {
     const rank = getSkillRank(sk.name);
@@ -4850,25 +4917,36 @@ function renderMasterSkillsTable() {
     return `
       <tr class="skill-row ${isTrained ? 'trained' : 'untrained'}">
         <td>
-          <strong style="color:${isTrained ? '#fff' : 'var(--ink-muted)'};">${sk.name}</strong>
-          <small style="display:block;color:var(--ink-dim);font-size:11px;">${sk.desc}</small>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <strong style="color:${isTrained ? '#fff' : '#d8d0c5'};font-size:${isTrained ? '14.5px' : '14px'};">${sk.name}</strong>
+            ${isTrained ? '<span style="color:var(--gold);font-size:12px;" title="Compétence maîtrisée">★</span>' : ''}
+          </div>
+          <small style="display:block;color:var(--ink-dim);font-size:11px;margin-top:2px;">${sk.desc}</small>
         </td>
         <td>
-          <span class="badge" style="border-color:var(--cat-${sk.type});color:var(--cat-${sk.type});">${sk.typeLabel}</span>
+          <span class="badge" style="border-color:var(--cat-${sk.type});color:var(--cat-${sk.type});font-size:11px;">${sk.typeLabel}</span>
         </td>
         <td>
-          <span class="badge ${ringBadgeClass}">${sk.traitLabel} · ${sk.ring}</span>
+          <span class="badge ${ringBadgeClass}" style="font-size:11px;">${sk.traitLabel} · ${sk.ring}</span>
         </td>
         <td style="text-align:center;">
-          <span class="badge ${isTrained ? 'gold' : ''}" style="font-size:14px;font-weight:bold;min-width:32px;display:inline-block;">
-            ${rank}
-          </span>
+          ${isTrained ? `
+            <span class="badge gold" style="font-size:13px;font-weight:bold;min-width:32px;display:inline-block;padding:3px 8px;">Rang ${rank}</span>
+          ` : `
+            <span class="badge" style="border-color:var(--line);color:var(--ink-muted);font-size:11.5px;padding:3px 8px;background:rgba(255,255,255,0.03);">Non maîtrisée (0)</span>
+          `}
         </td>
         <td style="text-align:right;">
           ${isTrained ? `
-            <span class="badge gold" style="font-size:13px;font-weight:bold;">${rolled}g${kept}</span>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+              <span class="roll-pill-trained">${rolled}g${kept}</span>
+              <span class="roll-sub-trained">${rank} (Rang) + ${traitVal} (${sk.traitLabel}) · 10 explosifs</span>
+            </div>
           ` : `
-            <span class="badge" style="font-size:11px;color:var(--ink-dim);">${rolled}g${kept} (sans relance)</span>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+              <span class="roll-pill-untrained">${rolled}g${kept}</span>
+              <span class="roll-sub-untrained">⚠️ ${sk.traitLabel} seul · Sans relance des 10</span>
+            </div>
           `}
         </td>
       </tr>
