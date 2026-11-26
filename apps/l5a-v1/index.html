@@ -543,7 +543,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 [data-element=air]{--paper:#d5e8db}
 [data-element=void]{--paper:#e5dcf0}
 [data-element=universal]{--paper:#e9e5d9}
-.game-card[data-element],.creation-ring,.spell-group[data-element]{
+.xp-trait{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid var(--element);border-inline-start:4px solid var(--element);border-radius:6px}
+.game-card[data-element],.creation-ring,.spell-group[data-element],.xp-trait[data-element]{
   background:var(--paper);
   background:linear-gradient(135deg,color-mix(in srgb,var(--paper) 75%,#fffdf9),var(--paper) 65%,color-mix(in srgb,var(--paper) 85%,white));
   border-color:color-mix(in srgb,var(--element) 58%,var(--paper));
@@ -564,8 +565,23 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 .school-grants small{color:var(--gold);font-weight:700;white-space:nowrap}
 .school-grants h4,.school-grants+h4{margin:.4rem 0}
 #weaponPicker:not([hidden]){display:grid;gap:.65rem;max-width:32rem;padding:.85rem;margin:.6rem 0;border:1px solid var(--line);border-radius:.6rem;background:var(--panel-sub);grid-template-columns:auto 1fr}
+#weaponPreview{grid-column:1/-1;border-left:3px solid var(--line);padding:.2rem .8rem}#weaponPreview p{margin:.25rem 0}
 #weaponPicker>label,#weaponPicker>fieldset{grid-column:1/-1}#weaponPicker select,#weaponPicker fieldset input{display:block;width:100%}
 #weaponPicker [hidden]{display:none}#weaponPicker button{justify-self:start}#weaponFeedback{display:block;margin-top:.4rem}
+#effectOptions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:1.2rem}
+#effectOptions h3{margin:.5rem 0} .effect-picker,.owned-effect{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.effect-picker select{flex:1;min-width:8rem}.owned-effect{padding:.55rem 0;border-bottom:1px solid var(--line)}.owned-effect>strong{flex:1}.owned-effect small{flex-basis:100%;color:var(--ink-muted)}
+#wizardSpellsGrid{display:grid;gap:.55rem}
+.scroll-group,.scroll-entry{border:1px solid var(--line);border-radius:.65rem;background:var(--panel);padding:.45rem .75rem;min-width:0}
+.scroll-entry{margin:.4rem 0}.scroll-entry summary,.scroll-group>summary{cursor:pointer;padding:.35rem}
+.scroll-entry summary small{margin-left:.7rem;color:var(--ink-muted)}
+.scroll-entry .spell-detail{max-width:70ch}.scroll-actions,#chosenScrolls{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap}
+#chosenScrolls:not(:empty){margin:.7rem 0}.scroll-actions:not(:empty){margin:.6rem 0}
+.innate-tag{display:inline-block;border:1px solid #87998c;color:#324d3b;background:#eff5ec;border-radius:1rem;padding:.12rem .55rem;font-size:.78rem;font-weight:700}
+.arrow-comparison summary{cursor:pointer;font-weight:600}
+.arrow-comparison dl{margin:.6em 0}
+.arrow-comparison dt{font-weight:700}
+.arrow-comparison dd{margin:0 0 .55em;line-height:1.4}
 </style>
 </head>
 <body>
@@ -817,15 +833,15 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 
     <!-- ETAPE 4 : SORTS DE DEPART (POUR SHUGENJA UNIQUEMENT) -->
     <div id="createStep4" class="create-step-pane hidden">
-      <p>Prières acquises d’office · Sensation, Communion et Invocation.</p>
+      
 
       <div class="card">
         <div class="card-header">
           <h2>Parchemins élémentaires de départ</h2>
           
         </div>
-        <p id="scrollInstructions"></p><div id="spellAllocation"></div><p id="spellStatus" role="status"></p><div class="selection-grid" id="wizardSpellsGrid"></div>
-        <details class="spell-catalog"><summary>Consulter tous les sorts du livre de base</summary><div id="creationSpellIndex"></div></details>
+        <p id="scrollInstructions"></p><div id="spellAllocation"></div><p id="spellStatus" role="status"></p><div id="chosenScrolls"></div><div id="wizardSpellsGrid"></div><details class="spell-catalog"><summary>Consulter les 65 sorts du livre de base</summary><div id="creationSpellIndex"></div></details>
+        
       </div>
 
       <div style="display:flex;justify-content:space-between;gap:10px;margin-top:14px;">
@@ -1004,6 +1020,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       </div>
     </div>
 
+    <section class="card" id="xpInnatePanel" hidden><h2>Maîtrise innée des sorts</h2><p>Un sort de votre grimoire coûte 3 XP à mémoriser. L’anneau de son élément ajouté à votre rang de maîtrise doit atteindre la maîtrise du sort (VF p. 144).</p><div id="xpInnateChoices"></div></section>
     <section class="card" id="xpSchoolPanel" hidden><h2>Progression d’école</h2><div id="xpMastery"></div><div id="xpFutureTechniques"></div></section>
     <!-- CARTE 3 : HISTORIQUE COMPLET (LEDGER) -->
     <div class="card">
@@ -1055,7 +1072,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       </div>
       <h3>Armes</h3><div id="inventoryWeapons"></div>
       <form id="weaponPicker" onsubmit="return false">
-        <label>Arme du livre de base · p. 249 <select name="model" onchange="weaponPickerMode()"></select></label>
+        <label>Arme du livre de base <select name="model" onchange="weaponPickerMode()"></select></label>
+        <div id="weaponPreview" aria-live="polite"></div>
         <fieldset name="customFields" hidden disabled><legend>Arme personnalisée</legend>
           <label>Nom <input name="weaponName" required></label><label>Attaque <input name="attack" required pattern="[0-9]+[gG][0-9]+" placeholder="5g3"></label>
           <label>Dommages <input name="damage" required pattern="[0-9]+[gG][0-9]+" placeholder="4g2"></label><label>Description <input name="description"></label>
@@ -1077,6 +1095,11 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 
   <!-- 6. VUE OPTIONS (SAUVEGARDE & EXPORT) -->
   <section id="screen-options" class="screen">
+    <section class="card" aria-labelledby="effectOptionsHeading">
+      <div class="card-header"><h2 id="effectOptionsHeading">Avantages et handicaps</h2></div>
+      <p class="card-sub">Modifiez les particularités du personnage en cours de partie. Ces ajustements ne dépensent ni PP ni XP.</p>
+      <div id="effectOptions"></div><small id="effectOptionsStatus" role="status"></small>
+    </section>
     <div class="card">
       <div class="card-header">
         <h2>Options & Sauvegardes</h2>
@@ -1940,7 +1963,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
           "id": "slot1",
           "label": "Compétence d'artisanat ou de survie au choix",
           "filter": "marchand",
-          "default": "Survie"
+          "default": "Chasse / Pistage"
         }
       ],
       "affinity": "Moine Tatoué",
@@ -2918,20 +2941,10 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "name": "Tir à l'arc",
       "trait": "reflexes",
       "type": "bugei",
-      "desc": "Maniement des arcs traditionnels (yumi) à pied.",
+      "desc": "Maniement de l’arc (kyujutsu). Équitation couvre également l’aptitude à tirer à cheval (VF p. 68 et 70).",
       "ring": "Air",
       "traitLabel": "Réflexes",
       "typeLabel": "Bugei (Martiale)"
-    },
-    {
-      "name": "Tir à l'arc à cheval",
-      "trait": "reflexes",
-      "type": "bugei",
-      "desc": "Tir à l'arc à pleine vitesse depuis une monture au galop.",
-      "ring": "Air",
-      "traitLabel": "Réflexes",
-      "typeLabel": "Bugei (Martiale)",
-      "legacyChoice": true
     },
     {
       "name": "Défense",
@@ -2982,20 +2995,10 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "name": "Art de la guerre",
       "trait": "perception",
       "type": "bugei",
-      "desc": "Stratégie, logistique et commandement des armées en campagne.",
+      "desc": "Étude des stratégies et des tactiques. Cette compétence de bugei s’utilise en bataille rangée comme en escarmouche, avec Perception (VF p. 69).",
       "ring": "Eau",
       "traitLabel": "Perception",
       "typeLabel": "Bugei (Martiale)"
-    },
-    {
-      "name": "Bataille",
-      "trait": "perception",
-      "type": "bugei",
-      "desc": "Survie et repérage des opportunités au cœur de la mêlée d'une bataille de masse.",
-      "ring": "Eau",
-      "traitLabel": "Perception",
-      "typeLabel": "Bugei (Martiale)",
-      "legacyChoice": true
     },
     {
       "name": "Équitation",
@@ -3008,18 +3011,18 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
     },
     {
       "name": "Athlétisme",
-      "trait": "strength",
+      "trait": "variable",
       "type": "bugei",
-      "desc": "Course, saut, escalade, nage et épreuves de puissance physique brute.",
-      "ring": "Eau",
-      "traitLabel": "Force",
+      "desc": "Le trait dépend de l’effort. Pour courir vite, utilisez Réflexes. Pour courir longtemps, Constitution (VF p. 69). Bugei pour les samurai, dévalorisante pour les heimin et hinin.",
+      "ring": "Variable",
+      "traitLabel": "Variable",
       "typeLabel": "Bugei (Martiale)"
     },
     {
       "name": "Chasse / Pistage",
       "trait": "perception",
       "type": "valorisante",
-      "desc": "Suivi des traces de gibier ou de fugitifs dans la nature sauvage.",
+      "desc": "Fauconnerie, pistage et vie en plein air, notamment installer un campement ou faire du feu (VF p. 67).",
       "ring": "Eau",
       "traitLabel": "Perception",
       "typeLabel": "Valorisante (Noble)"
@@ -3163,11 +3166,11 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
     },
     {
       "name": "Commerce",
-      "trait": "intelligence",
+      "trait": "awareness",
       "type": "marchand",
       "desc": "Évaluation des biens, fixation des prix et négociation marchande.",
-      "ring": "Feu",
-      "traitLabel": "Intelligence",
+      "ring": "Air",
+      "traitLabel": "Intuition",
       "typeLabel": "Marchande"
     },
     {
@@ -3181,22 +3184,12 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
     },
     {
       "name": "Artisanat",
-      "trait": "agility",
+      "trait": "variable",
       "type": "marchand",
-      "desc": "Travail manuel pratique : forge, menuiserie, cuisine ou fabrication d'outils.",
-      "ring": "Feu",
-      "traitLabel": "Agilité",
+      "desc": "Travail manuel selon le métier pratiqué, par exemple potier ou charpentier. Armurerie et Forge sont deux compétences distinctes (VF p. 70).",
+      "ring": "Variable",
+      "traitLabel": "Variable",
       "typeLabel": "Marchande"
-    },
-    {
-      "name": "Survie",
-      "trait": "perception",
-      "type": "marchand",
-      "desc": "Bivouac, recherche d'eau potable, abris de fortune et orientation.",
-      "ring": "Eau",
-      "traitLabel": "Perception",
-      "typeLabel": "Marchande",
-      "legacyChoice": true
     },
     {
       "name": "Discrétion",
@@ -3414,7 +3407,11 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "traitLabel": "Terre",
       "ring": "Terre",
       "type": "bugei",
-      "typeLabel": "Bugei (Martiale)"
+      "typeLabel": "Bugei et marchande",
+      "categories": [
+        "bugei",
+        "marchand"
+      ]
     },
     {
       "name": "Forge",
@@ -3423,7 +3420,11 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "traitLabel": "Terre",
       "ring": "Terre",
       "type": "bugei",
-      "typeLabel": "Bugei (Martiale)"
+      "typeLabel": "Bugei et marchande",
+      "categories": [
+        "bugei",
+        "marchand"
+      ]
     },
     {
       "name": "Lutte",
@@ -3614,7 +3615,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
         "Précision",
         "Temps d’incantation : retrancher une action, avec un minimum d’une action."
       ],
-      "desc": "Repère la présence d’une matière ou d’un objet associé à l’élément choisi. La Terre peut révéler de l’or ou un chemin dans la montagne, l’Eau une source, l’Air une odeur ou une voix précise. Le shugenja dispose d’un parchemin par élément pour cette prière (Terre, Eau, Feu et Air)."
+      "desc": "Repère la présence d’une matière ou d’un objet associé à l’élément choisi. La Terre peut révéler de l’or ou un chemin dans la montagne, l’Eau une source, l’Air une odeur ou une voix précise. Un seul parchemin permet d’employer cette prière avec la Terre, l’Eau, le Feu ou l’Air."
     },
     {
       "id": "commune",
@@ -3630,7 +3631,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
         "Importance ou précision des informations",
         "Temps d’incantation : retrancher une action, avec un minimum d’une action."
       ],
-      "desc": "Permet de poser une question à l’esprit présent dans un feu, un lac, une montagne ou un arbre. Son attitude envers l’esprit influe sur la réponse. La Terre répond littéralement, l’Air livre des impressions ou des paroles, le Feu exige des égards et apprécie les offrandes, l’Eau montre des images du passé sans porter de jugement. Le shugenja dispose d’un parchemin par élément pour cette prière (Terre, Eau, Feu et Air)."
+      "desc": "Permet de poser une question à l’esprit présent dans un feu, un lac, une montagne ou un arbre. Son attitude envers l’esprit influe sur la réponse. La Terre répond littéralement, l’Air livre des impressions ou des paroles, le Feu exige des égards et apprécie les offrandes, l’Eau montre des images du passé sans porter de jugement. Un seul parchemin permet d’employer cette prière avec la Terre, l’Eau, le Feu ou l’Air."
     },
     {
       "id": "summon",
@@ -3646,7 +3647,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
         "Volume : ajouter l’équivalent d’un poing",
         "Temps d’incantation : retrancher une action, avec un minimum d’une action."
       ],
-      "desc": "Emprunte ailleurs en Rokugan une quantité de matière de la taille du poing du shugenja et lui donne la forme voulue. La distance détermine l’incantation, de quelques secondes à plusieurs heures. Terre : pierre ou métal. Air : gaz qui se dissipe rapidement. Eau : tout liquide, y compris un poison. Feu : enflamme au contact une matière combustible. Des augmentations permettent d’enflammer des matériaux moins combustibles. Le shugenja dispose d’un parchemin par élément pour cette prière (Terre, Eau, Feu et Air)."
+      "desc": "Emprunte ailleurs en Rokugan une quantité de matière de la taille du poing du shugenja et lui donne la forme voulue. La distance détermine l’incantation, de quelques secondes à plusieurs heures. Terre : pierre ou métal. Air : gaz qui se dissipe rapidement. Eau : tout liquide, y compris un poison. Feu : enflamme au contact une matière combustible. Des augmentations permettent d’enflammer des matériaux moins combustibles. Un seul parchemin permet d’employer cette prière avec la Terre, l’Eau, le Feu ou l’Air."
     },
     {
       "id": "vf_contre_sort",
@@ -3655,7 +3656,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "element": "Universel",
       "tn": "10",
       "casting": "1 action",
-      "duration": "Instantanée",
+      "duration": "Non précisée",
       "mastery": 1,
       "concentration": "Non précisée",
       "raises": [
@@ -4677,168 +4678,216 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "name": "Aiguchi",
       "group": "Épées",
       "skill": "Kenjutsu",
-      "vd": "1g2"
+      "vd": "1g2",
+      "note": "Couteau court sans garde.",
+      "page": 122
     },
     {
       "key": "katana",
       "name": "Katana",
       "group": "Épées",
       "skill": "Kenjutsu",
-      "vd": "3g2"
+      "vd": "3g2",
+      "note": "Épée longue du samouraï. Avec le wakizashi, elle forme le daisho.",
+      "page": 122
     },
     {
       "key": "no-dachi",
       "name": "No-dachi",
       "group": "Épées",
       "skill": "Kenjutsu",
-      "vd": "3g3"
+      "vd": "3g3",
+      "note": "Grande épée maniée à deux mains.",
+      "page": 122
     },
     {
       "key": "tanto",
       "name": "Tanto",
       "group": "Épées",
       "skill": "Kenjutsu",
-      "vd": "1g2"
+      "vd": "1g2",
+      "note": "Couteau court muni d’une garde.",
+      "page": 122
     },
     {
       "key": "tessen",
       "name": "Tessen",
       "group": "Épées",
       "skill": "Éventail de guerre",
-      "vd": "0g2"
+      "vd": "0g2",
+      "note": "Éventail de guerre renforcé de métal. Il sert aussi à parer et à transmettre des ordres sur le champ de bataille.",
+      "page": 122
     },
     {
       "key": "wakizashi",
       "name": "Wakizashi",
       "group": "Épées",
       "skill": "Kenjutsu",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Épée courte qui forme le daisho avec le katana.",
+      "page": 122
     },
     {
       "key": "die_tsuchi",
       "name": "Die tsuchi",
       "group": "Armes d’hast",
       "skill": "Die tsuchi",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Marteau de guerre associé au clan du Crabe.",
+      "page": 123
     },
     {
       "key": "nage-yari",
       "name": "Nage-yari",
       "group": "Armes d’hast",
       "skill": "Armes de hast",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Javelot utilisable au contact ou comme arme de jet.",
+      "page": 123
     },
     {
       "key": "nagamaki",
       "name": "Nagamaki",
       "group": "Armes d’hast",
       "skill": "Naginata",
-      "vd": "4g2"
+      "vd": "4g2",
+      "note": "Version courte du naginata, qui emploie la même compétence.",
+      "page": 123
     },
     {
       "key": "naginata",
       "name": "Naginata",
       "group": "Armes d’hast",
       "skill": "Naginata",
-      "vd": "3g3"
+      "vd": "3g3",
+      "note": "Arme d’hast à lame de sabre.",
+      "page": 123
     },
     {
       "key": "ono",
       "name": "Ono",
       "group": "Armes d’hast",
       "skill": "Armes de hast",
-      "vd": "3g3"
+      "vd": "3g3",
+      "note": "Hache de bataille.",
+      "page": 123
     },
     {
       "key": "sasumata",
       "name": "Sasumata",
       "group": "Armes d’hast",
       "skill": "Armes de hast",
-      "vd": "0g2"
+      "vd": "0g2",
+      "note": "Après une touche, faites un jet d’opposition d’Agilité. Si vous l’emportez, la cible est immobilisée et subit 0g2 dommages par tour. Pour se libérer, elle peut tenter une fois par tour un jet simple de Force contre un ND de 25.",
+      "page": 123
     },
     {
       "key": "sodegarami",
       "name": "Sodegarami",
       "group": "Armes d’hast",
       "skill": "Armes de hast",
-      "vd": "0g1"
+      "vd": "0g1",
+      "note": "Cet « attrape-manches » permet d’accrocher les vêtements ou l’armure de l’adversaire.",
+      "page": 123
     },
     {
       "key": "tetsubo",
       "name": "Tetsubo",
       "group": "Armes d’hast",
       "skill": "Tetsubo (Armes lourdes)",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Arme à deux mains. Le tetsubo est exclu du bonus d’initiative des armes d’hast.",
+      "page": 123
     },
     {
       "key": "yari",
       "name": "Yari",
       "group": "Armes d’hast",
       "skill": "Armes de hast",
-      "vd": "4g2"
+      "vd": "4g2",
+      "note": "Lance traditionnelle.",
+      "page": 123
     },
     {
       "key": "dai-kyu",
       "name": "Dai-kyu",
       "group": "Arcs",
       "skill": "Tir à l'arc",
-      "vd": "arc"
+      "vd": "arc",
+      "note": "Arc long conçu pour le tir à cheval. Portée d’environ 200 mètres.",
+      "page": 124
     },
     {
       "key": "yumi",
       "name": "Yumi",
       "group": "Arcs",
       "skill": "Tir à l'arc",
-      "vd": "arc"
+      "vd": "arc",
+      "note": "Arc conçu pour le tir debout. Portée d’environ 200 mètres.",
+      "page": 124
     },
     {
       "key": "bo",
       "name": "Bo",
       "group": "Armes paysannes",
       "skill": "Bâton (Bojutsu)",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Long bâton bénéficiant de la règle d’initiative des armes d’hast.",
+      "page": 125
     },
     {
       "key": "jitte",
       "name": "Jitte",
       "group": "Armes paysannes",
       "skill": "Jitte",
-      "vd": "1g1"
+      "vd": "1g1",
+      "note": "Accorde une augmentation gratuite pour tenter de désarmer un adversaire.",
+      "page": 125
     },
     {
       "key": "jo",
       "name": "Jo",
       "group": "Armes paysannes",
       "skill": "Jo",
-      "vd": "0g2"
+      "vd": "0g2",
+      "note": "Bâton court généralement utilisé par paire.",
+      "page": 125
     },
     {
       "key": "kama",
       "name": "Kama",
       "group": "Armes paysannes",
       "skill": "Kama",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Serpe courte d’origine paysanne.",
+      "page": 125
     },
     {
       "key": "nunchaku",
       "name": "Nunchaku",
       "group": "Armes paysannes",
       "skill": "Nunchaku",
-      "vd": "2g2"
+      "vd": "2g2",
+      "note": "Fléau d’origine paysanne.",
+      "page": 125
     },
     {
       "key": "sai",
       "name": "Sai",
       "group": "Armes paysannes",
       "skill": "Sai",
-      "vd": "1g1"
+      "vd": "1g1",
+      "note": "Accorde une augmentation gratuite pour tenter de désarmer un adversaire.",
+      "page": 125
     },
     {
       "key": "tonfa",
       "name": "Tonfa",
       "group": "Armes paysannes",
       "skill": "Tonfa",
-      "vd": "1g2"
+      "vd": "1g2",
+      "note": "Arme paysanne en bois munie d’une poignée latérale.",
+      "page": 125
     }
   ]
 }
@@ -4951,12 +5000,34 @@ function initializeWoundEffects() {
   if (hasEffect("dis_blessure_permanente")) character.status.woundsTaken = Math.max(woundsNow(), woundsPerRank());
   character.status.woundEffectsReady = true;
 }
+// Les anciennes clés sont converties une seule fois au chargement ou à l’import.
+function migrateSkillNames(person){
+  const aliases={"Bataille":"Art de la guerre","Tir à l'arc à cheval":"Tir à l'arc","Survie":"Chasse / Pistage"};
+  for(const [oldName,name] of Object.entries(aliases)){
+    for(const ranks of [person.purchases?.skills,person.xp?.purchases?.skills,person.inGameSkills]){
+      if(ranks && Object.prototype.hasOwnProperty.call(ranks,oldName)){
+        ranks[name]=(Number(ranks[name])||0)+(Number(ranks[oldName])||0);
+        delete ranks[oldName];
+      }
+    }
+    for(const [slot,chosen] of Object.entries(person.schoolChosenSkills||{})){
+      if(chosen===oldName)person.schoolChosenSkills[slot]=name;
+    }
+    for(const entry of person.experience?.ledger||[]){
+      if(entry.kind==="skill" && entry.targetId===oldName){
+        entry.targetId=name;
+        if(entry.label?.startsWith(oldName))entry.label=name+entry.label.slice(oldName.length);
+      }
+    }
+  }
+}
 function loadCharacter() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       character = Object.assign(JSON.parse(JSON.stringify(DEFAULT_CHARACTER)), parsed);
+      migrateSkillNames(character);
       if(character.schoolPairApproved==null && ["ronin_bushi","ronin_shugenja","grue_bushi"].includes(character.schoolId)){
         const names=Object.values(character.schoolChosenSkills||{});character.schoolPairApproved=new Set(names).size<names.length;
       }
@@ -4971,6 +5042,7 @@ function loadCharacter() {
 }
 
 function resetCharacterView() {
+  document.getElementById("wizardSpellsGrid").replaceChildren();
   document.getElementById("weaponPicker").reset();
   document.getElementById("weaponPicker").elements.model.innerHTML="";
   document.getElementById("weaponFeedback").textContent="";
@@ -5071,6 +5143,7 @@ function renderActiveScreen(screenId) {
   if (screenId === "screen-spells") renderSpellsView();
   if (screenId === "screen-xp") renderXpView();
   if (screenId === "screen-inventory") renderInventoryView();
+  if (screenId === "screen-options") {document.getElementById("effectOptionsStatus").textContent="";renderEffectOptions();}
 }
 
 // -------------------------------------------------------------
@@ -5080,11 +5153,52 @@ const weakTraits = {strength:"Force", stamina:"Constitution", willpower:"Volont�
 const disadvantageLimit = 10;
 const rankedBenefits = {adv_force_terre:[2,4,6], adv_resistance_magique:[2,4,6], adv_statut_social:[5,10]};
 function hasEffect(id) {
+  if(character.isCreated && character.status.effectOverrides?.[id]!=null)return !!character.status.effectOverrides[id];
   return (character.purchases[id.startsWith("adv_") ? "advantages" : "disadvantages"] || []).includes(id);
 }
 function benefitLevel(id) {
   if (!hasEffect(id)) return 0;
+  if(character.isCreated && character.status.effectOverrides?.[id]>0)return Number(character.status.effectOverrides[id]);
   return character.purchases.effectLevels?.[id] || (id === "adv_statut_social" ? 1 : 2);
+}
+function activeWeakTrait(){
+  return (character.isCreated && character.status.weakTraitOverride) || character.purchases.weakTrait || "strength";
+}
+function renderEffectOptions(){
+  const groups=[["advantages","Avantages","un avantage"],["disadvantages","Handicaps","un handicap"]];
+  document.getElementById("effectOptions").innerHTML=groups.map(([key,title,prompt])=>{
+    const list=DATA[key], owned=list.filter(item=>hasEffect(item.id));
+    const available=list.filter(item=>!hasEffect(item.id) && (item.id!=="dis_fragile" || getTraitScore("stamina")>=2));
+    const rows=owned.map(item=>{
+      let setting="";
+      if(rankedBenefits[item.id]){
+        setting=`<select aria-label="Niveau de ${escCard(item.name)}" onchange="editCampaignEffect('${item.id}',Number(this.value))">${rankedBenefits[item.id].map((_,i)=>`<option value="${i+1}" ${benefitLevel(item.id)===i+1?"selected":""}>Niveau ${i+1}</option>`).join("")}</select>`;
+      }else if(item.id==="dis_faible"){
+        setting=`<select aria-label="Trait réduit par Faible" onchange="editCampaignEffect('dis_faible',1,this.value)">${Object.entries(weakTraits).map(([k,v])=>`<option value="${k}" ${k===activeWeakTrait()?"selected":""} ${k==="stamina" && k!==activeWeakTrait() && hasEffect("dis_fragile") && getTraitScore(k)<=2?"disabled":""}>${v}</option>`).join("")}</select>`;
+      }
+      return `<div class="owned-effect"><strong>${escCard(item.name)}</strong>${setting}<button class="btn sm" type="button" aria-label="Retirer ${escCard(item.name)}" onclick="editCampaignEffect('${item.id}',0)">Retirer</button><small>${escCard(item.summary)}</small></div>`;
+    }).join("");
+    return `<section><h3>${title}</h3><div class="effect-picker"><select id="pick-${key}" class="search-input" aria-label="Choisir ${prompt}"><option value="">Choisir ${prompt}…</option>${available.map(item=>`<option value="${item.id}">${escCard(item.name)}</option>`).join("")}</select><button class="btn sm" type="button" onclick="editCampaignEffect(document.getElementById('pick-${key}').value,1)">Ajouter</button></div>${rows||"<p>Aucun "+(key==="advantages"?"avantage":"handicap")+".</p>"}</section>`;
+  }).join("");
+}
+function editCampaignEffect(id,level,trait){
+  const status=document.getElementById("effectOptionsStatus");
+  const item=DATA.advantages.find(x=>x.id===id)||DATA.disadvantages.find(x=>x.id===id);
+  if(!item){status.textContent="Choisissez d’abord une particularité dans la liste.";return;}
+  if(!character.isCreated || !Number.isInteger(level) || level<0 || level>(rankedBenefits[id]?.length||1))return;
+  if(level && id==="dis_fragile" && getTraitScore("stamina")<2)return;
+  const wasOwned=hasEffect(id);
+  if(level && id==="dis_faible"){
+    const key=trait || (wasOwned?activeWeakTrait():"strength");
+    if(!Object.prototype.hasOwnProperty.call(weakTraits,key) || (key==="stamina" && !(wasOwned && activeWeakTrait()===key) && hasEffect("dis_fragile") && getTraitScore(key)<=2))return;
+    character.status.weakTraitOverride=key;
+  }
+  character.status.effectOverrides={...character.status.effectOverrides,[id]:level};
+  if(level && !wasOwned && id==="dis_blessure_permanente")character.status.woundsTaken=Math.max(woundsNow(),woundsPerRank());
+  if(id==="adv_statut_social")character.status.glory=Math.max(character.status.glory??1,-level);
+  const saved=saveCharacter();
+  renderEffectOptions();
+  status.textContent=item.name+(level?(wasOwned?" · modification enregistrée":" · ajouté à la fiche"):" · retiré de la fiche")+(saved?".":" · sauvegarde locale indisponible. Exportez la fiche.");
 }
 function advantageCost(adv) {
   if (rankedBenefits[adv.id]) return rankedBenefits[adv.id][(benefitLevel(adv.id) || 1) - 1];
@@ -5144,7 +5258,7 @@ function getTraitScore(traitKey) {
   val += (character.purchases.traits[traitKey] || 0);
   val += (character.xp.purchases.traits[traitKey] || 0);
   val += (character.inGameTraits[traitKey] || 0);
-  if (hasEffect("dis_faible") && traitKey === (character.purchases.weakTrait || "strength")) val -= 1;
+  if (hasEffect("dis_faible") && traitKey === activeWeakTrait()) val -= 1;
   return Math.max(1, val);
 }
 
@@ -5560,13 +5674,16 @@ function renderFamilyChoices() {
       </div>
     </div>
   `).join("");
+  const selected=fams.find(f=>f.id===character.familyId);
+  if(selected?.bonusTrait==="choice")familyGrid.insertAdjacentHTML("beforeend",bonusTraitControl("familyBonusTrait","Bonus de famille"));
 }
 
 function selectFamily(famId) {
+  const changed=character.familyId!==famId;
   character.familyId = famId;
   const fam = DATA.families.find(f => f.id === famId);
   if (fam) {
-    character.familyBonusTrait = (fam.bonusTrait === "choice") ? "agility" : fam.bonusTrait;
+    character.familyBonusTrait = fam.bonusTrait === "choice" ? (changed?"agility":character.familyBonusTrait||"agility") : fam.bonusTrait;
   }
   renderFamilyChoices();
 }
@@ -5638,7 +5755,12 @@ function renderSchoolChoices() {
     </div>
   `).join("");
 
+  if(schools.some(s=>s.id===character.schoolId && s.bonusTrait==="choice"))
+    schoolGrid.insertAdjacentHTML("beforeend",bonusTraitControl("schoolBonusTrait","Bonus d’école"));
   renderSchoolSkillChoicesControls();
+}
+function bonusTraitControl(key,title){
+  return `<label>${title} · +1 au trait <select onchange="character['${key}']=this.value">${Object.entries(weakTraits).map(([id,name])=>`<option value="${id}" ${character[key]===id?"selected":""}>${name}</option>`).join("")}</select></label>`;
 }
 
 function selectSchool(schoolId) {
@@ -5647,10 +5769,14 @@ function selectSchool(schoolId) {
   const changed = character.schoolId !== schoolId;
   if (changed) { character.schoolChosenSkills = {}; character.schoolPairApproved=false; }
   character.schoolId = schoolId;
-  if (changed) reconcileStartingSpells();
   const sch = DATA.schools.find(s => s.id === schoolId);
   if (sch) {
-    character.schoolBonusTrait = (sch.bonusTrait === "choice") ? "reflexes" : sch.bonusTrait;
+    character.schoolBonusTrait = sch.bonusTrait==="choice" ? (changed?"reflexes":character.schoolBonusTrait||"reflexes") : sch.bonusTrait;
+    if(changed){
+      character.purchases.spells=[];
+      delete character.purchases.counterElement;
+      delete character.purchases.isawaElements;
+    }
     if(!character.isCreated)character.status.armorType=sch.vocation==="shugenja"?"none":sch.id==="crabe_bushi"?"heavy":"light";
     character.status.honor = character.clanRonin ? 2.5 : sch.honor;
 
@@ -5672,6 +5798,12 @@ const vfSkillNames = {
   "Corps à corps (Jujutsu)":"Corps à corps (jiujutsu)", "Armes de hast":"Yari", "Tir à l'arc":"Tir à l’arc"
 };
 function skillLabel(name){return vfSkillNames[name] || name;}
+function inSkillCategory(skill,category){return (skill.categories||[skill.type]).includes(category);}
+function officialSkill(name){return DATA.skills.some(s=>s.name===name && !s.legacyChoice);}
+function matchesSkillName(sk,query){
+  const normalize=text=>text.toLocaleLowerCase("fr").replace(/’/g,"'");
+  return normalize(skillLabel(sk.name)).includes(normalize(query)) || normalize(sk.name).includes(normalize(query));
+}
 function compareSkillNames(a, b) {
   return skillLabel(a.name).localeCompare(skillLabel(b.name), "fr");
 }
@@ -5688,7 +5820,7 @@ function eligibleSchoolSkill(sch,slot,sk){
     case "religion": return ["Théologie","Shintao"].includes(sk.name);
     case "valorisante_bugei": return ["valorisante","bugei"].includes(sk.type);
     case undefined: case "all": return true;
-    default: return sk.type===slot.filter;
+    default: return inSkillCategory(sk,slot.filter);
   }
 }
 function validSchoolChoices(sch){
@@ -5842,7 +5974,7 @@ function renderTraitsCustomization() {
     return `
       <div class="trait-row">
         <div class="trait-info">
-          <strong>${tm.name} ${bought > 0 ? `<span class="badge gold">+${bought} rang${bought > 1 ? "s" : ""}</span>` : ""}</strong>
+          <strong>${tm.key==="void"?"Anneau du Vide":weakTraits[tm.key]} ${bought > 0 ? `<span class="badge gold">+${bought} rang${bought > 1 ? "s" : ""}</span>` : ""}</strong>
           <small>${tm.desc}</small>
         </div>
         <div class="trait-val-badge">${score}</div>
@@ -5897,7 +6029,7 @@ function renderSkillsCustomization() {
     const skData = DATA.skills.find(s => s.name === skName);
     const traitInfo = skData ? `[${skData.traitLabel} / ${skData.ring}]` : "";
 
-    const canIncrease = b.remaining >= 1 && rank < (character.clanId===8 ? 2 : 3);
+    const canIncrease = officialSkill(skName) && b.remaining >= 1 && rank < (character.clanId===8 ? 2 : 3);
 
     return `
       <div class="trait-row" style="padding:6px 0;">
@@ -5914,6 +6046,7 @@ function renderSkillsCustomization() {
 }
 
 function adjustSkillBuy(skName, delta) {
+  if(delta>0 && !officialSkill(skName))return;
   const b = calcBudget();
   if (delta > 0 && b.remaining < 1) return;
   const cur = character.purchases.skills[skName] || 0;
@@ -6039,8 +6172,8 @@ function renderModalItemsFiltered() {
     const allMap = getAllSkillsMap();
     const existingSkills = Object.keys(allMap).filter(k => allMap[k] > 0);
     const list = DATA.skills.filter(s => {
-      const match = s.name.toLowerCase().includes(query) || s.traitLabel.toLowerCase().includes(query) || s.ring.toLowerCase().includes(query);
-      return match && !existingSkills.includes(s.name);
+      const match = matchesSkillName(s,query) || s.traitLabel.toLowerCase().includes(query) || s.ring.toLowerCase().includes(query);
+      return !s.legacyChoice && match && !existingSkills.includes(s.name);
     }).sort(compareSkillNames);
 
     const canAfford = (b.remaining >= 1);
@@ -6049,7 +6182,7 @@ function renderModalItemsFiltered() {
       <div style="background:var(--panel-sub);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;${!canAfford ? 'opacity:0.55;' : ''}">
         <div style="flex:1;">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <strong style="color:var(--ink);font-size:14px;">${s.name}</strong>
+            <strong style="color:var(--ink);font-size:14px;">${escCard(skillLabel(s.name))}</strong>
             <span class="badge ${s.ring === 'Feu' ? 'fire' : s.ring === 'Air' ? 'air' : s.ring === 'Terre' ? 'earth' : 'water'}">${s.traitLabel} · ${s.ring}</span>
             <span class="badge" style="border-color:var(--cat-${s.type});color:var(--cat-${s.type});">${s.typeLabel}</span>
           </div>
@@ -6085,6 +6218,7 @@ function chooseDisadvantage(disId) {
 }
 
 function chooseNewSkill(skillName) {
+  if(!officialSkill(skillName))return;
   const b = calcBudget();
   if (b.remaining < 1) return;
   character.purchases.skills[skillName] = 1;
@@ -6107,7 +6241,7 @@ function startingElements() {
   if(trueRoninMage()) return spellElements;
   const school = DATA.schools.find(s => s.id === character.schoolId && s.clanId === character.clanId);
   if (!school || school.vocation !== "shugenja") return [];
-  return school.startingElements || character.purchases.isawaElements || ["", "", ""];
+  return school.id==="phenix_shugenja" ? (character.purchases.isawaElements || ["", "", ""]) : school.startingElements || [];
 }
 
 function reconcileStartingSpells() {
@@ -6164,7 +6298,13 @@ function setIsawaElement(slot, value) {
 function renderStep4() {
   const elements = startingElements();
   const ids = character.purchases.spells || [];
-  document.getElementById("scrollInstructions").textContent=(trueRoninMage()?"Choisissez sept sorts, tous éléments confondus (p. 92).":"Choisissez six sorts selon les quotas de votre école (p. 57).")+" Maîtrise maximale à la création : anneau de l’élément + 1. Le catalogue ci-dessous indique aussi les sorts hors de votre sélection (p. 250–251).";
+  const grid=document.getElementById("wizardSpellsGrid");
+  const openGroups=new Set([...grid.querySelectorAll("details[data-group][open]")].map(el=>el.dataset.group));
+  const openSpells=new Set([...grid.querySelectorAll("details[data-scroll][open]")].map(el=>el.dataset.scroll));
+  const firstVisit=!grid.childElementCount;
+  const school=DATA.schools.find(s=>s.id===character.schoolId);
+  const distribution=trueRoninMage()?"7 sorts parmi les quatre éléments":elements.map((e,i)=>(3-i)+" "+(e||"élément à choisir")).join(" · ");
+  document.getElementById("scrollInstructions").textContent=(school?.name||"")+" · VF p. "+(school?.abilityPage||92)+" · "+distribution+". Sensation, Communion et Invocation sont acquises. Les choix ci-dessous tiennent compte des anneaux du personnage (p. 57 et 251).";
   renderSpellIndex("creationSpellIndex",true);
   const selectors = character.schoolId === "phenix_shugenja" ? elements.map((e,i) =>
     `<label>${3-i} sort${i<2?"s":""} <select aria-label="Élément pour ${3-i} sort(s)" onchange="setIsawaElement(${i},this.value)"><option value="">Choisir un élément</option>${spellElements.map(v =>
@@ -6172,18 +6312,34 @@ function renderStep4() {
   ).join(" ") : "";
   document.getElementById("spellAllocation").innerHTML = selectors;
   document.getElementById("spellStatus").textContent = startingSpellError() || "La sélection est complète.";
-  document.getElementById("wizardSpellsGrid").innerHTML = elements.map((e,i) => {
-    if (!spellElements.includes(e)) return "";
-    const choices = DATA.spells.filter(s => s.page && s.element === e && eligibleScroll(s,e));
-    const counter = DATA.spells.find(s => s.id === "vf_contre_sort");
-    const hasCounter = ids.includes(counter.id);
-    if (!hasCounter || character.purchases.counterElement === e) choices.push(counter);
-    const count = choices.filter(s => ids.includes(s.id)).length;
-    return `<fieldset class="spell-group" data-element="${spellElementKey(e)}"><legend>${elementSeal(spellElementKey(e),e)} · ${trueRoninMage()?count:count+" / "+(3-i)}</legend>${choices.map(s => {
-      const checked = ids.includes(s.id);
-      return `<label><input type="checkbox" ${checked?"checked":(trueRoninMage()?ids.length>=7:count>=3-i)?"disabled":""} onchange="toggleSpellSelection('${s.id}','${e}')"> <span><strong>${s.name}</strong><small>ND ${s.tn} · Maîtrise ${s.mastery} · VF p. ${s.page}</small>${spellSummary(s)}</span></label>`;
-    }).join("")}</fieldset>`;
+  const spells=DATA.spells.filter(s=>s.page);
+  const counts=e=>ids.filter(id=>allocationElement(spells.find(s=>s.id===id)||{})===e).length;
+  const full=e=>trueRoninMage()?ids.length>=7:counts(e)>=3-elements.indexOf(e);
+  const available=elements.filter(e=>spellElements.includes(e) && !full(e));
+  document.getElementById("chosenScrolls").innerHTML=ids.length?"<strong>Parchemins choisis</strong> "+ids.map(id=>{
+    const sp=spells.find(s=>s.id===id);
+    return sp?`<button class="btn sm" type="button" onclick="revealScroll('${sp.id}')">${escCard(sp.name)}</button>`:"";
+  }).join(" "):"";
+  grid.innerHTML=["Universel",...elements.filter(e=>spellElements.includes(e))].map(e=>{
+    const quota=elements.includes(e) && !trueRoninMage()?` · ${counts(e)} / ${3-elements.indexOf(e)} choisis`:"";
+    const group=spells.filter(s=>s.element===e && (e==="Universel" || eligibleScroll(s,e)));
+    return `<details class="scroll-group" data-group="${e}" ${(firstVisit || grid.dataset.school!==character.schoolId ? e===elements[0]:openGroups.has(e))?"open":""}><summary>${e==="Universel"?"Sorts de base":elementSeal(spellElementKey(e),e)} · ${group.length} sorts${quota}</summary>${group.map(sp=>{
+      const checked=ids.includes(sp.id), common=commonPrayerIds.includes(sp.id), counter=sp.id==="vf_contre_sort";
+      const assigned=counter?(checked?character.purchases.counterElement:available[0]):e;
+      const eligible=elements.includes(assigned) && eligibleScroll(sp,assigned);
+      const state=common?"Acquis d’office":checked?"Choisi":counter?(available.length?"Remplace un parchemin au choix":"Aucune place disponible"):!elements.includes(e)?"Hors dotation":!eligible?`${e} ${sp.mastery-1} requis`:full(e)?"Quota atteint":"Disponible";
+      const select=counter && !checked && available.length?`<label>Décompter de <select id="counterSlot">${available.map(v=>`<option>${v}</option>`).join("")}</select></label>`:"";
+      const arg=counter && !checked?"document.getElementById('counterSlot').value":`'${assigned}'`;
+      const action=!common && (checked || eligible && !full(assigned))?`<button type="button" class="btn sm" onclick="toggleSpellSelection('${sp.id}',${arg})">${checked?"Retirer ce sort":"Choisir ce sort"}</button>`:"";
+      return `<details class="scroll-entry" data-scroll="${sp.id}" ${openSpells.has(sp.id)?"open":""}><summary><strong>${escCard(sp.name)}</strong><small>${state}</small></summary>${spellDetails(sp,school)}<div class="scroll-actions">${select}${action}</div></details>`;
+    }).join("")}</details>`;
   }).join("");
+  grid.dataset.school=character.schoolId;
+}
+function revealScroll(id){
+  const entry=document.querySelector('#wizardSpellsGrid [data-scroll="'+id+'"]');
+  if(entry){entry.closest("[data-group]").open=true;entry.open=true;entry.querySelector("summary").focus();entry.scrollIntoView({block:"nearest"});}
+
 }
 
 function toggleSpellSelection(id, element) {
@@ -6202,7 +6358,7 @@ function toggleSpellSelection(id, element) {
     }
   }
   renderStep4();
-  document.querySelector(`#wizardSpellsGrid input[onchange="toggleSpellSelection('${id}','${assigned}')"]`)?.focus();
+  document.querySelector('#wizardSpellsGrid [data-scroll="'+id+'"] .scroll-actions button')?.focus({preventScroll:true});
 }
 
 // --- ÉTAPE 5 : IDENTITÉ & BILAN FINAL ---
@@ -6361,7 +6517,7 @@ function ringCard(parts, prefix="ring") {
   const front = `<div class="ring-emblem" style="--element:var(--c-${key})"><span lang="ja" aria-hidden="true">${elementSymbols[key]}</span><strong aria-label="Rang ${r[key]}">${r[key]}</strong></div>${traitRows}${reserve}`;
   const lines = (isVoid?["void"]:traits).map(t=>{
     const score = r[t], p=character.purchases;
-    const mods = [[character.familyBonusTrait===t?1:0,"famille"],[(DATA.schools.find(s=>s.id===character.schoolId && s.vocation==="shugenja" && s.bonusTrait!=="choice")?.bonusTrait ?? character.schoolBonusTrait)===t?1:0,"école"],[p.traits[t],"création"],[character.xp.purchases.traits[t],"progression"],[character.inGameTraits[t],"en jeu / XP"],[hasEffect("dis_faible") && t===(p.weakTrait||"strength")?-1:0,"Faible"]];
+    const mods = [[character.familyBonusTrait===t?1:0,"famille"],[(DATA.schools.find(s=>s.id===character.schoolId && s.vocation==="shugenja" && s.bonusTrait!=="choice")?.bonusTrait ?? character.schoolBonusTrait)===t?1:0,"école"],[p.traits[t],"création"],[character.xp.purchases.traits[t],"progression"],[character.inGameTraits[t],"en jeu / XP"],[hasEffect("dis_faible") && t===activeWeakTrait()?-1:0,"Faible"]];
     return `<p><strong>${weakTraits[t]||"Vide"} ${score}</strong> · base 2 ${mods.filter(([v])=>v).map(([v,n])=>(v>0?"+":"−")+Math.abs(v)+" ("+n+")").join(" ")}<br>Rang ${score+1} · ${(score+1)*4} XP</p>`;
   }).join("");
   return gameCard(prefix+key,name,front,(isVoid?"<p>La réserve maximale est égale au rang de Vide. Retirez un point lorsque vous le dépensez et restituez-le après récupération.</p>":`<p>Le plus faible des deux traits donne ${r[key]} en ${name}.</p>`)+lines,key);
@@ -6389,7 +6545,7 @@ function effectOnSheet(id) {
     adv_retablissement_rapide: `Repos · ${recoveryPerDay()} blessure(s) récupérée(s) par jour.`,
     dis_fragile: `Constitution ${r.stamina} · ${woundsPerRank()} cases par palier, ${recoveryPerDay()} blessure(s) récupérée(s) par jour.`,
     dis_blessure_permanente: `Début d’aventure · ${woundsPerRank()} cases cochées.`,
-    dis_faible: `Trait réduit · ${weakTraits[character.purchases.weakTrait||"strength"]} au rang ${r[character.purchases.weakTrait||"strength"]}.`,
+    dis_faible: `Trait réduit · ${weakTraits[activeWeakTrait()]} au rang ${r[activeWeakTrait()]}.`,
     adv_rapide: `Initiative · ${character.schoolId==="scorpion_bushi"?"3g2":"2g1"} + ${r.reflexes}.`,
     adv_grande_destinee: character.status.destinyFulfilled?"Destinée accomplie.":character.status.destinyUsed?"Protection utilisée pour ce scénario.":"Protection disponible pour ce scénario."
   };
@@ -6520,15 +6676,16 @@ function renderMasterSkillsTable() {
 
   let skills = DATA.skills.filter(sk => {
     const rank = getSkillRank(sk.name);
+    if (sk.legacyChoice && rank<=0)return false;
     if (currentSkillCategoryFilter === "trained" && !query) {
       if (rank <= 0) return false;
     } else if (currentSkillCategoryFilter === "untrained") {
       if (rank > 0) return false;
     } else if (!["trained","all"].includes(currentSkillCategoryFilter)) {
-      if (sk.type !== currentSkillCategoryFilter) return false;
+      if (!inSkillCategory(sk,currentSkillCategoryFilter)) return false;
     }
     if (query) {
-      const match = sk.name.toLowerCase().includes(query) || sk.traitLabel.toLowerCase().includes(query) || sk.ring.toLowerCase().includes(query) || sk.typeLabel.toLowerCase().includes(query);
+      const match = matchesSkillName(sk,query) || sk.traitLabel.toLowerCase().includes(query) || sk.ring.toLowerCase().includes(query) || sk.typeLabel.toLowerCase().includes(query);
       if (!match) return false;
     }
     return true;
@@ -6551,16 +6708,17 @@ function renderMasterSkillsTable() {
     const kept = traitVal;
     const checkNote = modifier ? (modifier > 0 ? "+" : "") + modifier + " lancé(s)" : "";
 
-    return {rank, front:`<tr><th scope="row">${escCard(skillLabel(sk.name))}</th><td><strong class="skill-rank">${rank}</strong></td><td>${escCard(displayedTraits)}</td><td>${escCard(sk.typeLabel)}</td></tr>`,
-      back:`<details class="skill-note"><summary>${escCard(skillLabel(sk.name))}</summary><p>${escCard(sk.desc)}</p><p>${sk.traitLabel} ${traitVal} + ${substitute?"Iaijutsu (Kakita)":"compétence"} ${effectiveRank} · ${woundsNow() >= woundsPerRank()*6 ? "Jet impossible · " : ""}${rolled} dés lancés, ${Math.max(0,Math.min(rolled,kept))} gardés.${mountedBonus(sk.name)?" · +"+mountedBonus(sk.name)+" au résultat (en selle)":""}${armorPenalty() && ["stamina","strength","agility","reflexes"].includes(sk.trait)?" · action physique : ND +5 (armure lourde)":""}<br>${checkNote?checkNote+" · ":""}${isTrained?"Les 10 sont relancés.":"Les 10 ne sont pas relancés."}</p><strong>Rang ${rank+1} · ${rank+1} XP</strong></details>`};
+    return {rank, archived:sk.legacyChoice, front:`<tr><th scope="row">${escCard(skillLabel(sk.name))}</th><td><strong class="skill-rank">${rank}</strong></td><td>${escCard(displayedTraits)}</td><td>${escCard(sk.typeLabel)}</td></tr>`,
+      back:`<details class="skill-note"><summary>${escCard(skillLabel(sk.name))}</summary><p>${escCard(sk.desc)}</p><p>${sk.trait==="variable"?"Trait à déterminer selon l’action · rang "+rank:`${sk.traitLabel} ${traitVal} + ${substitute?"Iaijutsu (Kakita)":"compétence"} ${effectiveRank} · ${woundsNow() >= woundsPerRank()*6 ? "Jet impossible · " : ""}${rolled} dés lancés, ${Math.max(0,Math.min(rolled,kept))} gardés.`}${mountedBonus(sk.name)?" · +"+mountedBonus(sk.name)+" au résultat (en selle)":""}${armorPenalty() && ["stamina","strength","agility","reflexes"].includes(sk.trait)?" · action physique : ND +5 (armure lourde)":""}<br>${checkNote?checkNote+" · ":""}${isTrained?"Les 10 sont relancés.":"Les 10 ne sont pas relancés."}</p>${sk.legacyChoice?"":`<strong>Rang ${rank+1} · ${rank+1} XP</strong>`}</details>`};
   });
   function skillGroup(key,title,group) {
     if (!group.length) return "";
     return gameCard(key,title,`<table class="skill-lines"><thead><tr><th>Compétence</th><th>Rang</th><th>Trait</th><th>Catégorie</th></tr></thead><tbody>${group.map(x=>x.front).join("")}</tbody></table>`,group.map(x=>x.back).join(""));
   }
-  const trained=skillGroup("trained-skills","Compétences maîtrisées",rows.filter(x=>x.rank>0));
+  const trained=skillGroup("trained-skills","Compétences maîtrisées",rows.filter(x=>!x.archived && x.rank>0));
   const untrained=skillGroup("untrained-skills","Compétences non maîtrisées",rows.filter(x=>x.rank===0));
-  tbody.innerHTML = trained+untrained || "<p>Aucune compétence correspondante.</p>";
+  const archived=skillGroup("archived-skills","Anciennes compétences hors catalogue VF",rows.filter(x=>x.archived));
+  tbody.innerHTML = trained+untrained+archived || "<p>Aucune compétence correspondante.</p>";
 }
 
 function setSkillFilter(btn, filterKey) {
@@ -6747,10 +6905,23 @@ function toggleWoundBox(index) {
   setDamage(woundsNow() === index+1 ? index : index+1);
 }
 const arrowTypes=[
-  {name:"Ya",vd:"2g2"},{name:"Perce-armure",vd:"1g2",note:"Ignore la protection de l’armure."},
-  {name:"Watakusi",vd:"3g3",note:"Doublez la protection de l’armure adverse."},
-  {name:"Karimata",vd:"1g1",note:"Une touche permet de couper cordes et cordages."},{name:"Boule sifflante",vd:"0g1",note:"Flèche de signal."}
+  {name:"Ya",vd:"2g2",note:"Flèche traditionnelle. La protection de l’armure s’applique normalement."},
+  {name:"Perce-armure",vd:"1g2",note:"Ignorez le bonus d’armure de la cible pour calculer le ND pour toucher."},
+  {name:"Watakusi",vd:"3g3",note:"Cette « déchireuse » double le bonus d’armure de la cible dans le calcul du ND pour toucher."},
+  {name:"Karimata",vd:"1g1",note:"Sa pointe fourchue sert à trancher une corde ou un cordage sur une touche réussie."},
+  {name:"Boule sifflante",vd:"0g1",note:"Son sifflement sert de signal. Sa tête creuse, généralement sans pointe, tend à rebondir à l’impact."}
 ];
+function bowArrowControls(w){
+  const selected=arrowTypes.find(a=>a.name===w.arrow) || arrowTypes[0];
+  return `<label>Flèche <select data-id="${escCard(w.id)}" onchange="setBowArrow(this.dataset.id,this.value)">${arrowTypes.map(a=>`<option value="${a.name}" ${a===selected?"selected":""}>${a.name} · ${a.vd}</option>`).join("")}</select></label>
+    <p>${selected.note}</p><details class="arrow-comparison"><summary>Comparer les cinq flèches</summary>
+    <dl>${arrowTypes.map(a=>`<dt>${a.name} · ${a.vd}</dt><dd>${a.note}</dd>`).join("")}</dl>
+    <small>Valeurs de dommages des flèches seules. L’arc ajoute deux dés lancés. Livre de base VF, p. 124.</small></details>`;
+}
+function weaponProperties(model){
+  const initiative=(model.group==="Armes d’hast" && model.key!=="tetsubo") || model.key==="bo";
+  return model.note+(initiative?" Face à une arme plus courte, lancez un dé supplémentaire pour l’initiative et gardez le meilleur résultat.":"");
+}
 function catalogProfile(model,id,rings){
   const bow=model.vd==="arc";
   const arrow=arrowTypes.find(a=>a.name===character.inventory.arrows?.[id]) || arrowTypes[0];
@@ -6764,8 +6935,8 @@ function catalogProfile(model,id,rings){
   const label=skill==="Armes de hast"?"Yari (armes de hast)":skill;
   let desc=(useAgility?"Agilité":"Réflexes")+" "+trait+" + "+label+" "+getSkillRank(skill)+". ";
   desc+=bow?"Force de l’arc 2 + flèche "+arrow.name+" ("+vd+"). "+(arrow.note||""):"Force "+rings.strength+" + VD "+vd+".";
-  if(model.group==="Armes d’hast" && model.key!=="tetsubo")desc+=" Face à une arme plus courte, lancez un dé d’initiative supplémentaire et retenez le meilleur résultat (p. 123).";
-  return {id,modelKey:model.key,name:model.name,skill,attackRoll,dr,desc:desc+" VF p. 249.",bow,arrow:arrow.name,twoHands:bow||["no-dachi","tetsubo"].includes(model.key)};
+  desc+=" "+weaponProperties(model);
+  return {id,modelKey:model.key,name:model.name,skill,attackRoll,dr,desc:desc+" Livre de base VF, p. "+model.page+".",bow,arrow:arrow.name,twoHands:bow||["no-dachi","tetsubo"].includes(model.key)};
 }
 function ownedWeapons(){
   const inv=character.inventory, items=inv.items||[], rings=getRings();
@@ -6807,7 +6978,7 @@ function renderCombatWeapons(){
     const damage=adjustedRoll(w.dr,Number(hasEffect("adv_grand"))-woundPenalty(),extraKept)+(schoolBonus?" + "+schoolBonus:"");
     const notes=[extraKept?"Rage · +1 dé gardé":"",armorPenalty()?"Attaque physique · ND +5":"",attacksPerTurn()>1?attacksPerTurn()+" attaques par tour":"",(w.skill==="Iaijutsu" || w.usesKenjutsu && usesIaijutsu()) && learned("grue_bushi")?"Iaijutsu (Kakita)":"",learned("lion_bushi_akodo")?"Au choix : ignorer l’armure adverse ou prendre une augmentation gratuite.":""].filter(Boolean).join(" · ");
 
-    return gameCard("weapon-"+w.id,w.name,`<p>Attaque <b>${escCard(attack)}</b> · Dommages <b>${escCard(damage)}</b></p>`+(w.bow?`<label>Flèche <select data-id="${escCard(w.id)}" onchange="setBowArrow(this.dataset.id,this.value)">${arrowTypes.map(a=>`<option ${a.name===w.arrow?"selected":""}>${a.name}</option>`).join("")}</select></label>`:"")+(notes?`<small>${notes}</small>`:"")+(hand?`<label><input type="checkbox" data-id="${escCard(w.id)}" ${other?"checked":""} onchange="setWeaponHand(this.dataset.id,this.checked)"> Main non directrice</label>`:""),
+    return gameCard("weapon-"+w.id,w.name,`<p>Attaque <b>${escCard(attack)}</b> · Dommages <b>${escCard(damage)}</b></p>`+(w.bow?bowArrowControls(w):"")+(notes?`<small>${notes}</small>`:"")+(hand?`<label><input type="checkbox" data-id="${escCard(w.id)}" ${other?"checked":""} onchange="setWeaponHand(this.dataset.id,this.checked)"> Main non directrice</label>`:""),
       `<p>${escCard(w.desc)}</p><p>Attaque de base ${escCard(baseAttack)} · dommages de base ${escCard(w.dr)}.</p>${schoolBonus?`<p>Technique d’école : +${schoolBonus} au résultat pour toucher et aux dommages.</p>`:""}${learned("crabe_bushi",4)?"<p>Rage berserk : si vous sacrifiez 3 points de Blessures au début du tour, gardez un dé supplémentaire pour toucher et pour les dommages pendant ce tour.</p>":""}${learned("crabe_bushi",5) && attack==="Impossible"?"<p>L’éternité de la montagne : 1 point de Vide permet une action malgré votre état.</p>":""}`);
   }).join("");
 }
@@ -6826,7 +6997,7 @@ function setBowArrow(id,value){
 function populateWeaponPicker(){
   const picker=document.getElementById("weaponPicker");
   const select=picker.elements.model;
-  if(select.options.length)return;
+  if(select.options.length){weaponPickerMode();return;}
   const groups=[...new Set(DATA.weapons.map(w=>w.group))];
   select.innerHTML=groups.map(g=>`<optgroup label="${g}">${DATA.weapons.filter(w=>w.group===g).map(w=>`<option value="${w.key}">${w.name} · ${w.vd==="arc"?"VD selon la flèche":"VD "+w.vd}</option>`).join("")}</optgroup>`).join("")+'<option value="custom">Arme personnalisée…</option>';
   select.value="katana";weaponPickerMode();
@@ -6835,6 +7006,17 @@ function weaponPickerMode(){
   const picker=document.getElementById("weaponPicker");
   const custom=picker.elements.model.value==="custom";
   picker.elements.customFields.hidden=!custom;picker.elements.customFields.disabled=!custom;
+  const preview=document.getElementById("weaponPreview");
+  const model=DATA.weapons.find(w=>w.key===picker.elements.model.value);
+  preview.hidden=!model;
+  if(!model){preview.textContent="";return;}
+  const rings=getRings();
+  const profile=catalogProfile(model,"",rings);
+  const damage=profile.bow
+    ? `Avec une flèche ${profile.arrow} · <strong>${profile.dr}</strong> (Force de l’arc 2). Les dommages varient selon la flèche.`
+    : `VD ${model.vd} + Force ${rings.strength} · <strong>${profile.dr}</strong>`;
+  preview.innerHTML=`<p><b>Dommages de base</b> · ${damage}</p><p>${escCard(weaponProperties(model))}</p><small>Livre de base VF, p. ${model.page}</small>`;
+
 }
 function addPickedWeapon(){
   const form=document.getElementById("weaponPicker"), fields=form.elements;
@@ -6878,11 +7060,12 @@ function renderSpellsView() {
   container.innerHTML = spells.map(sp => {
     const key = spellElementKey(sp.element);
     const seal = elementSeal(key,sp.element);
-    const front = `<div class="spell-meta">${seal}<small>ND ${sp.tn}</small></div><p>${escCard(spellSummary(sp))}</p>`;
+    const innate=hasInnateSpell(sp.id);
+    const front = `${innate?'<span class="innate-tag">Maîtrise innée</span>':""}<div class="spell-meta">${seal}<small>ND ${sp.tn}</small></div><p>${escCard(spellSummary(sp))}</p>`;
     if (!sp.page) {
       return gameCard("spell-"+sp.id,sp.name,front,`<p>${escCard(sp.desc)}</p><p>Portée · ${escCard(sp.range)}<br>Durée · ${escCard(sp.duration)}<br>Maîtrise · ${escCard(sp.mastery)}</p><small>Ancienne fiche importée · hors catalogue VF</small>`,key);
     }
-    const back=seal+spellDetails(sp,sch);
+    const back=seal+(innate?'<p class="innate-note"><strong>Maîtrise innée.</strong> Vous pouvez lancer ce sort de mémoire. Si vous utilisez son parchemin, vous bénéficiez d’une augmentation gratuite (VF p. 73 et 144).</p>':"")+spellDetails(sp,sch);
     return gameCard("spell-"+sp.id,sp.name,front,back,key);
   }).join("");
 }
@@ -7136,6 +7319,7 @@ function buyTraitWithXp(traitKey) {
 }
 
 function buySkillWithXp(skillName) {
+  if(!officialSkill(skillName))return;
   const avail = getAvailableXp();
   const curRank = getSkillRank(skillName);
   const nextRank = curRank + 1;
@@ -7145,7 +7329,7 @@ function buySkillWithXp(skillName) {
     return;
   }
 
-  const label = `${skillName} (Rang ${curRank} → ${nextRank})`;
+  const label = `${skillLabel(skillName)} (Rang ${curRank} → ${nextRank})`;
 
   if (!character.inGameSkills) character.inGameSkills = {};
   character.inGameSkills[skillName] = (character.inGameSkills[skillName] || 0) + 1;
@@ -7205,7 +7389,36 @@ function renderSchoolProgress(){
   const future=school.techniques.filter(t=>t.rank>rank);
   document.getElementById("xpFutureTechniques").innerHTML=future.length?`<h3>Techniques des rangs suivants</h3><div class="deck technique-deck">${future.map(t=>schoolCard(school,t,"xp-tech")).join("")}</div>`:"";
 }
+function hasInnateSpell(id){
+  return (character.experience?.ledger||[]).some(x=>x.type==="purchase" && x.kind==="innateSpell" && x.targetId===id);
+}
+function canMemorizeSpell(sp){
+  if(!sp?.page || character.vocationId!=="shugenja" || !knownSpellIds().has(sp.id) || hasInnateSpell(sp.id))return false;
+  const rings=getRings();
+  const ring=sp.element==="Universel"?Math.max(...spellElements.map(e=>rings[spellElementKey(e)])):rings[spellElementKey(sp.element)];
+  return ring+getSchoolRank()>=sp.mastery;
+}
+function renderInnateXp(){
+  const panel=document.getElementById("xpInnatePanel");
+  panel.hidden=character.vocationId!=="shugenja";
+  if(panel.hidden)return;
+  const known=knownSpellIds(), affordable=getAvailableXp()>=3;
+  const spells=DATA.spells.filter(s=>s.page && known.has(s.id)).sort(compareSkillNames);
+  const choices=spells.map(sp=>{
+    const label=hasInnateSpell(sp.id)?" · déjà maîtrisé":!canMemorizeSpell(sp)?" · maîtrise insuffisante":"";
+    return `<option value="${sp.id}" ${label?"disabled":""}>${escCard(sp.name)} · ${sp.element}${label}</option>`;
+  }).join("");
+  document.getElementById("xpInnateChoices").innerHTML=`<label>Sort à maîtriser <select id="xpInnateSpell" onchange="document.getElementById('innateBuy').disabled=!this.value || getAvailableXp()<3"><option value="">Choisir un sort…</option>${choices}</select></label> <button class="btn sm" id="innateBuy" type="button" disabled onclick="buyInnateSpell(document.getElementById('xpInnateSpell').value)">Maîtriser · 3 XP</button>${affordable?"":" <small>Solde insuffisant · "+getAvailableXp()+" XP disponibles</small>"}`;
+}
+function buyInnateSpell(id){
+  const sp=DATA.spells.find(s=>s.id===id);
+  if(!canMemorizeSpell(sp) || getAvailableXp()<3)return;
+  character.experience.ledger.push({id:"xp_"+Date.now()+"_"+Math.random().toString(36).slice(2),type:"purchase",kind:"innateSpell",targetId:id,cost:3,label:"Maîtrise innée · "+sp.name,at:new Date().toISOString()});
+  saveCharacter();renderXpView();
+}
+
 function renderXpView() {
+  renderInnateXp();
   renderSchoolProgress();
   document.getElementById("destinyAwardLabel").hidden = !hasEffect("adv_dessein_superieur");
   const avail = getAvailableXp();
@@ -7220,28 +7433,18 @@ function renderXpView() {
   // 1. Liste des Traits à améliorer
   const traitsContainer = document.getElementById("xpTraitsUpgradeList");
   if (traitsContainer) {
-    const traitsMeta = [
-      { key: "stamina", name: "Constitution", ring: "Terre" },
-      { key: "willpower", name: "Volonté", ring: "Terre" },
-      { key: "strength", name: "Force", ring: "Eau" },
-      { key: "perception", name: "Perception", ring: "Eau" },
-      { key: "agility", name: "Agilité", ring: "Feu" },
-      { key: "intelligence", name: "Intelligence", ring: "Feu" },
-      { key: "reflexes", name: "Réflexes", ring: "Air" },
-      { key: "awareness", name: "Intuition", ring: "Air" },
-      { key: "void", name: "Anneau du Vide", ring: "Vide" }
-    ];
-
-    traitsContainer.innerHTML = traitsMeta.map(tm => {
+    traitsContainer.innerHTML = ringParts.flatMap(([element, ring, ...traits]) =>
+      (traits.length ? traits : ["void"]).map(key => ({key, ring, element}))
+    ).map(tm => {
       const cur = getTraitScore(tm.key);
       const next = cur + 1;
       const cost = next * 4;
       const canAfford = (avail >= cost);
 
       return `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;">
+        <div class="xp-trait" data-element="${tm.element}">
           <div>
-            <strong style="color:var(--ink);font-size:13.5px;">${tm.name}</strong>
+            <strong style="color:var(--ink);font-size:13.5px;">${tm.key==="void"?"Anneau du Vide":weakTraits[tm.key]}</strong>
             <small style="color:var(--ink-muted);display:block;font-size:11px;">${tm.ring} · Score actuel : ${cur} ➔ ${next}</small>
           </div>
           <button class="btn sm ${canAfford ? 'primary' : ''}" type="button" onclick="buyTraitWithXp('${tm.key}')" ${!canAfford ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
@@ -7299,10 +7502,11 @@ function renderXpSkillsList() {
 
   const skills = DATA.skills.filter(sk => {
     const curRank = getSkillRank(sk.name);
+    if (sk.legacyChoice)return false;
     if (cat === "trained" && curRank <= 0) return false;
-    if (cat !== "all" && cat !== "trained" && sk.type !== cat) return false;
+    if (cat !== "all" && cat !== "trained" && !inSkillCategory(sk,cat)) return false;
     if (query) {
-      const match = sk.name.toLowerCase().includes(query) || sk.traitLabel.toLowerCase().includes(query) || sk.ring.toLowerCase().includes(query);
+      const match = matchesSkillName(sk,query) || sk.traitLabel.toLowerCase().includes(query) || sk.ring.toLowerCase().includes(query);
       if (!match) return false;
     }
     return true;
@@ -7313,15 +7517,14 @@ function renderXpSkillsList() {
     const nextRank = curRank + 1;
     const cost = (curRank === 0) ? 1 : nextRank;
     const canAfford = (avail >= cost);
-    const ringBadgeClass = sk.ring === 'Feu' ? 'fire' : sk.ring === 'Air' ? 'air' : sk.ring === 'Terre' ? 'earth' : 'water';
+
 
     return `
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;">
         <div style="flex:1;">
           <div style="display:flex;align-items:center;gap:6px;">
             <strong style="color:var(--ink);font-size:13px;">${escCard(skillLabel(sk.name))}</strong>
-            <span class="badge ${ringBadgeClass}" style="font-size:10px;">${sk.traitLabel}</span>
-            ${curRank > 0 ? `<span class="badge gold" style="font-size:10px;">Rang ${curRank}</span>` : `<span class="badge" style="font-size:10px;color:var(--ink-dim);">Non acquise</span>`}
+            <span class="badge ${curRank > 0 ? 'gold' : ''}" style="font-size:10px;">${curRank > 0 ? 'Acquise' : 'Non acquise'}</span>
           </div>
         </div>
         <button class="btn sm ${canAfford ? 'primary' : ''}" type="button" data-skill="${escCard(sk.name)}" onclick="buySkillWithXp(this.dataset.skill)" ${!canAfford ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
@@ -7437,6 +7640,7 @@ function handleFileImport(evt) {
       const parsed = JSON.parse(e.target.result);
       if (parsed && typeof parsed === "object") {
         character = Object.assign(JSON.parse(JSON.stringify(DEFAULT_CHARACTER)), parsed);
+      migrateSkillNames(character);
       if(character.schoolPairApproved==null && ["ronin_bushi","ronin_shugenja","grue_bushi"].includes(character.schoolId)){
         const names=Object.values(character.schoolChosenSkills||{});character.schoolPairApproved=new Set(names).size<names.length;
       }
