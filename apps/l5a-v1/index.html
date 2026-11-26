@@ -182,6 +182,7 @@ main { max-width: 980px; margin: 0 auto; padding: 16px; padding-bottom: 90px; }
 .step-dot.active { background: var(--crimson); border-color: #ff5252; box-shadow: 0 0 8px var(--crimson-glow); }
 
 /* GRILLE DE CHOIX */
+#schoolGrid{display:block}.school-choice-group h3{margin:0 0 .35rem;color:var(--gold);font-size:1rem}.school-choice-group p{margin:0 0 .65rem;color:var(--ink-muted);font-size:.85rem}.school-choice-group + .school-choice-group{margin-top:1.35rem;padding-top:1rem;border-top:1px solid var(--line)}.school-choice-group .selection-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
 .selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 10px; }
 .select-card {
   background: var(--panel); border: 1px solid var(--line);
@@ -457,10 +458,41 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 .person-column [data-key=identity]{padding:.65rem .9rem;overflow-wrap:anywhere}
 .person-column [data-key=identity] .face-front,.person-column [data-key=identity] .face-back{flex:none}
 .identity-quote{margin:.55rem 0 0;border-left:2px solid var(--gold);padding-left:.65rem;font-style:italic;color:var(--ink-muted);white-space:pre-line}
-.identity-editor{display:grid;gap:.45rem}
 .identity-editor label{display:grid;gap:.15rem;font-size:.88rem}
 .identity-editor textarea{resize:vertical}
 .identity-editor button{justify-self:start}
+.effect-note-preview{white-space:pre-wrap;overflow-wrap:anywhere;border-left:2px solid var(--gold);padding-left:.6rem;color:var(--ink-muted);margin:.45rem 0 0}
+.effect-back-stack{display:grid;gap:.8rem}
+.effect-back-entry{border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--panel-sub) 82%,white 18%);padding:.75rem .85rem;display:grid;gap:.5rem}
+.effect-back-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.effect-back-title{font-weight:700;color:var(--gold);font-size:.92rem}
+.effect-back-meta{font-size:.78rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em}
+.effect-card-copy,.card-copy{margin:0;line-height:1.55;color:var(--ink)}
+.effect-side-note{margin:0;font-size:.82rem;color:var(--ink-muted)}
+.form-stack{display:grid;gap:.7rem}
+.form-field{display:grid;gap:.3rem;min-width:0}
+.form-field>span,.form-label{font-size:.82rem;font-weight:700;color:var(--ink-muted);letter-spacing:.01em}
+.field-control,.form-field input,.form-field select,.form-field textarea,.identity-editor input,.identity-editor textarea,.identity-editor select,.outfit-info input,.outfit-info select,.outfit-info textarea,#screen-inventory .inv-slot select,#screen-inventory .hand-slot select{width:100%;max-width:100%;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.58rem .7rem;box-sizing:border-box;line-height:1.4;box-shadow:inset 0 1px 0 #ffffff85}
+.form-field textarea,.identity-editor textarea,.outfit-info textarea{min-height:5rem;resize:vertical}
+.form-field select,.identity-editor select,.outfit-info select{padding-right:2rem}
+.form-actions{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin-top:.05rem}
+.form-status{font-size:.78rem;color:var(--ink-muted)}
+.identity-editor{display:grid;gap:.6rem}
+.effect-text-editor{margin:.15rem 0 0;display:grid;gap:.55rem}
+.effect-text-editor label{display:grid;gap:.32rem}
+.effect-text-editor textarea{width:100%;box-sizing:border-box;min-height:5.2rem}
+.effect-picker{display:grid;gap:.55rem}
+.owned-effect{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:.4rem .8rem;padding:.7rem 0;border-bottom:1px solid var(--line)}
+.owned-effect>strong{grid-column:1/2}
+.owned-effect>.btn,.owned-effect>select{grid-column:2/3;justify-self:end}
+.owned-effect small{grid-column:1/-1;color:var(--ink-muted);line-height:1.45}
+.back-bullets{margin:0;padding-left:1.1rem;display:grid;gap:.35rem}
+.back-bullets li{line-height:1.48}
+.back-compact p{margin:.18rem 0}
+.back-kv{display:grid;gap:.35rem}
+.back-kv p{margin:0;line-height:1.5}
+.back-formula{font-weight:700;color:var(--gold)}
+.face-back details.skill-note{border:1px solid var(--line);border-radius:8px;padding:.5rem .65rem;background:var(--panel);margin:.45rem 0}.face-back details.skill-note summary{cursor:pointer;color:var(--gold);font-weight:700;margin:-.1rem 0 .25rem}
 .person-column [data-key=portrait] .face-front{position:relative}
 .person-column .portrait-image,.person-column .portrait-empty{position:absolute;inset:0}
 #personaDeck .progress-stack{grid-area:progress}
@@ -569,8 +601,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 #weaponPicker>label,#weaponPicker>fieldset{grid-column:1/-1}#weaponPicker select,#weaponPicker fieldset input{display:block;width:100%}
 #weaponPicker [hidden]{display:none}#weaponPicker button{justify-self:start}#weaponFeedback{display:block;margin-top:.4rem}
 #effectOptions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:1.2rem}
-#effectOptions h3{margin:.5rem 0} .effect-picker,.owned-effect{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
-.effect-picker select{flex:1;min-width:8rem}.owned-effect{padding:.55rem 0;border-bottom:1px solid var(--line)}.owned-effect>strong{flex:1}.owned-effect small{flex-basis:100%;color:var(--ink-muted)}
+#effectOptions h3{margin:.5rem 0}
+.effect-picker select{width:100%;min-width:0}
 #wizardSpellsGrid{display:grid;gap:.55rem}
 .scroll-group,.scroll-entry{border:1px solid var(--line);border-radius:.65rem;background:var(--panel);padding:.45rem .75rem;min-width:0}
 .scroll-entry{margin:.4rem 0}.scroll-entry summary,.scroll-group>summary{cursor:pointer;padding:.35rem}
@@ -582,6 +614,12 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 .arrow-comparison dl{margin:.6em 0}
 .arrow-comparison dt{font-weight:700}
 .arrow-comparison dd{margin:0 0 .55em;line-height:1.4}
+
+#startingOutfitPanel{margin-top:1rem;padding:1rem;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.outfit-head{display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}.outfit-head h3{margin:0}.outfit-section{border-top:1px solid var(--line);margin-top:1rem;padding-top:.8rem}.outfit-section h4{margin:0 0 .65rem;color:var(--gold);font-size:.95rem;letter-spacing:.025em}.outfit-grid,.weapon-selection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:.6rem}.outfit-option{display:block;background:var(--panel-sub);border:1px solid var(--line);border-radius:9px;padding:.7rem;min-width:0}.outfit-option.chosen{border-color:var(--gold)}.outfit-option p,.outfit-info p{margin:.4rem 0;line-height:1.45;font-size:.85rem}.outfit-option select,.outfit-section>label select{display:block;width:100%;margin-top:.35rem}.outfit-option input[type=number]{width:4.5rem}.outfit-info{margin-top:.45rem}.outfit-stats{display:flex;gap:.35rem;flex-wrap:wrap}.outfit-stats span{padding:.25rem .45rem;border:1px solid var(--line);border-radius:5px;font-size:.8rem}.outfit-hint,.outfit-info small,.outfit-item small,.weapon-selection small{color:var(--ink-muted);font-size:.8rem}.outfit-inventory{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:.35rem}.outfit-item{border-bottom:1px solid var(--line);padding:.45rem}.outfit-item small,.weapon-selection small{display:block}.outfit-item details{font-size:.8rem}.outfit-status{border-top:1px solid var(--line);padding-top:.6rem;color:var(--gold)}.weapon-selection{margin:.5rem 0 .8rem}.weapon-selection-grid label{display:flex;align-items:center;gap:.5rem;cursor:pointer}.weapon-selection-grid input{flex-shrink:0}
+.hand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.hand-slot{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-sub);min-width:0}.hand-slot label{display:block;font-weight:600}.hand-slot select{display:block;width:100%;margin:6px 0;padding:7px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px}.hand-note{font-size:12px;color:var(--ink-dim);margin:7px 0}.hand-slot small{color:var(--ink-dim)}
+
+#screen-inventory .inv-loadout{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-sub);margin:12px 0}#screen-inventory .inv-loadout h3{margin:0 0 10px}#screen-inventory .inv-slot{display:grid;gap:5px;margin-top:12px}#screen-inventory .inv-slot select,#screen-inventory .hand-slot select{width:100%;max-width:100%;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:8px}#screen-inventory .inv-group{display:grid;gap:7px;margin-top:14px}#screen-inventory .inv-group h3{display:flex;justify-content:space-between;margin:0 0 4px;color:var(--gold)}#screen-inventory .inv-group h3 small{color:var(--ink-dim);font-weight:normal}#screen-inventory .inv-entry{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-sub);min-width:0}#screen-inventory .inv-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}#screen-inventory .inv-head small{display:block;color:var(--ink-dim);overflow-wrap:anywhere}#screen-inventory .inv-stats{font-size:13px;color:var(--ink);margin:3px 0}#screen-inventory .inv-active{font-size:11px;color:var(--gold);border:1px solid var(--gold);padding:2px 6px;border-radius:20px;white-space:nowrap}#screen-inventory .inv-actions{display:flex;align-items:center;gap:8px}#screen-inventory .inv-actions input{width:65px}#screen-inventory details{margin-top:8px}#screen-inventory summary{cursor:pointer;color:var(--gold);font-size:12px}#screen-inventory .inv-add{border:1px solid var(--line);padding:10px 12px;border-radius:8px}#screen-inventory .outfit-info{display:grid;gap:8px}#screen-inventory .outfit-info label{display:grid;gap:.32rem;align-items:stretch}
 </style>
 </head>
 <body>
@@ -923,11 +961,11 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
     <!-- Armes et Jets Roll & Keep avec ajout d'armes personnalisées -->
     <div class="card">
       <div class="card-header">
-        <h3>Armes équipées & Dommages</h3>
-        <button class="btn sm" type="button" onclick="showScreen('screen-inventory')">Gérer les armes</button>
+        <h3>Armes & dommages</h3>
+        <button class="btn sm" type="button" onclick="showScreen('screen-inventory')">Gérer l’équipement</button>
       </div>
 
-      <div class="deck" id="combatWeaponsList"></div>
+      <div id="combatWeaponOptions" class="fight-options"></div><div class="deck" id="combatWeaponsList"></div>
     </div>
     <details id="schoolTechniquesSection"><summary id="combatSchoolHeading">Techniques d’école</summary><div id="sheetSchoolTechniquesContainer" class="deck technique-deck"></div></details>
   </section>
@@ -1048,7 +1086,7 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 
         <div style="background:var(--panel-sub);border:1px solid var(--line);padding:8px 14px;border-radius:8px;display:flex;align-items:center;gap:8px;">
           <small style="color:var(--ink-muted);">Bu (argent)</small>
-          <input type="number" id="inputBu" style="width:60px;background:var(--panel-sub);border:1px solid #aaa;color:#ccc;font-weight:bold;text-align:center;border-radius:6px;" min="0" onchange="setMoney('bu', this.value)">
+          <input type="number" id="inputBu" style="width:60px;background:var(--panel-sub);border:1px solid #aaa;color:var(--ink);font-weight:bold;text-align:center;border-radius:6px;" min="0" onchange="setMoney('bu', this.value)">
           <button class="btn sm" style="padding:2px 8px;min-height:26px;" onclick="adjustMoney('bu', 1)">+1</button>
           <button class="btn sm" style="padding:2px 8px;min-height:26px;" onclick="adjustMoney('bu', -1)">-1</button>
         </div>
@@ -1070,17 +1108,17 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
           <button class="btn sm primary" onclick="addCustomInventoryItem()">➕ Ajouter</button>
         </div>
       </div>
-      <h3>Armes</h3><div id="inventoryWeapons"></div>
+      <div class="inv-loadout"><h3>Équipement actif</h3><div id="inventoryWeapons"></div><div id="inventoryArmor"></div></div><details class="inv-add"><summary>Ajouter une arme du catalogue ou personnalisée</summary>
       <form id="weaponPicker" onsubmit="return false">
         <label>Arme du livre de base <select name="model" onchange="weaponPickerMode()"></select></label>
         <div id="weaponPreview" aria-live="polite"></div>
         <fieldset name="customFields" hidden disabled><legend>Arme personnalisée</legend>
           <label>Nom <input name="weaponName" required></label><label>Attaque <input name="attack" required pattern="[0-9]+[gG][0-9]+" placeholder="5g3"></label>
-          <label>Dommages <input name="damage" required pattern="[0-9]+[gG][0-9]+" placeholder="4g2"></label><label>Description <input name="description"></label>
+          <label>Dommages <input name="damage" required pattern="[0-9]+[gG][0-9]+" placeholder="4g2"></label><label>Trait utilisé à l’attaque <select name="attackTrait"><option value="agility">Agilité</option><option value="reflexes">Réflexes</option><option value="other">Autre / formule libre</option></select></label><label>Description <input name="description"></label><label><input type="checkbox" name="twoHands"> Arme à deux mains</label>
         </fieldset>
-        <label><input name="equip" type="checkbox" checked> Équiper pour le combat</label>
+        <label><input name="equip" type="checkbox"> Placer en main directrice</label>
         <button class="btn primary" type="button" id="addWeaponButton" onclick="addPickedWeapon()">Ajouter une arme</button>
-      </form><small id="weaponFeedback" role="status"></small><h3>Objets</h3>
+      </form><small id="weaponFeedback" role="status"></small></details>
       <div id="inventoryItemsContainer" style="display:grid;gap:6px;"></div>
     </div>
 
@@ -1177,19 +1215,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "rules": [
         "Sensation, Communion et Invocation sont acquises à la création.",
         "La sélection des autres sorts dépend de l’école ou de l’origine rônin."
-      ]
-    },
-    {
-      "id": "monk",
-      "name": "Moine / Ascète (Ise Zumi & Shinsei)",
-      "icon": "☯️",
-      "summary": "Le mystique en quête d'illumination, maîtrisant le souffle intérieur et les tatouages sacrés.",
-      "desc": "Les moines renoncent aux vanités de la politique et des biens matériels pour explorer les mystères du Tao de Shinsei et la pureté de l'âme. Parmi eux, les énigmatiques Ise Zumi (les Moines Tatoués du Dragon) portent dans leur chair des tatouages vivants infusés au sang du Kami Togashi, débloquant des prouesses surnaturelles stupéfiantes.",
-      "rules": [
-        "Ne porte ni armure ni daisho (considéré comme renonçant aux symboles de caste).",
-        "Combat principalement à mains nues (atemi, arts martiaux) ou au bâton de pèlerin (bo).",
-        "Les Ise Zumi débutent avec 2 Tatouages magiques permanents conférant des pouvoirs uniques.",
-        "Privilégie la méditation, la philosophie et le contrôle du Vide."
       ]
     }
   ],
@@ -1924,54 +1949,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "skillsPage": 81
     },
     {
-      "id": "dragon_monk",
-      "clanId": 3,
-      "vocation": "monk",
-      "name": "Ordre des Ise Zumi (Moines Tatoués Togashi)",
-      "bonusTrait": "choice",
-      "bonusLabel": "+1 au choix (Agilité, Force ou Volonté)",
-      "honor": 2.5,
-      "outfit": "Pagne et vêtements de lin simples, sandales de paille, bâton de pèlerin (bo), fiole d'eau de source, aucun sabre ni armure, 1 koku.",
-      "skills": [
-        {
-          "name": "Corps à corps (Jujutsu)",
-          "rank": 1
-        },
-        {
-          "name": "Bâton (Bojutsu)",
-          "rank": 1
-        },
-        {
-          "name": "Athlétisme",
-          "rank": 1
-        },
-        {
-          "name": "Méditation",
-          "rank": 1
-        },
-        {
-          "name": "Théologie",
-          "rank": 1
-        },
-        {
-          "name": "Athlétisme",
-          "rank": 1
-        }
-      ],
-      "choiceSlots": [
-        {
-          "id": "slot1",
-          "label": "Compétence d'artisanat ou de survie au choix",
-          "filter": "marchand",
-          "default": "Chasse / Pistage"
-        }
-      ],
-      "affinity": "Moine Tatoué",
-      "deficiency": null,
-      "techniques": [],
-      "legacy": true
-    },
-    {
       "id": "lion_bushi_akodo",
       "clanId": 4,
       "vocation": "bushi",
@@ -2047,51 +2024,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       ],
       "page": 87,
       "skillsPage": 87
-    },
-    {
-      "id": "lion_bushi_matsu",
-      "clanId": 4,
-      "vocation": "bushi",
-      "name": "Berserker Matsu · ancienne fiche",
-      "bonusTrait": "strength",
-      "bonusLabel": "+1 Force",
-      "honor": 3.5,
-      "outfit": "Daisho avec lame no-dachi à deux mains, armure légère (+5 ND), kimono de guerre rouge et or, 5 koku.",
-      "skills": [
-        {
-          "name": "Kenjutsu",
-          "rank": 1
-        },
-        {
-          "name": "Corps à corps (Jujutsu)",
-          "rank": 1
-        },
-        {
-          "name": "Athlétisme",
-          "rank": 1
-        },
-        {
-          "name": "Intimidation",
-          "rank": 1
-        },
-        {
-          "name": "Art de la guerre",
-          "rank": 1
-        },
-        {
-          "name": "Défense",
-          "rank": 1
-        },
-        {
-          "name": "Histoire",
-          "rank": 1
-        }
-      ],
-      "choiceSlots": [],
-      "affinity": "Bushi Berserker",
-      "deficiency": null,
-      "techniques": [],
-      "legacy": true
     },
     {
       "id": "lion_shugenja",
@@ -2572,54 +2504,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "techniques": []
     },
     {
-      "id": "ronin_monk",
-      "clanId": 8,
-      "vocation": "monk",
-      "name": "Moine de la Fraternité de Shinsei",
-      "bonusTrait": "choice",
-      "bonusLabel": "+1 au choix (Volonté ou Constitution)",
-      "honor": 2.5,
-      "outfit": "Robe simple de bure brune ou grise, sandales de paille, bol à aumônes, bâton de pèlerin (bo), chapeau de paille, 10 zeni.",
-      "skills": [
-        {
-          "name": "Bâton (Bojutsu)",
-          "rank": 1
-        },
-        {
-          "name": "Méditation",
-          "rank": 1
-        },
-        {
-          "name": "Théologie",
-          "rank": 1
-        },
-        {
-          "name": "Herboristerie",
-          "rank": 1
-        },
-        {
-          "name": "Histoire",
-          "rank": 1
-        },
-        {
-          "name": "Corps à corps (Jujutsu)",
-          "rank": 1
-        }
-      ],
-      "choiceSlots": [
-        {
-          "id": "slot1",
-          "label": "Compétence artisanale au choix",
-          "filter": "marchand",
-          "default": "Artisanat"
-        }
-      ],
-      "affinity": "Disciple de Shinsei",
-      "deficiency": null,
-      "techniques": [],
-      "legacy": true
-    },
-    {
       "id": "ronin_shugenja",
       "clanId": 8,
       "vocation": "shugenja",
@@ -2671,18 +2555,18 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
   ],
   "advantages": [
     {
-      "id": "adv_ambidextre",
-      "name": "Ambidextre",
+      "id": "adv_ami_fidele",
+      "name": "Alter ego",
       "cost": 2,
-      "summary": "Ignore le malus de main non directrice.",
-      "desc": "Sans cet avantage, utiliser la main non directrice retire deux dés lancés."
+      "summary": "Ami : influence et dévouement, chacun de 1, 3 ou 5 PP.",
+      "desc": "Un ami véritable implique des devoirs réciproques. Le coût additionne influence et dévouement."
     },
     {
-      "id": "adv_ami_fidele",
-      "name": "Ami fidèle",
+      "id": "adv_ambidextre",
+      "name": "Ambidextre",
       "cost": 3,
-      "summary": "Un allié loyal prêt à risquer sa réputation ou sa vie pour vous.",
-      "desc": "Vous avez un ami dévoué dans votre clan ou à la cour impériale. Cet allié prendra de réels risques personnels pour vous venir en aide en cas de danger politique ou physique."
+      "summary": "Ignore le malus de main non directrice.",
+      "desc": "Sans cet avantage, utiliser la main non directrice retire deux dés lancés."
     },
     {
       "id": "adv_benediction_benten",
@@ -2695,34 +2579,41 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "adv_chanceux",
       "name": "Chanceux",
       "cost": 3,
-      "summary": "Permet de relancer 1 jet de dés raté par partie.",
-      "desc": "Les Fortunes veillent sur vos pas. Une fois par séance de jeu, vous pouvez relancer entièrement un jet de dés qui vient d'échouer et garder le meilleur résultat."
+      "summary": "Refaire 1, 2 ou 3 jets ratés par partie.",
+      "desc": "3 PP par jet pouvant être refait, au maximum trois."
+    },
+    {
+      "id": "adv_chantage",
+      "name": "Chantage",
+      "cost": 1,
+      "summary": "Coût égal au rang de Gloire de la victime ; Scorpion : −1 PP, minimum 1.",
+      "desc": "Coût égal au rang de Gloire de la victime ; Scorpion : −1 PP, minimum 1."
     },
     {
       "id": "adv_clairvoyant",
       "name": "Clairvoyant",
-      "cost": 3,
+      "cost": 2,
       "summary": "Détecte instinctivement le mensonge et la manipulation.",
-      "desc": "Vous possédez une intuition perçante. Les personnes qui tentent de vous tromper, de vous flatter faussement ou de dissimuler la vérité ont un malus de +10 à leur ND d'opposition contre votre Sensibilité."
+      "desc": "Toute personne cherchant à vous mentir ou à semer la confusion dans votre esprit ajoute 10 au ND de son action."
+    },
+    {
+      "id": "adv_terrain",
+      "name": "Connaissance du terrain",
+      "cost": 2,
+      "summary": "Connaissance des routes d’une province ; impossible de s’y perdre. Licorne : 1 PP.",
+      "desc": "Connaissance des routes d’une province ; impossible de s’y perdre. Licorne : 1 PP."
     },
     {
       "id": "adv_dessein_superieur",
       "name": "Dessein supérieur",
-      "cost": 3,
+      "cost": 2,
       "summary": "Objectif personnel · +1 XP si vous vous en rapprochez.",
       "desc": "À la fin de la partie, indiquez la progression vers votre dessein lors de l’attribution des XP."
     },
     {
-      "id": "adv_eloquent",
-      "name": "Éloquent",
-      "cost": 3,
-      "summary": "Ajoute un dé lancé lors des échanges verbaux.",
-      "desc": "Cet avantage s’applique quand le personnage fait usage de la parole."
-    },
-    {
       "id": "adv_force_terre",
       "name": "Force de la Terre",
-      "cost": 4,
+      "cost": 2,
       "summary": "Réduit le malus de blessures de 1 dé par niveau.",
       "desc": "Les états Épuisé, Coma et Mort restent applicables."
     },
@@ -2741,6 +2632,34 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "desc": "La protection cesse une fois votre destinée accomplie."
     },
     {
+      "id": "adv_heritage",
+      "name": "Héritage",
+      "cost": 2,
+      "summary": "Objet ancestral et coût convenus avec le MJ ; 2 ou 3 PP pour un objet magique mineur, 20 ou davantage pour un objet ancestral de clan.",
+      "desc": "Objet ancestral et coût convenus avec le MJ ; 2 ou 3 PP pour un objet magique mineur, 20 ou davantage pour un objet ancestral de clan."
+    },
+    {
+      "id": "adv_lien_karmique",
+      "name": "Lien karmique",
+      "cost": 1,
+      "summary": "Une fois par partie, un dé supplémentaire par PP investi lorsque vous combattez ou protégez la personne liée.",
+      "desc": "Une fois par partie, un dé supplémentaire par PP investi lorsque vous combattez ou protégez la personne liée."
+    },
+    {
+      "id": "adv_lire_levres",
+      "name": "Lire sur les lèvres",
+      "cost": 2,
+      "summary": "Un jet réussi de Perception permet de lire les lèvres d’une personne visible.",
+      "desc": "Un jet réussi de Perception permet de lire les lèvres d’une personne visible."
+    },
+    {
+      "id": "adv_maitrise_innee",
+      "name": "Maîtrise innée",
+      "cost": 3,
+      "summary": "3 PP par sort possédé et accessible ; lancement de mémoire, augmentation gratuite avec parchemin. Sélection à l’étape Sorts.",
+      "desc": "3 PP par sort possédé et accessible ; lancement de mémoire, augmentation gratuite avec parchemin. Sélection à l’étape Sorts."
+    },
+    {
       "id": "adv_rapide",
       "name": "Rapide",
       "cost": 3,
@@ -2752,19 +2671,19 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "name": "Relations",
       "cost": 2,
       "summary": "Un réseau de contacts utiles dans un autre clan ou une administration.",
-      "desc": "Vous connaissez des marchands, des fonctionnaires ou des samouraïs influents prêts à vous fournir des informations confidentielles ou des laissez-passer précieux."
+      "desc": "Relation secondaire (2 PP) : aide licite. Relation majeure (4 PP) : services plus délicats, parfois illicites."
     },
     {
       "id": "adv_resistance_magique",
       "name": "Résistance magique",
-      "cost": 4,
+      "cost": 2,
       "summary": "Tout sort qui vous cible gagne +5 ND par niveau.",
       "desc": "Ce modificateur concerne les sorts, y compris bénéfiques."
     },
     {
       "id": "adv_retablissement_rapide",
       "name": "Rétablissement rapide",
-      "cost": 2,
+      "cost": 3,
       "summary": "Constitution +1 pour la guérison naturelle.",
       "desc": "Le bouton de repos applique la récupération quotidienne."
     },
@@ -2776,6 +2695,20 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "desc": "Le bonus dépend de l’action entreprise."
     },
     {
+      "id": "adv_orientation",
+      "name": "Sens de l’orientation",
+      "cost": 1,
+      "summary": "Deux dés supplémentaires aux jets d’orientation, de lecture de carte ou de recherche d’une issue.",
+      "desc": "Deux dés supplémentaires aux jets d’orientation, de lecture de carte ou de recherche d’une issue."
+    },
+    {
+      "id": "adv_sensei",
+      "name": "Sensei",
+      "cost": 1,
+      "summary": "Maître dévoué : 1 PP (compétence 1–2), 3 PP (3–4), 5 PP (5).",
+      "desc": "Maître dévoué : 1 PP (compétence 1–2), 3 PP (3–4), 5 PP (5)."
+    },
+    {
       "id": "adv_statut_social",
       "name": "Statut social",
       "cost": 5,
@@ -2785,9 +2718,23 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
     {
       "id": "adv_trompe_la_mort",
       "name": "Trompe-la-mort",
-      "cost": 4,
+      "cost": 3,
       "summary": "Réussite automatique des tests de peur.",
       "desc": "Cette protection concerne les tests de peur."
+    },
+    {
+      "id": "adv_ecole_differente",
+      "name": "École différente",
+      "cost": 5,
+      "summary": "Formation dans une école d’un autre clan ; sélection à l’étape École.",
+      "desc": "Formation dans une école d’un autre clan ; sélection à l’étape École."
+    },
+    {
+      "id": "adv_eloquent",
+      "name": "Éloquent",
+      "cost": 2,
+      "summary": "Ajoute un dé lancé lors des échanges verbaux.",
+      "desc": "Cet avantage s’applique quand le personnage fait usage de la parole."
     }
   ],
   "disadvantages": [
@@ -2795,15 +2742,15 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "dis_amour_sincere",
       "name": "Amour sincère",
       "gain": 3,
-      "summary": "Un amour secret ou interdit guide et complique vos actions.",
-      "desc": "Vous aimez éperdument une personne que vous ne pouvez épouser (fiancée à un autre, d'un clan ennemi, ou de caste différente). Vous ferez tout pour la protéger, quitte à enfreindre le protocole."
+      "summary": "Choisir entre amour et loyauté : dépenser un point de Vide.",
+      "desc": "Lorsqu’il faut trancher entre cet amour et la loyauté envers son clan, son sensei ou sa famille, dépenser un point de Vide. Si l’être aimé retire sa faveur, la dépense ne s’applique plus jusqu’à la réconciliation. VF p. 74."
     },
     {
       "id": "dis_ampute",
       "name": "Amputé",
       "gain": 3,
-      "summary": "Perte d'un membre (bras ou œil) créant un handicap physique permanent.",
-      "desc": "Un combat passé vous a laissé mutilé. Tout jet physique en relation directe avec cette infirmité voit son ND augmenté de +10."
+      "summary": "ND +10 aux jets liés au membre manquant.",
+      "desc": "Un bras ou une jambe manque ; tout jet en rapport avec la mutilation subit +10 au ND. VF p. 74."
     },
     {
       "id": "dis_blessure_permanente",
@@ -2816,8 +2763,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "dis_brebis_galeuse",
       "name": "Brebis galeuse",
       "gain": 4,
-      "summary": "Votre propre famille a honte de vous et vous méprise.",
-      "desc": "Pour une faute commise dans votre jeunesse ou un tempérament jugé indigne, vos proches vous évitent et refusent de vous accorder aide matérielle ou recommandations."
+      "summary": "Banni de sa famille ; école familiale limitée au rang 1.",
+      "desc": "Le personnage a rompu ses liens familiaux et doit trouver une autre école pour étudier au-delà du rang 1. VF p. 74."
     },
     {
       "id": "dis_chagrin_amour",
@@ -2830,15 +2777,15 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "dis_coeur_tendre",
       "name": "Cœur tendre",
       "gain": 2,
-      "summary": "Répugnance viscérale à tuer un ennemi sans défense ou à torturer.",
-      "desc": "Vous ne pouvez supporter de voir souffrir les innocents ou les vaincus sans armes. Vous refusez d'exécuter un prisonnier ou de laisser torturer un suspect sans tenter d'intervenir."
+      "summary": "Volonté ND 20 pour torturer ou tuer.",
+      "desc": "Un jet de Volonté ND 20 est nécessaire pour parvenir à torturer ou tuer quelqu’un. VF p. 74."
     },
     {
       "id": "dis_compulsif",
       "name": "Compulsif",
       "gain": 3,
-      "summary": "Une obsession ou manie incontrôlable face à la tentation.",
-      "desc": "Vous avez un penchant irrépressible (le jeu, l'alcool, les énigmes, le perfectionnisme maniaque). Face à votre vice, vous devez réussir un jet de Volonté (ND 15) pour ne pas y céder."
+      "summary": "Jet d’Honneur ND 15, 20 ou 25 face à la pulsion.",
+      "desc": "Le seuil du jet d’Honneur dépend du coût : 2 PP = ND 15, 3 PP = ND 20, 4 PP = ND 25. VF p. 74."
     },
     {
       "id": "dis_credule",
@@ -2846,13 +2793,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "gain": 3,
       "summary": "Le ND pour vous convaincre est de 5.",
       "desc": "Ce seuil concerne les tentatives de persuasion contre vous."
-    },
-    {
-      "id": "dis_dette_honneur",
-      "name": "Dette d'honneur",
-      "gain": 3,
-      "summary": "Dette morale sacrée envers un autre samouraï ou une famille rivale.",
-      "desc": "Un samouraï d'un autre clan a jadis sauvé votre vie ou celle de votre père. Si cette personne vient réclamer votre aide ou une faveur, vous ne pouvez honorablement la lui refuser."
     },
     {
       "id": "dis_ennemi_jure",
@@ -2879,8 +2819,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "dis_incapable_mentir",
       "name": "Incapable de mentir",
       "gain": 2,
-      "summary": "Le mensonge direct vous étouffe : vous ne pouvez dissimuler la vérité.",
-      "desc": "Votre éducation ou votre morale vous interdit formellement de proférer un mensonge. Quand vous êtes interrogé, vous ne pouvez que dire la vérité ou vous enfermer dans un silence suspect."
+      "summary": "Échec automatique de toute tentative de mensonge.",
+      "desc": "Le personnage échoue à mentir ; ses interlocuteurs n’ont pas à effectuer de jet. VF p. 75."
     },
     {
       "id": "dis_indiscret",
@@ -2893,8 +2833,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "dis_malchanceux",
       "name": "Malchanceux",
       "gain": 3,
-      "summary": "Le destin vous joue des tours : le MJ peut vous faire relancer 1 réussite par partie.",
-      "desc": "Une étoile néfaste veille sur vos pas. Une fois par séance de jeu, le Maître de Jeu peut vous forcer à relancer un jet de dé qui venait de réussir et vous imposer le second résultat."
+      "summary": "Le MJ peut imposer 1 à 3 relances par partie.",
+      "desc": "Une relance par tranche de 3 PP ; le MJ ne peut imposer une relance d’un jet déjà relancé grâce à Chanceux. VF p. 75."
     },
     {
       "id": "dis_malediction_benten",
@@ -2907,8 +2847,8 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "id": "dis_mauvaise_reputation",
       "name": "Mauvaise réputation",
       "gain": 2,
-      "summary": "Tristement célèbre pour un acte suspect ou une rumeur déshonorante.",
-      "desc": "Les cours parlent de vous en mal. Qu'il s'agisse d'une rumeur infondée ou d'une véritable bourde passée, les samouraïs honorables se méfient instinctivement de vous dès qu'ils apprennent votre nom."
+      "summary": "Les autres samouraïs lancent un dé de plus pour vous identifier.",
+      "desc": "Définissez la mauvaise réputation par un mot ; les samouraïs qui vous croisent lancent un dé supplémentaire à leur jet d’identification. VF p. 76."
     },
     {
       "id": "dis_sombre_secret",
@@ -2916,6 +2856,128 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "gain": 5,
       "summary": "Un secret terrifiant qui vous vaudrait le seppuku ou l'exil s'il était découvert.",
       "desc": "Vous cachez un secret inavouable (une ascendance illégitime, la commission d'un meurtre prohibé, la possession d'un objet souillé ou un crime d'État). Si ce secret venait à être révélé au grand jour, votre honneur serait anéanti et vous n'auriez d'autre choix que la mort ou la fuite comme ronin pourri."
+    },
+    {
+      "id": "dis_dependant",
+      "name": "Dépendant",
+      "gain": 3,
+      "summary": "Dépendance à un produit ; −1 dé par jour de sevrage.",
+      "desc": "Dépendance à un produit ; −1 dé par jour de sevrage. (VF p. 74).",
+      "page": 74,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_social",
+      "name": "Désavantage social",
+      "gain": 3,
+      "summary": "Réduit la Gloire d’un rang par niveau par rapport à la Maîtrise.",
+      "desc": "Réduit la Gloire d’un rang par niveau par rapport à la Maîtrise. (VF p. 74).",
+      "page": 74,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_douillet",
+      "name": "Douillet",
+      "gain": 5,
+      "summary": "Aggrave d’un degré le malus de blessures.",
+      "desc": "Aggrave d’un degré le malus de blessures. (VF p. 74).",
+      "page": 74
+    },
+    {
+      "id": "dis_estropie",
+      "name": "Estropié",
+      "gain": 3,
+      "summary": "−2 dés lancés aux jets impliquant l’Agilité.",
+      "desc": "Une jambe est pratiquement inutilisable. Tous les jets impliquant l’Agilité perdent deux dés lancés. VF p. 75.",
+      "page": 75
+    },
+    {
+      "id": "dis_faiblesse_caractere",
+      "name": "Faiblesse de caractère",
+      "gain": 3,
+      "summary": "Les attaques impliquant votre Volonté bénéficient de deux dés supplémentaires.",
+      "desc": "Les attaques impliquant votre Volonté bénéficient de deux dés supplémentaires. (VF p. 75).",
+      "page": 75
+    },
+    {
+      "id": "dis_impetueux",
+      "name": "Impétueux",
+      "gain": 2,
+      "summary": "Jet d’Honneur ND 20 pour garder son calme face à un affront.",
+      "desc": "Jet d’Honneur ND 20 pour garder son calme face à un affront. (VF p. 75).",
+      "page": 75,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_indifferent",
+      "name": "Indifférent",
+      "gain": 2,
+      "summary": "Dépense d’un point de Vide pour prendre un risque pour autrui.",
+      "desc": "Dépense d’un point de Vide pour prendre un risque pour autrui. (VF p. 75).",
+      "page": 75,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_lien_dependance",
+      "name": "Lien de dépendance",
+      "gain": 1,
+      "summary": "Adulte, personne âgée ou enfant dépendant du personnage.",
+      "desc": "Adulte, personne âgée ou enfant dépendant du personnage. (VF p. 75).",
+      "page": 75,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_mauvaise_fortune",
+      "name": "Mauvaise fortune",
+      "gain": 1,
+      "summary": "Le MJ détermine une conséquence dans la table.",
+      "desc": "Selon le résultat, la conséquence peut être narrative ou mécanique ; le résultat 9 impose ND +5 à une compétence déterminée jusqu’à dépense de 1 XP. VF p. 75–76.",
+      "page": 75,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_obligation",
+      "name": "Obligation",
+      "gain": 2,
+      "summary": "Faveur mineure ou majeure à rendre.",
+      "desc": "Faveur mineure ou majeure à rendre. (VF p. 76).",
+      "page": 76,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_obnubile",
+      "name": "Obnubilé",
+      "gain": 3,
+      "summary": "Objectif poursuivi au détriment de ses proches et de son honneur.",
+      "desc": "Objectif poursuivi au détriment de ses proches et de son honneur. (VF p. 76).",
+      "page": 76,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_petit",
+      "name": "Petit",
+      "gain": 3,
+      "summary": "Écartez le meilleur dé de chaque jet de dommages.",
+      "desc": "Le meilleur dé de dommages ne peut être gardé. Le nombre de dés du jet ne change pas ; le joueur écarte le meilleur résultat avant de sélectionner les dés autorisés. VF p. 76.",
+      "page": 76
+    },
+    {
+      "id": "dis_phobie",
+      "name": "Phobie",
+      "gain": 2,
+      "summary": "−2 ou −4 dés face à la phobie ; un point de Vide permet de surmonter le handicap pour une action.",
+      "desc": "−2 ou −4 dés face à la phobie ; un point de Vide permet de surmonter le handicap pour une action. (VF p. 76).",
+      "page": 76,
+      "campaignOnly": true
+    },
+    {
+      "id": "dis_possede",
+      "name": "Possédé",
+      "gain": 1,
+      "summary": "Esprit ancestral : une fois par scénario, jusqu’à trois fois, ou au moins une fois par jour.",
+      "desc": "Esprit ancestral : une fois par scénario, jusqu’à trois fois, ou au moins une fois par jour. (VF p. 76).",
+      "page": 76,
+      "campaignOnly": true
     }
   ],
   "skills": [
@@ -3118,26 +3180,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "typeLabel": "Valorisante (Noble)"
     },
     {
-      "name": "Artisanat d'art",
-      "trait": "intelligence",
-      "type": "valorisante",
-      "desc": "Peinture raffinée, sculpture, gravure ou composition florale (ikebana).",
-      "ring": "Feu",
-      "traitLabel": "Intelligence",
-      "typeLabel": "Valorisante (Noble)",
-      "legacyChoice": true
-    },
-    {
-      "name": "Recherche",
-      "trait": "intelligence",
-      "type": "valorisante",
-      "desc": "Consultation méthodique d'anciennes bibliothèques et registres secrets.",
-      "ring": "Feu",
-      "traitLabel": "Intelligence",
-      "typeLabel": "Valorisante (Noble)",
-      "legacyChoice": true
-    },
-    {
       "name": "Connaissance : Outremonde",
       "trait": "intelligence",
       "type": "valorisante",
@@ -3199,26 +3241,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
       "ring": "Feu",
       "traitLabel": "Agilité",
       "typeLabel": "Dévalorisante"
-    },
-    {
-      "name": "Tromperie / Feinte",
-      "trait": "agility",
-      "type": "devalorisante",
-      "desc": "Mouvements trompeurs, ruses et attaques sournoises.",
-      "ring": "Feu",
-      "traitLabel": "Agilité",
-      "typeLabel": "Dévalorisante",
-      "legacyChoice": true
-    },
-    {
-      "name": "Intimidation",
-      "trait": "willpower",
-      "type": "devalorisante",
-      "desc": "Menaces physiques ou verbales pour contraindre un individu à céder.",
-      "ring": "Terre",
-      "traitLabel": "Volonté",
-      "typeLabel": "Dévalorisante",
-      "legacyChoice": true
     },
     {
       "name": "Poison",
@@ -3491,116 +3513,6 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
     }
   ],
   "spells": [
-    {
-      "id": "sp_terre_1",
-      "element": "Terre",
-      "mastery": 1,
-      "name": "Force de la Pierre",
-      "tn": 10,
-      "range": "Contact",
-      "duration": "5 minutes",
-      "desc": "Accorde la robustesse du granit. Augmente la Constitution de la cible de +1 pour la durée du sort."
-    },
-    {
-      "id": "sp_terre_2",
-      "element": "Terre",
-      "mastery": 1,
-      "name": "Armure de la Terre",
-      "tn": 10,
-      "range": "Personnel",
-      "duration": "Combat",
-      "desc": "La peau du shugenja s'épaissit comme la roche, lui conférant +5 à son ND pour être touché."
-    },
-    {
-      "id": "sp_terre_3",
-      "element": "Terre",
-      "mastery": 2,
-      "name": "Étreinte de la Terre",
-      "tn": 15,
-      "range": "15 mètres",
-      "duration": "1 minute",
-      "desc": "Le sol meuble s'ouvre sous les pieds d'un adversaire et se referme comme un étau, l'immobilisant."
-    },
-    {
-      "id": "sp_eau_1",
-      "element": "Eau",
-      "mastery": 1,
-      "name": "Voie de la Guérison",
-      "tn": 10,
-      "range": "Contact",
-      "duration": "Instantanée",
-      "desc": "Les esprits de l'eau purifient la chair. Soigne un nombre de points de blessures égal au double du Rang d'Eau du shugenja."
-    },
-    {
-      "id": "sp_eau_2",
-      "element": "Eau",
-      "mastery": 1,
-      "name": "Reflet Clair",
-      "tn": 10,
-      "range": "Vue",
-      "duration": "10 minutes",
-      "desc": "Permet de percevoir les poisons, impuretés et maladies dans une source d'eau ou un plat."
-    },
-    {
-      "id": "sp_eau_3",
-      "element": "Eau",
-      "mastery": 2,
-      "name": "Vitesse du Torrent",
-      "tn": 15,
-      "range": "Contact",
-      "duration": "5 rounds",
-      "desc": "La cible se déplace avec la fluidité torrentielle de l'eau, doublant sa vitesse de déplacement et gagnant +1g1 à l'initiative."
-    },
-    {
-      "id": "sp_feu_2",
-      "element": "Feu",
-      "mastery": 1,
-      "name": "Regard de la Flamme",
-      "tn": 10,
-      "range": "Personnel",
-      "duration": "10 minutes",
-      "desc": "Les yeux du prêtre brillent d'une lueur incandescente, lui permettant de voir parfaitement dans les ténèbres les plus noires."
-    },
-    {
-      "id": "sp_feu_3",
-      "element": "Feu",
-      "mastery": 2,
-      "name": "Souffle du Dragon",
-      "tn": 15,
-      "range": "Cône de 8m",
-      "duration": "Instantanée",
-      "desc": "Crache un éventail de flammes dévastatrices consumant tout sur son passage (4g3 de dégâts)."
-    },
-    {
-      "id": "sp_air_1",
-      "element": "Air",
-      "mastery": 1,
-      "name": "Voile de Brume",
-      "tn": 10,
-      "range": "Autour du prêtre",
-      "duration": "5 minutes",
-      "desc": "Une nappe de brume dense enveloppe le shugenja et ses alliés, conférant +10 à leur ND pour être touché à distance."
-    },
-    {
-      "id": "sp_air_2",
-      "element": "Air",
-      "mastery": 1,
-      "name": "Le Murmure du Vent",
-      "tn": 10,
-      "range": "100 mètres",
-      "duration": "1 minute",
-      "desc": "Les esprits de l'air transportent les chuchotements du prêtre à l'oreille d'un allié sans qu'aucun témoin ne puisse l'entendre."
-    },
-    {
-      "id": "sp_air_3",
-      "element": "Air",
-      "mastery": 2,
-      "name": "L'Illusion Parfaite",
-      "tn": 15,
-      "range": "20 mètres",
-      "duration": "10 minutes",
-      "desc": "Tisse une illusion visuelle et auditive saisissante de réalisme (bruits de pas, apparition de soldats fantômes, etc.)."
-    },
     {
       "id": "sense",
       "name": "Sensation",
@@ -4898,15 +4810,19 @@ body{background:linear-gradient(125deg,#f9f7f1,#eceae2 70%) fixed}
 "use strict";
 
 const DATA = JSON.parse(document.getElementById("l5a-data").textContent);
-const STORAGE_KEY = "l5a_character_v1";
+const RANK_LIMITS = Object.freeze({trait:10, void:10, skill:6, mastery:5});
+function traitLimit(key){return key==="void"?RANK_LIMITS.void:RANK_LIMITS.trait;}
+const STORAGE_KEY = "l5a_builder_release_v1";
 
 // Structure de données par défaut du personnage
 const DEFAULT_CHARACTER = {
+  schemaVersion: 1,
   isCreated: false,
   clanId: 3, // Dragon par défaut
   familyId: 9, // Mirumoto
   vocationId: "bushi",
   schoolId: "dragon_bushi",
+  schoolPairApproved: false,
   schoolChosenSkills: {}, // { slotId: skillName }
   identity: {
     name: "",
@@ -4942,18 +4858,9 @@ const DEFAULT_CHARACTER = {
     statusRank: 1.0,
     taint: 0.0,
     reputationBonus: 0,
-    armorType: "light" // "none", "light", "heavy"
+    approvedMastery: 1
   },
-  // XP
-  xp: {
-    totalEarned: 0,
-    totalSpent: 0,
-    purchases: {
-      traits: { stamina: 0, willpower: 0, strength: 0, perception: 0, agility: 0, intelligence: 0, reflexes: 0, awareness: 0, void: 0 },
-      skills: {}
-    },
-    ledger: []
-  },
+  experience: {ledger: []},
   // Inventaire & argent
   inventory: {
     koku: 5,
@@ -4961,6 +4868,9 @@ const DEFAULT_CHARACTER = {
     zeni: 0,
     items: [],
     customWeapons: [],
+    hands: {main:null,off:null},
+    armorId: null,
+    arrows: {},
     notes: ""
   }
 };
@@ -4995,44 +4905,36 @@ function saveCharacter() {
   }
 }
 
-function initializeWoundEffects() {
-  if (character.status.woundEffectsReady || !character.isCreated) return;
-  if (hasEffect("dis_blessure_permanente")) character.status.woundsTaken = Math.max(woundsNow(), woundsPerRank());
-  character.status.woundEffectsReady = true;
-}
-// Les anciennes clés sont converties une seule fois au chargement ou à l’import.
-function migrateSkillNames(person){
-  const aliases={"Bataille":"Art de la guerre","Tir à l'arc à cheval":"Tir à l'arc","Survie":"Chasse / Pistage"};
-  for(const [oldName,name] of Object.entries(aliases)){
-    for(const ranks of [person.purchases?.skills,person.xp?.purchases?.skills,person.inGameSkills]){
-      if(ranks && Object.prototype.hasOwnProperty.call(ranks,oldName)){
-        ranks[name]=(Number(ranks[name])||0)+(Number(ranks[oldName])||0);
-        delete ranks[oldName];
-      }
+function validateV1(p){
+  const obj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+  const fail=()=>{throw Error("Format incompatible : une sauvegarde officielle V1 est requise.");};
+  if(!obj(p)||p.schemaVersion!==1||typeof p.isCreated!=="boolean"||!obj(p.identity)||!obj(p.status)||!obj(p.purchases)||!obj(p.inventory)||!obj(p.experience)||!obj(p.inGameTraits)||!obj(p.inGameSkills)||!obj(p.schoolChosenSkills))fail();
+  if(!Array.isArray(p.experience.ledger)||!Array.isArray(p.inventory.items)||!Array.isArray(p.inventory.customWeapons)||!obj(p.inventory.hands)||!obj(p.inventory.arrows)||!Object.hasOwn(p.inventory,"armorId")||!Number.isInteger(p.status.approvedMastery)||p.status.approvedMastery<1||p.status.approvedMastery>RANK_LIMITS.mastery)fail();
+  if(!obj(p.purchases.traits)||!obj(p.purchases.skills)||!["advantages","disadvantages","spells"].every(k=>Array.isArray(p.purchases[k])))fail();
+  if(!DATA.schools.some(x=>x.id===p.schoolId&&x.vocation===p.vocationId)||!DATA.clans.some(x=>x.id===p.clanId)||!DATA.families.some(x=>x.id===p.familyId))fail();
+  for(const k of ["advantages","disadvantages","spells"])if(p.purchases[k].some(id=>!DATA[k].some(x=>x.id===id)))fail();
+  const items=[...p.inventory.items,...p.inventory.customWeapons], ids=items.map(x=>x?.id);
+  if(ids.some(id=>typeof id!=="string"||!id)||new Set(ids).size!==ids.length||items.some(x=>x.weaponKey&&!DATA.weapons.some(w=>w.key===x.weaponKey)))fail();
+  if([p.inventory.hands.main,p.inventory.hands.off,p.inventory.armorId].some(id=>id!==null&&!ids.includes(id)))fail();
+  const previous=character;
+  try {
+    character=p;
+    for(const key of Object.keys(DEFAULT_CHARACTER.baseTraits)){
+      const rank=permanentTraitScore(key);
+      if(!Number.isInteger(rank)||rank<1||rank>traitLimit(key))throw Error("Trait hors limites : "+key);
     }
-    for(const [slot,chosen] of Object.entries(person.schoolChosenSkills||{})){
-      if(chosen===oldName)person.schoolChosenSkills[slot]=name;
-    }
-    for(const entry of person.experience?.ledger||[]){
-      if(entry.kind==="skill" && entry.targetId===oldName){
-        entry.targetId=name;
-        if(entry.label?.startsWith(oldName))entry.label=name+entry.label.slice(oldName.length);
-      }
-    }
-  }
+    for(const skill of DATA.skills){const rank=getSkillRank(skill.name);if(!Number.isInteger(rank)||rank>RANK_LIMITS.skill)throw Error("Compétence hors limites : "+skill.name);}
+  } finally {character=previous;}
+  return true;
 }
 function loadCharacter() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      character = Object.assign(JSON.parse(JSON.stringify(DEFAULT_CHARACTER)), parsed);
-      migrateSkillNames(character);
-      if(character.schoolPairApproved==null && ["ronin_bushi","ronin_shugenja","grue_bushi"].includes(character.schoolId)){
-        const names=Object.values(character.schoolChosenSkills||{});character.schoolPairApproved=new Set(names).size<names.length;
-      }
-      if(character.isCreated && character.vocationId==="bushi" && character.status.approvedMastery==null) character.status.approvedMastery=getSchoolRank();
-      initializeWoundEffects();
+      validateV1(parsed);
+      character = parsed;
+
       return true;
     }
   } catch (e) {
@@ -5151,7 +5053,7 @@ function renderActiveScreen(screenId) {
 // -------------------------------------------------------------
 const weakTraits = {strength:"Force", stamina:"Constitution", willpower:"Volonté", perception:"Perception", agility:"Agilité", intelligence:"Intelligence", reflexes:"Réflexes", awareness:"Intuition"};
 const disadvantageLimit = 10;
-const rankedBenefits = {adv_force_terre:[2,4,6], adv_resistance_magique:[2,4,6], adv_statut_social:[5,10]};
+const rankedBenefits = {adv_force_terre:[2,4,8], adv_chanceux:[3,6,9], adv_sensei:[1,3,5], adv_resistance_magique:[2,4,6], adv_statut_social:[5,10]};
 function hasEffect(id) {
   if(character.isCreated && character.status.effectOverrides?.[id]!=null)return !!character.status.effectOverrides[id];
   return (character.purchases[id.startsWith("adv_") ? "advantages" : "disadvantages"] || []).includes(id);
@@ -5161,56 +5063,149 @@ function benefitLevel(id) {
   if(character.isCreated && character.status.effectOverrides?.[id]>0)return Number(character.status.effectOverrides[id]);
   return character.purchases.effectLevels?.[id] || (id === "adv_statut_social" ? 1 : 2);
 }
+function effectLevel(id){
+  if(!hasEffect(id))return 0;
+  if(rankedBenefits[id])return benefitLevel(id);
+  if(character.isCreated && character.status.effectOverrides?.[id]!=null)return Math.max(0,Number(character.status.effectOverrides[id])||0);
+  return Math.max(1,Number(character.purchases.effectLevels?.[id])||1);
+}
+function weakTraitPenalty(trait){
+  if(!hasEffect("dis_faible"))return 0;
+  const rows=character.isCreated&&character.status.campaignRows?.dis_faible;
+  return Number(Array.isArray(rows)?rows.some(r=>r.trait===trait):trait===activeWeakTrait());
+}
+function agilityDicePenalty(trait){return trait==="agility"&&hasEffect("dis_estropie")?2:0;}
+function socialDisadvantageLevel(){return Number(character.clanRonin||character.clanId===8)+effectLevel("dis_social");}
+function gloryModifier(){
+  const social=socialDisadvantageLevel(), ronin=character.clanRonin||character.clanId===8;
+  return benefitLevel("adv_statut_social")+(social?getSchoolRank()-social-(ronin?0:1):0);
+}
+function effectiveGlory(){return Number(character.status.glory??(character.clanRonin||character.clanId===8?0:1))+gloryModifier();}
+function damageSelectionNote(){return hasEffect("dis_petit")?"Petit · écartez le meilleur dé de dommages avant de garder les dés autorisés (VF p. 76).":"";}
 function activeWeakTrait(){
   return (character.isCreated && character.status.weakTraitOverride) || character.purchases.weakTrait || "strength";
 }
+const campaignRepeatDis=new Set(['dis_compulsif','dis_dependant','dis_ennemi_jure','dis_faible','dis_lien_dependance','dis_obligation','dis_phobie']);
+const campaignDisLevels={dis_compulsif:[2,3,4],dis_ennemi_jure:[3,4,5,6],dis_lien_dependance:[1,2,4],dis_obligation:[2,4],dis_phobie:[2,4],dis_possede:[1,2,4],dis_malchanceux:[3,6,9],dis_social:[3,6,9]};
+function campaignRows(id){
+ const all=character.status.campaignRows ||= {};
+ if(!Object.prototype.hasOwnProperty.call(all,id)){
+  const list=character.purchases[id.startsWith('adv_')?'advantages':'disadvantages']||[];
+  const count=hasEffect(id)?Math.max(1,list.filter(x=>x===id).length):0;
+  all[id]=Array.from({length:count},(_,i)=>({...((character.purchases.advDetails||{})[id]?.[i]||{}), ...(id==='dis_faible'?{trait:activeWeakTrait()}:{}), ...(id.startsWith('dis_')?{label:effectNote(id)}:{}),...((rankedBenefits[id]||campaignDisLevels[id])?{level:effectLevel(id)}:{})}));
+ }
+ return all[id];
+}
+function campaignMultiple(id){return repeatAdvantages.has(id)||campaignRepeatDis.has(id);}
+function campaignLocked(id){return id==='adv_ecole_differente';}
+function campaignInnateChoices(){return DATA.spells.filter(sp=>canMemorizeSpell(sp));}
+function campaignFields(item){const id=item.id;
+ if(id==='adv_maitrise_innee')return `<label class="form-field"><span>Sort</span><select class="field-control" data-campaign-field="spell"><option value="">Choisir…</option>${campaignInnateChoices().map(sp=>`<option value="${sp.id}">${escCard(sp.name)}</option>`).join('')}</select></label>`;
+ if(id.startsWith('adv_')&&repeatAdvantages.has(id))return advConfig(item).replaceAll('data-adv-field','data-campaign-field').replaceAll('<label>','<label class="form-field">').replaceAll('<select ','<select class="field-control" ').replaceAll('<input ','<input class="field-control" ').replaceAll('<textarea ','<textarea class="field-control" ');
+ const values=campaignDisLevels[id];
+ return `${rankedBenefits[id]||values?`<label class="form-field"><span>Niveau</span><select class="field-control" data-campaign-field="level">${(rankedBenefits[id]||values).map((v,i)=>`<option value="${i+1}">Niveau ${i+1}${values?' · '+v+' PP de référence':''}</option>`).join('')}</select></label>`:''}${id==='dis_faible'?`<label class="form-field"><span>Trait</span><select class="field-control" data-campaign-field="trait">${Object.entries(weakTraits).filter(([k])=>getTraitScore(k)>1&&!(k==='stamina'&&hasEffect('dis_fragile')&&getTraitScore(k)<=2)).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>`:''}<label class="form-field"><span>Précisions</span><textarea class="field-control" data-campaign-field="label" rows="3" maxlength="2000"></textarea></label>`;
+}
 function renderEffectOptions(){
-  const groups=[["advantages","Avantages","un avantage"],["disadvantages","Handicaps","un handicap"]];
-  document.getElementById("effectOptions").innerHTML=groups.map(([key,title,prompt])=>{
-    const list=DATA[key], owned=list.filter(item=>hasEffect(item.id));
-    const available=list.filter(item=>!hasEffect(item.id) && (item.id!=="dis_fragile" || getTraitScore("stamina")>=2));
-    const rows=owned.map(item=>{
-      let setting="";
-      if(rankedBenefits[item.id]){
-        setting=`<select aria-label="Niveau de ${escCard(item.name)}" onchange="editCampaignEffect('${item.id}',Number(this.value))">${rankedBenefits[item.id].map((_,i)=>`<option value="${i+1}" ${benefitLevel(item.id)===i+1?"selected":""}>Niveau ${i+1}</option>`).join("")}</select>`;
-      }else if(item.id==="dis_faible"){
-        setting=`<select aria-label="Trait réduit par Faible" onchange="editCampaignEffect('dis_faible',1,this.value)">${Object.entries(weakTraits).map(([k,v])=>`<option value="${k}" ${k===activeWeakTrait()?"selected":""} ${k==="stamina" && k!==activeWeakTrait() && hasEffect("dis_fragile") && getTraitScore(k)<=2?"disabled":""}>${v}</option>`).join("")}</select>`;
-      }
-      return `<div class="owned-effect"><strong>${escCard(item.name)}</strong>${setting}<button class="btn sm" type="button" aria-label="Retirer ${escCard(item.name)}" onclick="editCampaignEffect('${item.id}',0)">Retirer</button><small>${escCard(item.summary)}</small></div>`;
-    }).join("");
-    return `<section><h3>${title}</h3><div class="effect-picker"><select id="pick-${key}" class="search-input" aria-label="Choisir ${prompt}"><option value="">Choisir ${prompt}…</option>${available.map(item=>`<option value="${item.id}">${escCard(item.name)}</option>`).join("")}</select><button class="btn sm" type="button" onclick="editCampaignEffect(document.getElementById('pick-${key}').value,1)">Ajouter</button></div>${rows||"<p>Aucun "+(key==="advantages"?"avantage":"handicap")+".</p>"}</section>`;
-  }).join("");
+ const groups=[['advantages','Avantages'],['disadvantages','Handicaps']];
+ document.getElementById('effectOptions').innerHTML=groups.map(([key,title])=>{
+ const list=[...DATA[key]].sort(key==='advantages'?compareAdvantageCost:compareDisadvantageGain);
+ const available=list.filter(x=>!campaignLocked(x.id)&&(campaignMultiple(x.id)||!hasEffect(x.id))&&(x.id!=='adv_maitrise_innee'||campaignInnateChoices().length)&&(x.id!=='dis_fragile'||getTraitScore('stamina')>=2));
+ const owned=list.filter(x=>hasEffect(x.id)||x.id==='adv_maitrise_innee'&&DATA.spells.some(sp=>hasInnateSpell(sp.id)));
+ const rows=owned.map(item=>{const id=item.id;
+ if(campaignLocked(id))return `<div class="owned-effect"><strong>${escCard(item.name)}</strong><small>Lié à l’école fréquentée : non modifiable ici.</small></div>`;
+ const instances=campaignRows(id);
+ const entries=instances.map((r,i)=>`<div class="owned-effect"><strong>${escCard(item.name)}${instances.length>1?' · '+(i+1):''}</strong>${r.label?`<small>${escCard(r.label)}</small>`:''}${r.trait?`<small>${escCard(weakTraits[r.trait])}</small>`:''}${r.level?`<small>Niveau ${r.level}</small>`:''}${!campaignMultiple(id)&&(rankedBenefits[id]||campaignDisLevels[id])?`<select onchange="editCampaignEffect('${id}',Number(this.value))">${(rankedBenefits[id]||campaignDisLevels[id]).map((_,j)=>`<option value="${j+1}" ${effectLevel(id)===j+1?'selected':''}>Niveau ${j+1}</option>`).join('')}</select>`:''}<button class="btn sm" onclick="removeCampaignEffect('${id}',${i})">Retirer</button><small>${escCard(item.summary)}</small></div>`).join('');
+ return entries+(id==='adv_maitrise_innee'?(character.experience?.ledger||[]).filter(e=>e.kind==='innateSpell'&&e.type==='purchase'&&hasInnateSpell(e.targetId)).map(e=>`<div class="owned-effect"><strong>${escCard(e.label)}</strong><small>Achat XP conservé dans le journal.</small><button class="btn sm" onclick="removeCampaignInnate('${e.targetId}')">Retirer sans remboursement</button></div>`).join(''):'');
+ }).join('');
+ return `<section><h3>${title}</h3><div class="effect-picker"><select id="pick-${key}" class="search-input" onchange="showCampaignFields('${key}')"><option value="">Choisir…</option>${available.map(x=>`<option value="${x.id}">${escCard(x.name)}</option>`).join('')}</select></div><div id="campaign-fields-${key}" class="outfit-section" hidden></div>${rows||'<p>Aucune particularité.</p>'}</section>`;
+ }).join('');
 }
-function editCampaignEffect(id,level,trait){
-  const status=document.getElementById("effectOptionsStatus");
-  const item=DATA.advantages.find(x=>x.id===id)||DATA.disadvantages.find(x=>x.id===id);
-  if(!item){status.textContent="Choisissez d’abord une particularité dans la liste.";return;}
-  if(!character.isCreated || !Number.isInteger(level) || level<0 || level>(rankedBenefits[id]?.length||1))return;
-  if(level && id==="dis_fragile" && getTraitScore("stamina")<2)return;
-  const wasOwned=hasEffect(id);
-  if(level && id==="dis_faible"){
-    const key=trait || (wasOwned?activeWeakTrait():"strength");
-    if(!Object.prototype.hasOwnProperty.call(weakTraits,key) || (key==="stamina" && !(wasOwned && activeWeakTrait()===key) && hasEffect("dis_fragile") && getTraitScore(key)<=2))return;
-    character.status.weakTraitOverride=key;
-  }
-  character.status.effectOverrides={...character.status.effectOverrides,[id]:level};
-  if(level && !wasOwned && id==="dis_blessure_permanente")character.status.woundsTaken=Math.max(woundsNow(),woundsPerRank());
-  if(id==="adv_statut_social")character.status.glory=Math.max(character.status.glory??1,-level);
-  const saved=saveCharacter();
-  renderEffectOptions();
-  status.textContent=item.name+(level?(wasOwned?" · modification enregistrée":" · ajouté à la fiche"):" · retiré de la fiche")+(saved?".":" · sauvegarde locale indisponible. Exportez la fiche.");
+function showCampaignFields(key){const id=document.getElementById('pick-'+key).value,el=document.getElementById('campaign-fields-'+key),item=DATA[key].find(x=>x.id===id);el.hidden=!item;el.innerHTML=item?`<div class="outfit-info form-stack"><p class="card-copy">${escCard(item.desc)}</p>${campaignFields(item)}<div class="form-actions"><button class="btn sm" onclick="addCampaignEffect('${id}',this)">Ajouter sans coût</button></div></div>`:'';}
+function campaignCommit(message){const ok=saveCharacter();renderEffectOptions();document.getElementById('effectOptionsStatus').textContent=message+(ok?'':' · sauvegarde locale indisponible : exportez la fiche.');}
+function readEffectFields(root,kind){return Object.fromEntries([...root.querySelectorAll(`[data-${kind}-field]`)].map(field=>[field.dataset[kind+"Field"],field.value.trim()]));}
+function addCampaignEffect(id,button){
+ const item=[...DATA.advantages,...DATA.disadvantages].find(x=>x.id===id);if(!item||!character.isCreated||campaignLocked(id)||(!campaignMultiple(id)&&hasEffect(id)))return;
+ const r=readEffectFields(button.closest('.form-stack'),'campaign');
+ if(id==='adv_maitrise_innee'){const sp=DATA.spells.find(x=>x.id===r.spell);if(!canMemorizeSpell(sp))return alert('Choisissez un sort accessible non maîtrisé.');r.label=sp.name;}
+ else if(repeatAdvantages.has(id)&&!validAdvDetail(id,r))return alert('Complétez les paramètres.');
+ if(id==='dis_faible'&&(!weakTraits[r.trait]||getTraitScore(r.trait)<=1||r.trait==='stamina'&&hasEffect('dis_fragile')&&getTraitScore(r.trait)<=2))return alert('Trait incompatible.');
+ if(id==='dis_fragile'&&getTraitScore('stamina')<2)return;
+ if(campaignRepeatDis.has(id)&&id!=='dis_faible'&&!r.label)return alert('Précisez le handicap.');
+ const rows=campaignRows(id);if(id==='dis_faible'&&rows.some(x=>x.trait===r.trait))return alert('Ce trait est déjà réduit.');
+ rows.push(r);if(!campaignMultiple(id)&&r.label)effectNotes()[id]=r.label;character.status.effectOverrides={...character.status.effectOverrides,[id]:Number(r.level)||1};
+ if(id==='adv_maitrise_innee')character.status.innateRemoved=(character.status.innateRemoved||[]).filter(x=>x!==r.spell);
+ if(id==='dis_blessure_permanente')character.status.woundsTaken=Math.max(woundsNow(),woundsPerRank());
+ campaignCommit(item.name+' ajouté sans coût.');
 }
-function advantageCost(adv) {
+function removeCampaignInnate(id){if(!confirm('Retirer cette maîtrise sans rembourser les XP ?'))return; (character.status.innateRemoved||=[]).push(id);campaignCommit('Maîtrise retirée.');}
+function removeCampaignEffect(id,i){if(campaignLocked(id)||!confirm('Retirer cette particularité sans modifier les PP ou XP ?'))return;const rows=campaignRows(id);if(!rows[i])return;const r=rows.splice(i,1)[0];if(id==='adv_maitrise_innee'&&r.spell)(character.status.innateRemoved||=[]).push(r.spell);character.status.effectOverrides={...character.status.effectOverrides,[id]:rows.length?Number(rows[0].level)||1:0};campaignCommit('Particularité retirée.');}
+function editCampaignEffect(id,level){const levels=rankedBenefits[id]||campaignDisLevels[id];if(!levels||!hasEffect(id)||!Number.isInteger(level)||level<1||level>levels.length)return;const rows=campaignRows(id);if(rows[0])rows[0].level=level;character.status.effectOverrides={...character.status.effectOverrides,[id]:level};campaignCommit('Niveau modifié.');}
+const repeatAdvantages=new Set(["adv_ami_fidele","adv_chantage","adv_terrain","adv_heritage","adv_lien_karmique","adv_maitrise_innee","adv_relations"]);
+function advantageDetails(){return character.purchases.advDetails ||= {};}
+function activeEffectDetails(id){return character.isCreated&&character.status.campaignRows&&Object.prototype.hasOwnProperty.call(character.status.campaignRows,id)?character.status.campaignRows[id]:(advantageDetails()[id]||[]);}
+function effectNotes(){return character.purchases.effectNotes ||= {};}
+function effectNote(id){return String(effectNotes()[id]||"");}
+function effectNotePreview(value){return value?`<p class="effect-note-preview">${escCard(value)}</p>`:"";}
+function effectTextEditor(id,index,value,label){return `<div class="identity-editor effect-text-editor" data-effect-id="${escCard(id)}" data-detail-index="${index}"><label class="form-field"><span>${escCard(label)}</span><textarea class="field-control" rows="3" maxlength="2000">${escCard(value)}</textarea></label><div class="form-actions"><button class="btn sm" type="button" onclick="saveEffectText(this)">Enregistrer</button><small class="form-status" role="status" aria-live="polite"></small></div></div>`;}
+function saveEffectText(button){
+ const editor=button.closest('.effect-text-editor'),id=editor.dataset.effectId,index=Number(editor.dataset.detailIndex),field=editor.querySelector('textarea'),value=field.value.trim(),status=editor.querySelector('[role="status"]');
+ if(!hasEffect(id))return;
+ const detail=index>=0?activeEffectDetails(id)[index]:null;
+ if(index>=0&&(!detail||id==='adv_maitrise_innee'))return;
+ if(detail&&!value&&id!=='dis_faible'){status.textContent='Ce champ doit être renseigné.';return;}
+ const target=detail||effectNotes(),key=detail?'label':id,old=target[key];target[key]=value;
+ if(!saveCharacter()){if(old===undefined)delete target[key];else target[key]=old;status.textContent='Enregistrement impossible.';return;}
+ renderSheetView();
+ const updated=[...document.querySelectorAll('.effect-text-editor')].find(e=>e.dataset.effectId===id&&Number(e.dataset.detailIndex)===index);
+ if(updated){updated.querySelector('[role="status"]').textContent='Enregistré.';updated.querySelector('button').focus();}
+}
+function effectCardTexts(x){
+ const details=campaignMultiple(x.id)?activeEffectDetails(x.id):[];
+ const perDis=x.id.startsWith('dis_')&&details.length>0;
+ const general=perDis?'':effectNote(x.id);
+ const front=details.map(d=>effectNotePreview([d.trait?weakTraits[d.trait]:'',d.label||d.spell||''].filter(Boolean).join(' · '))).join('')+(general&&!details.some(d=>String(d.label||d.spell||'').trim()===general.trim())?effectNotePreview(general):'');
+ const sections=[];
+ details.forEach((d,i)=>{
+   const costLabel=character.isCreated?'':' · '+advantageCost(x,d)+' PP';
+   const title=x.id==='adv_maitrise_innee'?(d.label||d.spell||('Acquisition '+(i+1))):'Acquisition '+(i+1);
+   const meta=[];
+   if(d.trait)meta.push(weakTraits[d.trait]);
+   if(d.level)meta.push('Niveau '+d.level);
+   if(x.id==='adv_maitrise_innee'){
+     sections.push(`<div class="effect-back-entry"><div class="effect-back-head"><span class="effect-back-title">${escCard(title)}</span><span class="effect-back-meta">${costLabel?costLabel.slice(3):'Particularité active'}</span></div>${meta.length?`<p class="effect-side-note">${escCard(meta.join(' · '))}</p>`:''}</div>`);
+   }else{
+     const label=x.id==='adv_terrain'?'Province':x.id==='adv_heritage'?'Objet ancestral':x.id.startsWith('dis_')?'Précisions'+(d.trait?' · '+weakTraits[d.trait]:''):'Personne concernée';
+     sections.push(`<div class="effect-back-entry"><div class="effect-back-head"><span class="effect-back-title">${escCard(title)}</span><span class="effect-back-meta">${character.isCreated?'Particularité active':advantageCost(x,d)+' PP'}</span></div>${meta.length?`<p class="effect-side-note">${escCard(meta.join(' · '))}</p>`:''}${effectTextEditor(x.id,i,d.label||'',label)}</div>`);
+   }
+ });
+ if(!perDis){
+   sections.push(`<div class="effect-back-entry"><div class="effect-back-head"><span class="effect-back-title">Notes du personnage</span><span class="effect-back-meta">Personnalisable</span></div>${effectTextEditor(x.id,-1,general,'Précisions personnelles')}</div>`);
+ }
+ return {front,back:sections.join('')};
+}
+function detailAt(id,index){return advantageDetails()[id]?.[index]||null;}
+function externalSchool(s){return !!s && s.clanId!==character.clanId && character.clanId!==8 && s.clanId!==8;}
+function allowedSchool(s){return !!s && (s.clanId===character.clanId||externalSchool(s));}
+function advantageCost(adv,detail=null) {
+  if(adv.id==="adv_ami_fidele")return detail?Number(detail.influence)+Number(detail.devotion):2;
+  if(adv.id==="adv_chantage")return Math.max(1,(detail?Number(detail.value):1)-(character.clanId===6?1:0));
+  if(adv.id==="adv_terrain")return character.clanId===7?1:2;
+  if(["adv_heritage","adv_lien_karmique","adv_relations"].includes(adv.id))return detail?Number(detail.value):adv.cost;
+
   if (rankedBenefits[adv.id]) return rankedBenefits[adv.id][(benefitLevel(adv.id) || 1) - 1];
-  if (adv.id === "adv_grand" && character.clanId === 1 || adv.id === "adv_benediction_benten" && character.clanId === 2) return 1;
+  if (adv.id === "adv_grand" && character.clanId === 1) return 1;
+  if(adv.id === "adv_benediction_benten" && character.clanId === 2)return 2;
   if (adv.id === "adv_trompe_la_mort" && character.clanId === 4) return 2;
   return adv.cost;
 }
+function compareEffectName(a,b){return a.name.localeCompare(b.name,"fr",{sensitivity:"base"});}
+function compareAdvantageCost(a,b){return (rankedBenefits[a.id]?.[0]??advantageCost(a))-(rankedBenefits[b.id]?.[0]??advantageCost(b))||compareEffectName(a,b);}
+function compareDisadvantageGain(a,b){return a.gain-b.gain||compareEffectName(a,b);}
 function canAddAdvantage(a, budget) {
-  return a && !hasEffect(a.id) && advantageCost(a) <= budget.remaining;
+  return a && !["adv_ecole_differente","adv_maitrise_innee"].includes(a.id) && (repeatAdvantages.has(a.id)||!hasEffect(a.id)) && (rankedBenefits[a.id]?.[0]??advantageCost(a)) <= budget.remaining;
 }
 function canAddDisadvantage(d, budget) {
-  return d && !hasEffect(d.id) && d.gain + budget.disadvGain <= disadvantageLimit &&
+  return d && !d.campaignOnly && !hasEffect(d.id) && d.gain + budget.disadvGain <= disadvantageLimit &&
     (d.id !== "dis_fragile" || getTraitScore("stamina") >= 2);
 }
 function changeBenefitLevel(id, level) {
@@ -5233,9 +5228,10 @@ function recoveryPerDay() {
 function woundsNow() {
   return character.status.woundsTaken || 0;
 }
+function woundPenaltyAt(level){return Math.max(0,level+Number(hasEffect("dis_douillet"))-benefitLevel("adv_force_terre"));}
 function woundPenalty() {
   const level = Math.floor(woundsNow() / woundsPerRank());
-  return level < 5 ? Math.max(0, level - benefitLevel("adv_force_terre")) : 0;
+  return level < 5 ? woundPenaltyAt(level) : 0;
 }
 function woundState() {
   const level = Math.floor(woundsNow() / woundsPerRank());
@@ -5243,23 +5239,24 @@ function woundState() {
 }
 function pool(rolled, kept) {
   const n = Math.max(0, rolled);
-  return n ? n + "g" + Math.min(n, kept) : "0 dé";
+  return n ? n + "g" + Math.max(0, Math.min(n, kept)) : "0 dé";
 }
 function adjustedRoll(formula, delta, extraKept=0) {
   const m = /^(\d+)g(\d+)$/i.exec(String(formula).trim());
   return m ? pool(Number(m[1]) + delta, Number(m[2])+extraKept) : formula;
 }
-function getTraitScore(traitKey) {
+function permanentTraitScore(traitKey) {
   let val = 2; // Base de départ
   if (character.familyBonusTrait === traitKey) val += 1;
   const school=DATA.schools.find(s=>s.id===character.schoolId);
   const bonus=school?.vocation==="shugenja" && school.bonusTrait!=="choice" ? school.bonusTrait : character.schoolBonusTrait;
   if (bonus === traitKey) val += 1;
   val += (character.purchases.traits[traitKey] || 0);
-  val += (character.xp.purchases.traits[traitKey] || 0);
   val += (character.inGameTraits[traitKey] || 0);
-  if (hasEffect("dis_faible") && traitKey === activeWeakTrait()) val -= 1;
-  return Math.max(1, val);
+  return val;
+}
+function getTraitScore(traitKey) {
+  return Math.max(1, permanentTraitScore(traitKey)-weakTraitPenalty(traitKey));
 }
 
 function getRings() {
@@ -5296,7 +5293,6 @@ function getSkillRank(skillName) {
   // Achats PP
   rank += (character.purchases.skills[skillName] || 0);
   // Achats XP
-  rank += (character.xp.purchases.skills[skillName] || 0);
   // Modifications en cours de jeu
   rank += (character.inGameSkills[skillName] || 0);
   return Math.max(0, rank);
@@ -5376,22 +5372,14 @@ function calcInsightBreakdown() {
 }
 
 function getSchoolRank() {
-  if(character.clanRonin) return 1;
-  if(character.vocationId==="shugenja") return character.status.approvedMastery || 1;
-  if(character.status.approvedMastery!=null)return character.status.approvedMastery;
-  const insight = calcInsight();
-  if (insight >= 225) return 5;
-  if (insight >= 200) return 4;
-  if (insight >= 175) return 3;
-  if (insight >= 150) return 2;
-  return 1;
+  return character.clanRonin ? 1 : character.status.approvedMastery;
 }
 
 function learned(school,rank=1){
   return character.schoolId===school && getSchoolRank()>=rank;
 }
 function armorPenalty(){
-  return character.status.armorType==="heavy" && !learned("crabe_bushi") ? 5 : 0;
+  return activeArmorType()==="heavy" && !learned("crabe_bushi") ? 5 : 0;
 }
 function usesIaijutsu(){
   if(!learned("grue_bushi"))return false;
@@ -5419,10 +5407,11 @@ function calcTnToBeHit() {
   if (woundState() === "Épuisé") return 5;
   if(learned("licorne_bushi",2) && character.status.parrying)return parryTarget();
   let base = rings.reflexes * 5;
-  if (character.status.armorType === "light") base += 5;
-  if (character.status.armorType === "heavy") base += 10;
+  if (activeArmorType() === "light") base += 5;
+  if (activeArmorType() === "heavy") base += 10;
+  base += armorQualityBonus();
   // Technique Mirumoto Daisho (+5)
-  if (mirumotoDaishoInHand()) base += 5;
+  if (equippedDaisho()) base += 5;
   return base;
 }
 
@@ -5440,11 +5429,11 @@ function calcBudget() {
   const effectiveDisadvGain = Math.min(disadvantageLimit, disadvGain);
   const totalAvailable = baseCapital + effectiveDisadvGain;
 
-  let spentAdv = 0;
+  let spentAdv = 0; const seenAdv={};
   (character.purchases.advantages || []).forEach(advId => {
     const adv = DATA.advantages.find(a => a.id === advId);
     if (adv) {
-      spentAdv += advantageCost(adv);
+      spentAdv += advantageCost(adv,detailAt(advId,seenAdv[advId]||0)); seenAdv[advId]=(seenAdv[advId]||0)+1;
     }
   });
 
@@ -5691,7 +5680,7 @@ function selectFamily(famId) {
 // --- ÉTAPE 2 : VOCATION & ÉCOLE ---
 function renderStep2() {
   const vocGrid = document.getElementById("vocationGrid");
-  vocGrid.innerHTML = DATA.vocations.filter(v => v.id !== "monk").map(v => `
+  vocGrid.innerHTML = DATA.vocations.map(v => `
     <div class="select-card ${v.id === character.vocationId ? 'selected' : ''}" onclick="selectVocation('${v.id}')">
       <div class="select-card-head">
         <h4><span>${v.icon}</span> ${v.name}</h4>
@@ -5712,7 +5701,7 @@ function renderStep2() {
 function selectVocation(vocId) {
   if (!["bushi","shugenja"].includes(vocId)) return;
   character.vocationId = vocId;
-  const schools = DATA.schools.filter(s => !s.legacy && s.clanId === character.clanId && s.vocation === vocId);
+  const schools = DATA.schools.filter(s => s.clanId === character.clanId && s.vocation === vocId);
   if (schools.length > 0) {
     selectSchool(schools[0].id);
   } else {
@@ -5725,7 +5714,7 @@ function selectVocation(vocId) {
 
 function renderSchoolChoices() {
   const schoolGrid = document.getElementById("schoolGrid");
-  let schools = DATA.schools.filter(s => !s.legacy && s.clanId === character.clanId && s.vocation === character.vocationId);
+  let schools = DATA.schools.filter(s => allowedSchool(s) && s.vocation === character.vocationId);
   if (schools.length === 0) {
     schoolGrid.innerHTML = `
       <div class="notice-box warning" style="grid-column: 1 / -1;">
@@ -5736,7 +5725,7 @@ function renderSchoolChoices() {
     return;
   }
 
-  schoolGrid.innerHTML = schools.map(s => `
+  const renderCard = s => `
     <div class="select-card ${s.id === character.schoolId ? 'selected' : ''}" onclick="selectSchool('${s.id}')">
       <div class="select-card-head">
         <h4>${s.name}</h4>
@@ -5744,16 +5733,22 @@ function renderSchoolChoices() {
       </div>
       <div class="select-card-body">
         <div style="margin-bottom:8px;font-size:12px;">
+          <span class="badge ${externalSchool(s)?"crimson":"gold"}">${externalSchool(s)?"École différente · 5 PP":"Sans surcoût · 0 PP"}</span>
           <span class="badge crimson">Honneur départ : ${s.honor}</span>
           ${s.affinity && s.vocation==="shugenja" ? `<span class="badge gold">Affinité ${s.affinity} · Déficience ${s.deficiency}</span>` : ''}
         </div>
+        ${startingOutfits[s.id]?`<p class="outfit-hint">Dotation de cette école : ${startingOutfits[s.id][0]} koku${startingOutfits[s.id][1]?` · ${startingOutfits[s.id][1]} bu`:""} · qualité ${startingOutfits[s.id][6]}${startingOutfits[s.id][2]!=="none"?` · ${startingOutfits[s.id][2]==="choice"?"armure au choix":startingOutfits[s.id][2]==="heavy"?"armure lourde":"armure légère"}`:""}${startingOutfits[s.id][3]?` · ${startingOutfits[s.id][3]} arme(s) supplémentaire(s) au choix`:""}.</p>`:""}
         ${s.id==="ronin_shugenja"?"Sensation, Communion, Invocation et sept autres sorts · VF p. 92":s.techniques.length ? techniqueCard(s,s.techniques[0]) : escCard(s.ability || "Sans technique d’école · VF p. 92")}
       </div>
       <div class="select-card-footer">
         <small style="color:var(--ink-dim);">VF p. ${s.skillsPage||92} · ${s.skills.map(sk=>escCard(skillLabel(sk.name))+(sk.rank>1?" (rang "+sk.rank+")":"")).join(", ")} ${s.choiceSlots && s.choiceSlots.length ? `+ ${s.choiceSlots.length} au choix` : ''}</small>
       </div>
     </div>
-  `).join("");
+  `;
+  const local = schools.filter(s=>!externalSchool(s));
+  const foreign = schools.filter(s=>externalSchool(s));
+  const group = (title, subtitle, entries) => `<section class="school-choice-group"><h3>${title}</h3><p>${subtitle}</p><div class="selection-grid">${entries.map(renderCard).join("")}</div></section>`;
+  schoolGrid.innerHTML = group("Écoles de votre clan", "Accessibles pour la vocation choisie, sans dépense supplémentaire de PP.", local) + (foreign.length ? group("Écoles différentes · 5 PP", "Écoles des autres clans pour la même vocation. Le choix entraîne automatiquement une dépense de 5 PP.", foreign) : "");
 
   if(schools.some(s=>s.id===character.schoolId && s.bonusTrait==="choice"))
     schoolGrid.insertAdjacentHTML("beforeend",bonusTraitControl("schoolBonusTrait","Bonus d’école"));
@@ -5765,10 +5760,12 @@ function bonusTraitControl(key,title){
 
 function selectSchool(schoolId) {
   const candidate = DATA.schools.find(s => s.id === schoolId);
-  if (!candidate || candidate.legacy || candidate.vocation === "monk" || candidate.vocation !== character.vocationId || candidate.clanId !== character.clanId) return;
+  if (!candidate || candidate.vocation !== character.vocationId || !allowedSchool(candidate)) return;
   const changed = character.schoolId !== schoolId;
-  if (changed) { character.schoolChosenSkills = {}; character.schoolPairApproved=false; }
+  if (changed) { character.schoolChosenSkills = {}; character.schoolPairApproved=false; delete character.purchases.outfit; }
   character.schoolId = schoolId;
+  character.purchases.advantages=character.purchases.advantages.filter(id=>id!=="adv_ecole_differente");
+  if(externalSchool(candidate))character.purchases.advantages.push("adv_ecole_differente");
   const sch = DATA.schools.find(s => s.id === schoolId);
   if (sch) {
     character.schoolBonusTrait = sch.bonusTrait==="choice" ? (changed?"reflexes":character.schoolBonusTrait||"reflexes") : sch.bonusTrait;
@@ -5776,8 +5773,9 @@ function selectSchool(schoolId) {
       character.purchases.spells=[];
       delete character.purchases.counterElement;
       delete character.purchases.isawaElements;
+      clearCreationInnate();
     }
-    if(!character.isCreated)character.status.armorType=sch.vocation==="shugenja"?"none":sch.id==="crabe_bushi"?"heavy":"light";
+
     character.status.honor = character.clanRonin ? 2.5 : sch.honor;
 
     // Initialiser les choix par défaut si présents
@@ -5799,7 +5797,7 @@ const vfSkillNames = {
 };
 function skillLabel(name){return vfSkillNames[name] || name;}
 function inSkillCategory(skill,category){return (skill.categories||[skill.type]).includes(category);}
-function officialSkill(name){return DATA.skills.some(s=>s.name===name && !s.legacyChoice);}
+function officialSkill(name){return DATA.skills.some(s=>s.name===name);}
 function matchesSkillName(sk,query){
   const normalize=text=>text.toLocaleLowerCase("fr").replace(/’/g,"'");
   return normalize(skillLabel(sk.name)).includes(normalize(query)) || normalize(sk.name).includes(normalize(query));
@@ -5813,7 +5811,7 @@ function canPairSchoolSkills(sch){
   return ["grue_bushi","grue_shugenja","phenix_shugenja","ronin_bushi","ronin_shugenja"].includes(sch?.id);
 }
 function eligibleSchoolSkill(sch,slot,sk){
-  if(sk.legacyChoice || sch.skills.some(f=>f.name===sk.name))return false;
+  if(sch.skills.some(f=>f.name===sk.name))return false;
   switch(slot.filter){
     case "arme": return schoolWeaponSkills.has(sk.name);
     case "cour": return ["Courtisan","Étiquette"].includes(sk.name);
@@ -5882,32 +5880,19 @@ function renderStep3() {
   renderHonorAdjustment();
 }
 
-function renderChosenAdvantages() {
-  const container = document.getElementById("chosenAdvantagesList");
-  const list = character.purchases.advantages || [];
-  if (list.length === 0) {
-    container.innerHTML = `<div style="text-align:center;padding:12px;color:var(--ink-dim);font-size:12px;">Aucun avantage sélectionné.</div>`;
-    return;
-  }
-  container.innerHTML = list.map(advId => {
-    const adv = DATA.advantages.find(a => a.id === advId);
-    if (!adv) return "";
-    return `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;background:var(--panel);border:1px solid var(--line);border-radius:6px;margin-bottom:6px;">
-        <div>
-          <strong style="color:var(--gold);font-size:13px;">${adv.name}</strong>
-          <small style="color:var(--ink-muted);display:block;font-size:11px;">${adv.summary}</small>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <span class="badge gold">${advantageCost(adv)} PP</span>
-          ${rankedBenefits[advId] ? `<select aria-label="Niveau de ${adv.name}" onchange="changeBenefitLevel('${advId}', this.value)">${rankedBenefits[advId].map((cost,i)=>cost>advantageCost(adv) && cost-advantageCost(adv)>calcBudget().remaining ? "" : `<option value="${i+1}" ${benefitLevel(advId)===i+1?"selected":""}>Niveau ${i+1} · ${cost} PP</option>`).join("")}</select>` : ""}
-          <button class="btn sm danger" style="padding:2px 8px;min-height:26px;" type="button" onclick="removeAdvantage('${adv.id}')">✕</button>
-        </div>
-      </div>
-    `;
-  }).join("");
+function renderChosenAdvantages(){
+ const list=character.purchases.advantages, seen={};
+ document.getElementById("chosenAdvantagesList").innerHTML=list.map((id,pos)=>{const a=DATA.advantages.find(x=>x.id===id);const i=seen[id]||0;seen[id]=i+1;return {id,pos,a,d:detailAt(id,i)};}).filter(x=>x.a).sort((x,y)=>advantageCost(x.a,x.d)-advantageCost(y.a,y.d)||compareEffectName(x.a,y.a)).map(({id,pos,a,d})=>{
+ const locked=["adv_ecole_differente","adv_maitrise_innee"].includes(id);
+ return `<div class="owned-effect"><strong>${escCard(a.name)} · ${advantageCost(a,d)} PP</strong><small>${escCard(a.summary)}${d?" · "+escCard(d.label||d.spell||""):""}</small>${rankedBenefits[id]?`<select onchange="changeBenefitLevel('${id}',this.value)">${rankedBenefits[id].map((c,j)=>`<option value="${j+1}" ${benefitLevel(id)===j+1?"selected":""} ${c-advantageCost(a)>calcBudget().remaining?"disabled":""}>Niveau ${j+1} · ${c} PP</option>`).join("")}</select>`:""}${locked?`<small>Modifier à l’étape ${id==="adv_ecole_differente"?"École":"Sorts"}.</small>`:`<button class="btn sm" onclick="removeAdvantageAt(${pos})">Retirer</button>`}</div>`;
+ }).join("")||"Aucun avantage sélectionné.";
 }
-
+function removeAdvantageAt(pos){const ids=character.purchases.advantages,id=ids[pos],i=ids.slice(0,pos).filter(x=>x===id).length;ids.splice(pos,1);advantageDetails()[id]?.splice(i,1);renderStep3();}
+function advConfig(a){const id=a.id;if(!repeatAdvantages.has(id))return "";const opts=(values)=>values.map(v=>`<option value="${v}">${v}</option>`).join("");
+ let fields=id==="adv_ami_fidele"?`<label>Influence <select data-adv-field="influence">${opts([1,3,5])}</select></label> <label>Dévouement <select data-adv-field="devotion">${opts([1,3,5])}</select></label>`:id==="adv_chantage"?`<label>Gloire <input data-adv-field="value" type="number" min="1" max="10" value="1"></label>`:id==="adv_heritage"?`<label>Coût validé par le MJ <input data-adv-field="value" type="number" min="1" value="2"></label>`:id==="adv_lien_karmique"?`<label>PP <select data-adv-field="value">${opts([1,2,3,4,5])}</select></label>`:id==="adv_relations"?`<label>Importance <select data-adv-field="value"><option value="2">Secondaire · 2 PP</option><option value="4">Majeure · 4 PP</option></select></label>`:"";
+ return `<div style="margin-top:8px;display:grid;gap:6px"><label>${id==="adv_terrain"?"Province":id==="adv_heritage"?"Objet ancestral":"Personne concernée"} <input data-adv-field="label" maxlength="150" required></label>${fields}</div>`;
+}
+function validAdvDetail(id,d){if(!repeatAdvantages.has(id))return true;if(!d)return false;if(id==="adv_maitrise_innee")return typeof d.spell==="string";if(!String(d.label||"").trim())return false;const v=Number(d.value);if(id==="adv_ami_fidele")return [1,3,5].includes(Number(d.influence))&&[1,3,5].includes(Number(d.devotion));if(id==="adv_terrain")return true;if(id==="adv_relations")return [2,4].includes(v);return Number.isInteger(v)&&v>=1&&(id==="adv_chantage"?v<=10:id==="adv_lien_karmique"?v<=5:true);}
 function renderChosenDisadvantages() {
   const container = document.getElementById("chosenDisadvantagesList");
   const list = character.purchases.disadvantages || [];
@@ -5916,7 +5901,7 @@ function renderChosenDisadvantages() {
     container.innerHTML = compulsory || `<div style="text-align:center;padding:12px;color:var(--ink-dim);font-size:12px;">Aucun désavantage sélectionné (conseillé pour gagner jusqu'à +10 PP).</div>`;
     return;
   }
-  container.innerHTML = compulsory + list.map(disId => {
+  container.innerHTML = compulsory + [...list].sort((a,b)=>{const x=DATA.disadvantages.find(d=>d.id===a),y=DATA.disadvantages.find(d=>d.id===b);return x&&y?compareDisadvantageGain(x,y):0;}).map(disId => {
     const dis = DATA.disadvantages.find(d => d.id === disId);
     if (!dis) return "";
     return `
@@ -5924,6 +5909,7 @@ function renderChosenDisadvantages() {
         <div>
           <strong style="color:#963c36;font-size:13px;">${dis.name}</strong>
           <small style="color:var(--ink-muted);display:block;font-size:11px;">${dis.summary}</small>
+          <label class="form-field" style="margin-top:6px;"><span>Précisions personnelles</span><textarea class="field-control" rows="3" maxlength="2000" oninput="effectNotes()['${dis.id}']=this.value">${escCard(effectNote(dis.id))}</textarea></label>
           ${disId === "dis_faible" ? `<select aria-label="Trait réduit" onchange="character.purchases.weakTrait=this.value;renderStep3()">${Object.entries(weakTraits).map(([key,label])=>`<option value="${key}" ${key===(character.purchases.weakTrait||"strength")?"selected":""} ${key==="stamina" && getTraitScore(key)<=2 && hasEffect("dis_fragile")?"disabled":""}>${label}</option>`).join("")}</select>` : ""}
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
@@ -5935,13 +5921,9 @@ function renderChosenDisadvantages() {
   }).join("");
 }
 
-function removeAdvantage(advId) {
-  character.purchases.advantages = character.purchases.advantages.filter(id => id !== advId);
-  renderStep3();
-}
-
 function removeDisadvantage(disId) {
   character.purchases.disadvantages = character.purchases.disadvantages.filter(id => id !== disId);
+  delete effectNotes()[disId];
   renderStep3();
 }
 
@@ -6029,7 +6011,7 @@ function renderSkillsCustomization() {
     const skData = DATA.skills.find(s => s.name === skName);
     const traitInfo = skData ? `[${skData.traitLabel} / ${skData.ring}]` : "";
 
-    const canIncrease = officialSkill(skName) && b.remaining >= 1 && rank < (character.clanId===8 ? 2 : 3);
+    const canIncrease = officialSkill(skName) && b.remaining >= 1 && bought < 2;
 
     return `
       <div class="trait-row" style="padding:6px 0;">
@@ -6039,7 +6021,7 @@ function renderSkillsCustomization() {
         </div>
         <div class="trait-val-badge" style="font-size:16px;">Rang ${rank}</div>
         <button class="btn-circle" type="button" data-skill="${escCard(skName)}" onclick="adjustSkillBuy(this.dataset.skill, -1)" ${bought <= 0 ? 'disabled' : ''}>-</button>
-        <button class="btn-circle" type="button" data-skill="${escCard(skName)}" onclick="adjustSkillBuy(this.dataset.skill, 1)" ${!canIncrease ? 'disabled title="PP insuffisants ou rang 3 max atteint"' : ''}>+</button>
+        <button class="btn-circle" type="button" data-skill="${escCard(skName)}" onclick="adjustSkillBuy(this.dataset.skill, 1)" ${!canIncrease ? 'disabled title="PP insuffisants ou deux rangs achetés maximum"' : ''}>+</button>
       </div>
     `;
   }).join("");
@@ -6053,7 +6035,7 @@ function adjustSkillBuy(skName, delta) {
   const next = cur + delta;
   if (next < 0) return;
   const rank = getSkillRank(skName);
-  if (delta > 0 && rank >= (character.clanId===8 ? 2 : 3)) {
+  if (delta > 0 && next > 2) {
     alert("Le rang maximal à la création est atteint.");
     return;
   }
@@ -6128,10 +6110,10 @@ function renderModalItemsFiltered() {
     const list = DATA.advantages.filter(a => {
       const match = a.name.toLowerCase().includes(query) || (a.desc && a.desc.toLowerCase().includes(query));
       return match && canAddAdvantage(a,b);
-    });
+    }).sort(compareAdvantageCost);
 
     container.innerHTML = list.map(a => {
-      const cost = advantageCost(a);
+      const cost = rankedBenefits[a.id]?.[0]??advantageCost(a);
 
       return `
         <div style="background:var(--panel-sub);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
@@ -6141,9 +6123,9 @@ function renderModalItemsFiltered() {
               <span class="badge gold">${cost} PP</span>
             </div>
             <p style="margin:0 0 4px;font-size:12.5px;color:var(--ink);">${a.summary}</p>
-            <small style="color:var(--ink-muted);">${a.desc}</small>
+            <small style="color:var(--ink-muted);">${a.desc}</small>${advConfig(a)}
           </div>
-          <button class="btn sm primary" type="button" onclick="chooseAdvantage('${a.id}')">
+          <button class="btn sm primary" type="button" onclick="chooseAdvantage('${a.id}',this)">
             Choisir
           </button>
         </div>
@@ -6153,7 +6135,7 @@ function renderModalItemsFiltered() {
     const list = DATA.disadvantages.filter(d => {
       const match = d.name.toLowerCase().includes(query) || (d.desc && d.desc.toLowerCase().includes(query));
       return match && canAddDisadvantage(d,b);
-    });
+    }).sort(compareDisadvantageGain);
 
     container.innerHTML = list.map(d => `
       <div style="background:var(--panel-sub);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
@@ -6173,7 +6155,7 @@ function renderModalItemsFiltered() {
     const existingSkills = Object.keys(allMap).filter(k => allMap[k] > 0);
     const list = DATA.skills.filter(s => {
       const match = matchesSkillName(s,query) || s.traitLabel.toLowerCase().includes(query) || s.ring.toLowerCase().includes(query);
-      return !s.legacyChoice && match && !existingSkills.includes(s.name);
+      return match && !existingSkills.includes(s.name);
     }).sort(compareSkillNames);
 
     const canAfford = (b.remaining >= 1);
@@ -6196,7 +6178,7 @@ function renderModalItemsFiltered() {
   }
 }
 
-function chooseAdvantage(advId) {
+function chooseAdvantage(advId,button) {
   const b = calcBudget();
   const adv = DATA.advantages.find(a => a.id === advId);
   if (!canAddAdvantage(adv,b)) return;
@@ -6204,6 +6186,7 @@ function chooseAdvantage(advId) {
     if (!character.purchases.effectLevels) character.purchases.effectLevels = {};
     character.purchases.effectLevels[advId] = 1;
   }
+  if(repeatAdvantages.has(advId)){const detail=readEffectFields(button.parentElement,'adv');if(!validAdvDetail(advId,detail))return alert("Complétez les paramètres de cet avantage.");if(advantageCost(adv,detail)>b.remaining)return alert("PP insuffisants.");(advantageDetails()[advId]||=[]).push(detail);}
   character.purchases.advantages.push(advId);
   closePickerModal();
   renderStep3();
@@ -6220,7 +6203,7 @@ function chooseDisadvantage(disId) {
 function chooseNewSkill(skillName) {
   if(!officialSkill(skillName))return;
   const b = calcBudget();
-  if (b.remaining < 1) return;
+  if (b.remaining < 1 || getSkillRank(skillName)>0) return;
   character.purchases.skills[skillName] = 1;
   closePickerModal();
   renderStep3();
@@ -6239,7 +6222,7 @@ function eligibleScroll(sp,element){
 }
 function startingElements() {
   if(trueRoninMage()) return spellElements;
-  const school = DATA.schools.find(s => s.id === character.schoolId && s.clanId === character.clanId);
+  const school = DATA.schools.find(s => s.id === character.schoolId && allowedSchool(s));
   if (!school || school.vocation !== "shugenja") return [];
   return school.id==="phenix_shugenja" ? (character.purchases.isawaElements || ["", "", ""]) : school.startingElements || [];
 }
@@ -6295,6 +6278,10 @@ function setIsawaElement(slot, value) {
   renderStep4();
 }
 
+function clearCreationInnate(){character.purchases.advantages=character.purchases.advantages.filter(x=>x!=="adv_maitrise_innee");delete advantageDetails().adv_maitrise_innee;}
+function creationInnateIds(){return (advantageDetails().adv_maitrise_innee||[]).map(d=>d.spell);}
+function eligibleCreationInnate(sp){return character.vocationId==="shugenja" && !!sp?.page && (character.purchases.spells.includes(sp.id)||commonPrayerIds.includes(sp.id)) && (sp.element==="Universel"?Math.max(...spellElements.map(e=>getRings()[spellElementKey(e)])):getRings()[spellElementKey(sp.element)])+1>=sp.mastery;}
+function toggleCreationInnate(id){const sp=DATA.spells.find(x=>x.id===id),ids=creationInnateIds(),i=ids.indexOf(id);if(i>=0){advantageDetails().adv_maitrise_innee.splice(i,1);character.purchases.advantages.splice(character.purchases.advantages.indexOf("adv_maitrise_innee"),1);}else{if(!eligibleCreationInnate(sp)||calcBudget().remaining<3)return; (advantageDetails().adv_maitrise_innee||=[]).push({spell:id,label:sp.name});character.purchases.advantages.push("adv_maitrise_innee");}renderStep4();}
 function renderStep4() {
   const elements = startingElements();
   const ids = character.purchases.spells || [];
@@ -6335,6 +6322,8 @@ function renderStep4() {
     }).join("")}</details>`;
   }).join("");
   grid.dataset.school=character.schoolId;
+  if(!document.getElementById("creationInnatePanel"))grid.insertAdjacentHTML("beforebegin",'<section id="creationInnatePanel" class="panel"></section>');
+  document.getElementById("creationInnatePanel").innerHTML=`<h3>Maîtrise innée · 3 PP par sort</h3><p>${calcBudget().remaining} PP disponibles. Réservez des PP à l’étape précédente.</p>`+DATA.spells.filter(sp=>eligibleCreationInnate(sp)||creationInnateIds().includes(sp.id)).map(sp=>`<label class="owned-effect"><input type="checkbox" ${creationInnateIds().includes(sp.id)?"checked":calcBudget().remaining<3?"disabled":""} onchange="toggleCreationInnate('${sp.id}')"> ${escCard(sp.name)} · ${escCard(sp.element)}</label>`).join("");
 }
 function revealScroll(id){
   const entry=document.querySelector('#wizardSpellsGrid [data-scroll="'+id+'"]');
@@ -6394,9 +6383,96 @@ function renderStep5() {
       </div>
     </div>
   `;
+  if(!document.getElementById("startingOutfitPanel"))recap.insertAdjacentHTML("afterend",'<div id="startingOutfitPanel" class="panel"></div>');
+  renderOutfitChoices();
 }
 
+// Dotations du livre de base VF, p. 79–92.
+const startingOutfits={crabe_bushi:[5,0,"heavy",2,0,1,"moyenne"],dragon_bushi:[2,0,"light",1,0,0,"moyenne"],grue_bushi:[10,0,"choice",3,1,1,"luxueuse"],licorne_bushi:[10,0,"choice",3,1,1,"luxueuse"],lion_bushi_akodo:[5,0,"light",2,0,1,"moyenne",1],phenix_bushi:[2,0,"light",1,0,0,"moyenne"],scorpion_bushi:[2,0,"light",1,0,0,"moyenne"],ronin_bushi:[0,10,"light",0,0,0,"moyenne",-2],crabe_shugenja:[3,0,"none",0,0,0,"moyenne"],dragon_shugenja:[3,0,"none",0,0,0,"moyenne"],grue_shugenja:[10,0,"none",0,1,0,"luxueuse"],licorne_shugenja:[10,0,"none",0,1,0,"luxueuse"],lion_shugenja:[3,0,"none",0,0,0,"moyenne"],phenix_shugenja:[4,0,"none",0,0,0,"moyenne",1],scorpion_shugenja:[3,0,"none",0,0,0,"moyenne"],ronin_shugenja:[3,0,"none",0,0,0,"moyenne"]};
+function outfitDraft(){
+ const school=DATA.schools.find(s=>s.id===character.schoolId);
+ const config=school && startingOutfits[school.id];if(!config || school.vocation!==character.vocationId)return null;
+ const [koku,bu,armor,extra,mount,helmet,quality,exception=0]=config;
+ const c=character.purchases.outfit?.school===character.schoolId?character.purchases.outfit:{};
+ const armorType=armor==="choice"?c.armor:armor,items=[];
+ const add=(name,qty=1,weaponKey=null)=>items.push({id:"start_"+items.length,name,qty,quality,...(weaponKey?{weaponKey}:{})});
+ const weapon=key=>{const w=DATA.weapons.find(x=>x.key===key);if(w)add(w.name,1,key);};
+ add("Kimono");add("Rations de voyage");
+ if(character.vocationId==="bushi"){
+  weapon("katana");weapon("wakizashi");weapon("yumi");if(armorType)add(armorType==="heavy"?"Armure lourde":"Armure légère");if(helmet)add("Heaume");
+  for(let i=0;i<extra;i++)weapon(c.weapons?.[i]);
+  for(const a of arrowTypes)if(Number(c.arrows?.[a.name])>0)add("Flèches · "+a.name,Number(c.arrows[a.name]));
+ }else{add("Sacoche à parchemins");weapon("tanto");if(character.schoolId!=="grue_shugenja")weapon("wakizashi");if(character.schoolId==="crabe_shugenja")weapon("katana");if(character.schoolId==="phenix_shugenja"){add("Trousse de premiers secours");add("Parchemins vierges",2);}}
+ if(mount)add("Monture");for(const i of c.quality||[])if(items[i])items[i].quality=exception<0?"médiocre":"luxueuse";
+ return {items,koku,bu,armorType,extra,exception,c,armor,quality,school};
+}
+function setOutfitChoice(kind,key,value){
+ let c=character.purchases.outfit;if(c?.school!==character.schoolId)c=character.purchases.outfit={school:character.schoolId};
+ if(kind==="armor")c.armor=value;
+ if(kind==="weapons"){c.weapons=c.weapons||{};c.weapons[key]=value;}
+ if(kind==="arrows"){c.arrows=c.arrows||{};c.arrows[key]=Number(value);}
+ if(kind==="primary")c.primary=value;
+ if(kind==="quality"){const a=new Set(c.quality||[]);value?a.add(key):a.delete(key);c.quality=[...a];}else if(kind!=="primary"){c.quality=[];c.primary="";}
+ renderOutfitChoices();
+}
+function outfitError(d){
+ if(!d)return "Dotation indisponible.";
+ if(!["none","light","heavy"].includes(d.armorType))return "Choisissez votre armure.";
+ for(let i=0;i<d.extra;i++)if(!DATA.weapons.some(w=>w.key===d.c.weapons?.[i]))return "Choisissez toutes les armes supplémentaires.";
+ if(character.vocationId==="bushi"){
+ const a=arrowTypes.map(x=>d.c.arrows?.[x.name]||0),total=character.schoolId==="ronin_bushi"?10:20;
+ if(a.some(n=>!Number.isSafeInteger(n)||n<0)||a.reduce((x,y)=>x+y,0)!==total)return "Répartissez exactement "+total+" flèches.";
+ if(total===10&&a.filter(n=>n>0).length!==1)return "Les dix flèches du véritable rônin doivent être du même type.";
+ }
+ if(!d.items.some(it=>it.weaponKey&&it.id===d.c.primary))return "Choisissez votre arme principale.";
+ const q=d.c.quality||[];if(q.length!==Math.abs(d.exception)||new Set(q).size!==q.length||q.some(i=>!Number.isInteger(i)||!d.items[i]))return "Sélectionnez les objets de qualité particulière.";return "";
+}
+function outfitWeaponInfo(w){
+ if(!w)return '<p class="outfit-hint">Sélectionnez une arme pour consulter ses caractéristiques.</p>';
+ const r=getRings(),profile=catalogProfile(w,"",r);
+ return `<div class="outfit-info"><div class="outfit-stats"><span><b>VD</b> ${w.vd==="arc"?"Selon la flèche":escCard(w.vd)}</span><span><b>Dommages</b> ${w.vd==="arc"?"Selon la flèche":escCard(profile.dr)}</span><span><b>Compétence</b> ${escCard(w.skill)}</span></div><p>${escCard(weaponProperties(w))}</p>${w.vd==="arc"?`<details><summary>Valeurs des flèches</summary>${arrowTypes.map(a=>`<p><b>${escCard(a.name)} · ${a.vd}</b> — ${escCard(a.note)}</p>`).join("")}</details>`:""}<small> Livre de base VF, p. ${w.page}</small></div>`;
+}
+function outfitArmorInfo(type){return type==="heavy"?`<b>+10 au ND pour être touché</b> · déplacement divisé par deux. ${learned("crabe_bushi")?"Technique Hida : pas de malus physique.":"+5 au ND des actions physiques."}`:"<b>+5 au ND pour être touché</b> · déplacement divisé par deux, sans malus aux ND des actions physiques.";}
+function renderOutfitChoices(){
+ const el=document.getElementById("startingOutfitPanel"),d=outfitDraft();if(!el||!d)return;const c=d.c;
+ const selectedArrows=arrowTypes.reduce((n,a)=>n+(Number(c.arrows?.[a.name])||0),0),total=character.schoolId==="ronin_bushi"?10:20;
+ const weapons=d.items.filter(it=>it.weaponKey);
+ const schoolClan=DATA.clans.find(cl=>cl.id===d.school.clanId);
+ const page={crabe:79,dragon:81,grue:83,licorne:85,lion:87,phenix:89,scorpion:91,ronin:92}[character.schoolId.split("_")[0]];
+ el.innerHTML=`<div class="outfit-head"><div><h3>Dotation initiale · ${escCard(d.school.name)}</h3><small>${escCard(schoolClan?.name||"")} · Livre de base VF · p. ${page}</small>${externalSchool(d.school)?`<p class="outfit-hint">École différente : dotation de l’école fréquentée, et non du clan d’origine. Les 5 PP sont déjà comptabilisés.</p>`:""}</div><div class="outfit-stats"><span>${d.koku} koku · ${d.bu} bu</span><span>Qualité ${d.quality}</span></div></div><p class="outfit-hint">VF p. 67 : certains objets de luxe ont des effets particuliers, à préciser dans Équipement avec le MJ ; aucun bonus universel.</p>`+
+ (d.armor!=="none"?`<section class="outfit-section"><h4>Armure</h4><div class="outfit-grid">${(d.armor==="choice"?["light","heavy"]:[d.armor]).map(t=>`<label class="outfit-option ${d.armorType===t?"chosen":""}">${d.armor==="choice"?`<input type="radio" name="outfitArmor" ${d.armorType===t?"checked":""} onchange="setOutfitChoice('armor',0,'${t}')"> `:""}<strong>${t==="light"?"Armure légère":"Armure lourde"}</strong><p>${outfitArmorInfo(t)}</p></label>`).join("")}</div></section>`:"")+
+ (d.extra?`<section class="outfit-section"><h4>Armes au choix · ${d.extra}</h4><div class="outfit-grid">${Array.from({length:d.extra},(_,i)=>`<div class="outfit-option"><label>Arme ${i+1}<select onchange="setOutfitChoice('weapons',${i},this.value)"><option value="">Choisir…</option>${[...new Set(DATA.weapons.map(w=>w.group))].map(g=>`<optgroup label="${escCard(g)}">${DATA.weapons.filter(w=>w.group===g).map(w=>`<option value="${w.key}" ${c.weapons?.[i]===w.key?"selected":""}>${escCard(w.name)} · ${w.vd==="arc"?"Arc":w.vd}</option>`).join("")}</optgroup>`).join("")}</select></label>${outfitWeaponInfo(DATA.weapons.find(w=>w.key===c.weapons?.[i]))}</div>`).join("")}</div></section>`:"")+
+ (character.vocationId==="bushi"?`<section class="outfit-section"><h4>Flèches · ${selectedArrows} / ${total}</h4>${total===10?`<label>Type des dix flèches<select onchange="setRoninArrows(this.value)"><option value="">Choisir…</option>${arrowTypes.map(a=>`<option ${c.arrows?.[a.name]===10?"selected":""}>${escCard(a.name)}</option>`).join("")}</select></label>`:""}<div class="outfit-grid">${arrowTypes.map(a=>`<div class="outfit-option"><div class="outfit-head"><strong>${escCard(a.name)} · ${a.vd}</strong>${total===20?`<input aria-label="Quantité ${escCard(a.name)}" type="number" min="0" max="20" value="${Number(c.arrows?.[a.name])||0}" onchange="setOutfitChoice('arrows','${a.name}',this.value)">`:""}</div><p>${escCard(a.note)}</p></div>`).join("")}</div></section>`:"")+
+ `<section class="outfit-section"><h4>Arme principale</h4><label>Arme utilisée au départ<select onchange="setOutfitChoice('primary',0,this.value)"><option value="">Choisir…</option>${weapons.map(it=>`<option value="${it.id}" ${c.primary===it.id?"selected":""}>${escCard(it.name)} · ${escCard(DATA.weapons.find(w=>w.key===it.weaponKey)?.vd||"")}</option>`).join("")}</select></label>${outfitWeaponInfo(DATA.weapons.find(w=>w.key===weapons.find(it=>it.id===c.primary)?.weaponKey))}</section>`+
+ `<section class="outfit-section"><h4>Inventaire de départ</h4>${d.exception?`<p>Choisissez ${Math.abs(d.exception)} objet(s) de qualité ${d.exception<0?"médiocre":"luxueuse"}.</p>`:""}<div class="outfit-inventory">${d.items.map((it,i)=>`<div class="outfit-item"><label>${d.exception?`<input type="checkbox" ${(c.quality||[]).includes(i)?"checked":""} onchange="setOutfitChoice('quality',${i},this.checked)"> `:""}<b>${escCard(it.name)}</b>${it.qty>1?` ×${it.qty}`:""}<small>${it.quality}</small></label>${it.weaponKey?`<details><summary>Caractéristiques</summary>${outfitWeaponInfo(DATA.weapons.find(w=>w.key===it.weaponKey))}</details>`:""}</div>`).join("")}</div></section><p role="status" class="outfit-status">${escCard(outfitError(d)||"Dotation complète.")}</p>`;
+}
+function setRoninArrows(name){if(!arrowTypes.some(a=>a.name===name)&&name!=="")return;let c=character.purchases.outfit;if(c?.school!==character.schoolId)c=character.purchases.outfit={school:character.schoolId};c.arrows=name?{[name]:10}:{};c.quality=[];c.primary="";renderOutfitChoices();}
+function creationValidation(){
+ const p=character.purchases, school=DATA.schools.find(s=>s.id===character.schoolId), fam=DATA.families.find(f=>f.id===character.familyId);
+ const fail=(step,message)=>({step,message});
+ const bonusOk=(actual,expected)=>expected==="choice"?Object.hasOwn(weakTraits,actual):actual===expected;
+ if(!DATA.clans.some(c=>c.id===character.clanId)||!fam||fam.clanId!==character.clanId||!bonusOk(character.familyBonusTrait,fam.bonusTrait))return fail(1,"Clan, famille ou bonus familial invalide.");
+ if(!school||!allowedSchool(school)||school.vocation!==character.vocationId||!["bushi","shugenja"].includes(school.vocation)||!bonusOk(character.schoolBonusTrait,school.bonusTrait)||!schoolChoicesComplete(school))return fail(2,"École, bonus ou compétences d’école invalides.");
+ for(const [k,n] of Object.entries(p.traits||{}))if(![...Object.keys(weakTraits),"void"].includes(k)||!Number.isInteger(n)||n<0||n>2)return fail(3,"Achat de trait invalide.");
+ for(const k of [...Object.keys(weakTraits),"void"])if(getTraitScore(k)>4)return fail(3,"Le trait "+(weakTraits[k]||"Vide")+" dépasse 4.");
+ for(const [k,n] of Object.entries(p.skills||{}))if(!officialSkill(k)||!Number.isInteger(n)||n<0||n>2)return fail(3,"Achat de compétence invalide : "+k+" (maximum deux rangs achetés).");
+ for(const group of ["advantages","disadvantages"]){const ids=p[group];if(!Array.isArray(ids)||ids.some((id,i)=>!DATA[group].some(a=>a.id===id)||(ids.indexOf(id)!==i&&!repeatAdvantages.has(id))))return fail(3,"Avantages ou désavantages invalides.");}
+ for(const [id,n] of Object.entries(p.effectLevels||{}))if(p.advantages.includes(id)&&(!rankedBenefits[id]||!Number.isInteger(n)||n<1||n>rankedBenefits[id].length))return fail(3,"Niveau d’avantage invalide.");
+ if(hasEffect("dis_faible")&&!Object.hasOwn(weakTraits,activeWeakTrait()))return fail(3,"Choisissez le trait affecté par Faible.");
+ if(hasEffect("dis_fragile")&&getTraitScore("stamina")<2)return fail(3,"Fragile exige une Constitution d’au moins 2.");
+ if(![-1,0,1].includes(p.honorMod))return fail(3,"Modification d’Honneur invalide.");
+ const counts={};for(const id of p.advantages){const i=counts[id]||0;counts[id]=i+1;if(!validAdvDetail(id,detailAt(id,i)))return fail(id==="adv_maitrise_innee"?4:3,"Paramètres d’avantage incomplets : "+id);}
+ if(p.advantages.includes("adv_ecole_differente")!==externalSchool(school))return fail(2,"École différente incohérente.");
+ const innate=creationInnateIds();if(innate.length!==(counts.adv_maitrise_innee||0)||new Set(innate).size!==innate.length||innate.some(id=>!eligibleCreationInnate(DATA.spells.find(x=>x.id===id))))return fail(4,"Vérifiez les sorts maîtrisés de façon innée.");
+ const b=calcBudget();if(!Number.isFinite(b.remaining)||b.remaining<0||b.disadvGain>disadvantageLimit)return fail(3,"Budget ou plafond de désavantages invalide.");
+ if(character.vocationId==="shugenja"){const e=startingSpellError();if(e)return fail(4,e);}
+ return null;
+}
 function finalizeCharacter() {
+  if(character.isCreated)return;
+  const validation=creationValidation();if(validation){alert(validation.message);gotoCreateStep(validation.step);return;}
+  const outfit=outfitDraft(),equipmentError=outfitError(outfit);if(equipmentError){alert(equipmentError);return;}
+  if(calcBudget().remaining>0&&!confirm("Il reste "+calcBudget().remaining+" PP. Confirmer la création ?"))return;
   const school=DATA.schools.find(s=>s.id===character.schoolId);
   if(!schoolChoicesComplete(school)){alert("Complétez les choix de compétences de votre école.");gotoCreateStep(2);return;}
   const budget = calcBudget();
@@ -6405,7 +6481,7 @@ function finalizeCharacter() {
     gotoCreateStep(3);
     return;
   }
-  if (!DATA.schools.some(s => s.id === character.schoolId && s.vocation === character.vocationId && s.clanId === character.clanId && s.vocation !== "monk" && !s.legacy)) {
+  if (!DATA.schools.some(s => s.id === character.schoolId && s.vocation === character.vocationId && allowedSchool(s))) {
     gotoCreateStep(2);
     return;
   }
@@ -6428,32 +6504,12 @@ function finalizeCharacter() {
   character.status.glory=character.clanRonin || character.clanId===8 ? 0 : 1;
   const rings = getRings();
   character.status.currentVoid = rings.void;
-  character.status.woundEffectsReady = true;
+
   character.status.woundsTaken = hasEffect("dis_blessure_permanente") ? woundsPerRank() : 0;
 
-  // Initialiser les objets de départ de l'école dans l'inventaire
-  const sch = DATA.schools.find(s => s.id === character.schoolId);
-  if (sch && (!character.inventory.items || character.inventory.items.length === 0)) {
-    character.inventory.items = [
-      { id: "item_daisho", name: "Daisho (Katana & Wakizashi)", qty: 1 },
-      { id: "item_armor", name: sch.vocation === 'bushi' ? (character.status.armorType==="heavy"?"Armure lourde":"Armure légère de voyage") : "Robes de soie traditionnelles", qty: 1 },
-      { id: "item_rations", name: "Rations de voyage et nécessaire", qty: 1 },
-      { id: "item_kimono", name: "Kimono aux couleurs du clan", qty: 1 }
-    ];
-  }
 
-  if(sch?.vocation==="shugenja"){
-    character.status.armorType="none";
-    const items=[["kimono","Kimono"],["rations","Rations de voyage"],["scrolls","Sacoche à parchemins"],["tanto","Tanto"]];
-    if(sch.id!=="grue_shugenja") items.push(["wakizashi","Wakizashi"]);
-    if(sch.id==="crabe_shugenja") items.push(["katana","Katana"]);
-    if(["grue_shugenja","licorne_shugenja"].includes(sch.id)) items.push(["mount","Monture"]);
-    if(sch.id==="phenix_shugenja") items.push(["kit","Trousse de premiers secours"],["blank","Parchemins vierges"]);
-    character.inventory.items=items.map(([id,name])=>({id:"item_"+id,name,qty:id==="blank"?2:1}));
-    character.inventory.koku=({grue_shugenja:10,licorne_shugenja:10,phenix_shugenja:4})[sch.id] || 3;
-  }else if(sch?.vocation==="bushi"){
-    character.inventory.items.push({id:"item_yumi",name:"Yumi",qty:1});
-  }
+  character.inventory.items=outfit.items;character.inventory.armorId=outfit.items.find(it=>itemArmorType(it)===outfit.armorType)?.id||null;character.inventory.koku=outfit.koku;character.inventory.bu=outfit.bu;character.inventory.zeni=0;
+  character.inventory.hands={main:outfit.c.primary,off:null};character.inventory.customWeapons=[];
   saveCharacter();
   alert("Félicitations ! Votre samouraï est créé et sa fiche interactive est prête pour vos parties.");
   showScreen("screen-sheet");
@@ -6473,6 +6529,12 @@ function gameCard(key, title, front, back, element="") {
     <div class="face-front" ${turned?"hidden":""}>${front}</div>
     <div class="face-back" ${turned?"":"hidden"}>${back}</div></article>`;
 }
+function backEntry(title, body, meta=""){
+  return `<div class="effect-back-entry"><div class="effect-back-head"><span class="effect-back-title">${escCard(title)}</span>${meta?`<span class="effect-back-meta">${escCard(meta)}</span>`:""}</div>${body}</div>`;
+}
+function backStack(){return `<div class="effect-back-stack">${[...arguments].filter(Boolean).join("")}</div>`;}
+function backP(text, cls="effect-card-copy"){return `<p class="${cls}">${escCard(text)}</p>`;}
+function backList(items){return items.filter(Boolean).length?`<ul class="back-bullets">${items.filter(Boolean).map(x=>`<li>${escCard(x)}</li>`).join("")}</ul>`:"";}
 async function turnCard(button) {
   const card = button.closest(".game-card");
   if (card.dataset.turning) return;
@@ -6517,10 +6579,11 @@ function ringCard(parts, prefix="ring") {
   const front = `<div class="ring-emblem" style="--element:var(--c-${key})"><span lang="ja" aria-hidden="true">${elementSymbols[key]}</span><strong aria-label="Rang ${r[key]}">${r[key]}</strong></div>${traitRows}${reserve}`;
   const lines = (isVoid?["void"]:traits).map(t=>{
     const score = r[t], p=character.purchases;
-    const mods = [[character.familyBonusTrait===t?1:0,"famille"],[(DATA.schools.find(s=>s.id===character.schoolId && s.vocation==="shugenja" && s.bonusTrait!=="choice")?.bonusTrait ?? character.schoolBonusTrait)===t?1:0,"école"],[p.traits[t],"création"],[character.xp.purchases.traits[t],"progression"],[character.inGameTraits[t],"en jeu / XP"],[hasEffect("dis_faible") && t===activeWeakTrait()?-1:0,"Faible"]];
-    return `<p><strong>${weakTraits[t]||"Vide"} ${score}</strong> · base 2 ${mods.filter(([v])=>v).map(([v,n])=>(v>0?"+":"−")+Math.abs(v)+" ("+n+")").join(" ")}<br>Rang ${score+1} · ${(score+1)*4} XP</p>`;
+    const mods = [[character.familyBonusTrait===t?1:0,"famille"],[(DATA.schools.find(s=>s.id===character.schoolId && s.vocation==="shugenja" && s.bonusTrait!=="choice")?.bonusTrait ?? character.schoolBonusTrait)===t?1:0,"école"],[p.traits[t],"création"],[character.inGameTraits[t],"en jeu / XP"],[-weakTraitPenalty(t),"Faible"]];
+    return `<p><strong>${weakTraits[t]||"Vide"} ${score}</strong> · base 2 ${mods.filter(([v])=>v).map(([v,n])=>(v>0?"+":"−")+Math.abs(v)+" ("+n+")").join(" ")}<br>${permanentTraitScore(t)>=traitLimit(t)?"Rang maximal atteint":`Rang ${score+1} · ${(score+1)*4} XP`}</p>`;
   }).join("");
-  return gameCard(prefix+key,name,front,(isVoid?"<p>La réserve maximale est égale au rang de Vide. Retirez un point lorsque vous le dépensez et restituez-le après récupération.</p>":`<p>Le plus faible des deux traits donne ${r[key]} en ${name}.</p>`)+lines,key);
+  const principle=isVoid?backP("La réserve maximale est égale au rang de Vide. Retirez un point lorsque vous le dépensez et restituez-le après récupération."):backP(`Le plus faible des deux traits donne ${r[key]} en ${name}.`);
+  return gameCard(prefix+key,name,front,backStack(backEntry("Principe",principle,key),backEntry("Détail du calcul",`<div class="back-compact">${lines}</div>`,isVoid?"Vide":"Anneau")),key);
 }
 function situationalTechnique(s,t){
   const ring=getRings(), rank=t.rank;
@@ -6534,7 +6597,11 @@ function situationalTechnique(s,t){
 function schoolCard(s,t,prefix) {
   const first=t.rank===1;
   return gameCard(prefix+t.rank,`Rang ${t.rank} · ${first?s.techniqueName:t.name}`,`<p>${escCard(first?s.techniqueSummary:t.desc)}</p>`,
-    `<p class="full-text">${escCard(first?s.techniqueDesc:t.desc)}</p>${prefix==="xp-tech"?"":"<p>"+escCard(situationalTechnique(s,t))+"</p>"}<p>${escCard(s.name)} · Rang ${t.rank} · VF p. ${s.page}</p>`);
+    backStack(
+      backEntry("Effet complet",backP(first?s.techniqueDesc:t.desc)),
+      prefix!=="xp-tech"&&situationalTechnique(s,t)?backEntry("Application",backP(situationalTechnique(s,t),"effect-side-note")):"",
+      backEntry("Référence",backP(`${s.name} · Rang ${t.rank} · VF p. ${s.page}`,"effect-side-note"),"Technique")
+    ));
 }
 function effectOnSheet(id) {
   const r=getRings();
@@ -6545,7 +6612,15 @@ function effectOnSheet(id) {
     adv_retablissement_rapide: `Repos · ${recoveryPerDay()} blessure(s) récupérée(s) par jour.`,
     dis_fragile: `Constitution ${r.stamina} · ${woundsPerRank()} cases par palier, ${recoveryPerDay()} blessure(s) récupérée(s) par jour.`,
     dis_blessure_permanente: `Début d’aventure · ${woundsPerRank()} cases cochées.`,
-    dis_faible: `Trait réduit · ${weakTraits[activeWeakTrait()]} au rang ${r[activeWeakTrait()]}.`,
+    dis_faible: Object.keys(weakTraits).filter(t=>weakTraitPenalty(t)).map(t=>`${weakTraits[t]} réduit à ${r[t]}`).join(" · "),
+    dis_douillet: `Malus actuel : −${woundPenalty()} dé(s) · un degré supplémentaire aux paliers numériques.`,
+    dis_estropie: "Jets impliquant l’Agilité : −2 dés lancés (sans modifier le Trait).",
+    dis_petit: damageSelectionNote(),
+    dis_social: `Gloire effective : ${effectiveGlory()} · ${socialDisadvantageLevel()} rang(s) de désavantage social, rônin inclus.`,
+    dis_faiblesse_caractere: "Attaque impliquant votre Volonté : l’adversaire lance 2 dés de plus.",
+    dis_mauvaise_reputation: "Les autres samouraïs lancent 1 dé de plus pour vous identifier.",
+    adv_grand: "Dommages : +1 dé lancé. En société : −1 dé lancé.",
+    adv_ambidextre: "Aucun malus de main non directrice.",
     adv_rapide: `Initiative · ${character.schoolId==="scorpion_bushi"?"3g2":"2g1"} + ${r.reflexes}.`,
     adv_grande_destinee: character.status.destinyFulfilled?"Destinée accomplie.":character.status.destinyUsed?"Protection utilisée pour ce scénario.":"Protection disponible pour ce scénario."
   };
@@ -6557,11 +6632,10 @@ function portraitCard() {
   const front = hosted || /^data:image\/(jpeg|png|webp);base64,/i.test(src)
     ? `<img class="portrait-image" src="${escCard(src)}" alt="Portrait de ${escCard(character.identity.name||"votre personnage")}" referrerpolicy="no-referrer" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>Image indisponible. Vérifiez le lien dans les réglages du portrait.</p>`
     : `<button class="portrait-empty" onclick="this.closest('.game-card').querySelector('.turn-card').click()">Ajouter un portrait</button>`;
-  return gameCard("portrait","Portrait",front,`<form class="portrait-form" onsubmit="event.preventDefault();changePortrait(this.url);">
-    <label>Lien direct de l’image<input type="url" name="url" placeholder="https://…" required value="${hosted?escCard(src):""}"></label>
-    <button class="btn sm">Utiliser le lien</button></form>
-    <label class="portrait-file">Importer une image<input type="file" accept="image/jpeg,image/png,image/webp" onchange="changePortrait(this)"></label>
-    <small role="status" class="portrait-status"></small>`);
+  return gameCard("portrait","Portrait",front,backStack(
+    backEntry("Hébergement externe",`<form class="portrait-form form-stack" onsubmit="event.preventDefault();changePortrait(this.url);"><label class="form-field"><span>Lien direct de l’image</span><input class="field-control" type="url" name="url" placeholder="https://…" required value="${hosted?escCard(src):""}"></label><div class="form-actions"><button class="btn sm">Utiliser le lien</button></div></form>`,"Portrait"),
+    backEntry("Importer une image",`<label class="portrait-file form-field"><span>Fichier local</span><input class="field-control" type="file" accept="image/jpeg,image/png,image/webp" onchange="changePortrait(this)"></label><small role="status" class="portrait-status form-status"></small>`,"JPEG · PNG · WebP")
+  ));
 }
 async function changePortrait(input) {
   const card = input.closest(".game-card"), status = card.querySelector(".portrait-status");
@@ -6631,37 +6705,39 @@ function renderSheetView() {
 
   const identity=gameCard("identity",character.identity.name||"Samouraï",
     `<p>${character.clanRonin?"Rônin · ancien clan ":""}${escCard(clan?.name)} · ${escCard(fam?.name)}</p><strong>${escCard(sch?.name)} · Rang ${getSchoolRank()}</strong>${character.identity.quote?`<blockquote class="identity-quote">« ${escCard(character.identity.quote)} »</blockquote>`:""}`,
-    `<div class="identity-editor"><label>Nom du personnage<input class="search-input" name="characterName" value="${escCard(character.identity.name)}" oninput="this.setCustomValidity('')"></label>
-    <label>Devise<textarea class="search-input" rows="2">${escCard(character.identity.quote)}</textarea></label>
-    <button type="button" class="btn sm" onclick="saveSheetIdentity(this)">Enregistrer</button><small role="status"></small></div><p>${escCard(fam?.summary)}<br>${escCard(fam?.name)} · ${escCard(fam?.bonusLabel)}</p><p>${escCard(sch?.name)} · ${escCard(sch?.bonusLabel)}</p>`);
-  const stats=[["honor","Honneur",st.honor],["glory","Gloire",(st.glory??1)+benefitLevel("adv_statut_social")],["statusRank","Statut",st.statusRank],["taint","Souillure",st.taint]];
+    backStack(
+      backEntry("Identité",`<div class="identity-editor"><label class="form-field"><span>Nom du personnage</span><input class="field-control" name="characterName" value="${escCard(character.identity.name)}" oninput="this.setCustomValidity('')"></label><label class="form-field"><span>Devise</span><textarea class="field-control" rows="3">${escCard(character.identity.quote)}</textarea></label><div class="form-actions"><button type="button" class="btn sm" onclick="saveSheetIdentity(this)">Enregistrer</button><small class="form-status" role="status"></small></div></div>`,"Fiche"),
+      backEntry("Famille",`<p class="effect-card-copy"><b>${escCard(fam?.name||'—')}</b></p><p class="effect-side-note">${escCard(fam?.summary||'')}</p><p class="effect-side-note">${escCard(fam?.bonusLabel||'')}</p>`,"Origine"),
+      backEntry("École",`<p class="effect-card-copy"><b>${escCard(sch?.name||'—')}</b></p><p class="effect-side-note">${escCard(sch?.bonusLabel||'')}</p>`,"Formation")
+    ));
+  const stats=[["honor","Honneur",st.honor],["glory","Gloire",effectiveGlory()],["statusRank","Statut",st.statusRank],["taint","Souillure",st.taint]];
   const initialHonor=(character.clanRonin?2.5:sch?.honor??2.5)+(character.purchases.honorMod||0);
-  const initial=[initialHonor,(character.clanRonin||character.clanId===8?0:1)+benefitLevel("adv_statut_social"),1,0];
+  const initial=[initialHonor,1-socialDisadvantageLevel()+benefitLevel("adv_statut_social"),1,0];
   const meanings=["Fidélité au bushidō","Renommée dans l’Empire","Place dans la hiérarchie","Influence de l’Outremonde"];
-  const social=gameCard("standing","Honneur, gloire et statut",stats.map(([k,n,v])=>`<div class="standing"><span>${n}</span>${stepButtons(d=>`adjustStatInGame('${k}',${d/10})`,(v??0).toFixed(1),n)}</div>`).join(""),stats.map(([k,n,v],i)=>`<p><b>${n}</b> · ${meanings[i]}<br>Départ ${initial[i].toFixed(1)} · évolution ${((v??0)-initial[i]).toFixed(1)}</p>`).join(""));
-  const rep=gameCard("reputation","Réputation",`<b class="face-score">${b.total}</b><p>Rang ${b.currentRank} · ${b.nextThreshold?b.neededForNext+" points avant le rang suivant":"Maîtrise maximale"}</p>`,`<p>Anneaux ${b.sumRings} × 10 + compétences ${b.sumSkills}${b.bonus?" + ajustement "+b.bonus:""} = <strong>${b.total}</strong></p><p>Rangs 2 à 5 · 150 / 175 / 200 / 225 points</p>`);
+  const social=gameCard("standing","Honneur, gloire et statut",stats.map(([k,n,v])=>`<div class="standing"><span>${n}</span>${stepButtons(d=>`adjustStatInGame('${k}',${d/10})`,(v??0).toFixed(1),n)}</div>`).join(""),backStack(...stats.map(([k,n,v],i)=>backEntry(n,`<p class="effect-card-copy">${escCard(meanings[i])}</p><p class="effect-side-note"><b>Départ</b> ${initial[i].toFixed(1)} · <b>Évolution</b> ${((v??0)-initial[i]).toFixed(1)}</p>${k==="glory"&&socialDisadvantageLevel()?`<p class="effect-side-note">Maîtrise ${getSchoolRank()} − ${socialDisadvantageLevel()} (désavantage social), hors autres évolutions.</p>`:""}`,"Valeur actuelle · "+(v??0).toFixed(1)))));
+  const rep=gameCard("reputation","Réputation",`<b class="face-score">${b.total}</b><p>Rang ${b.currentRank} · ${b.nextThreshold?b.neededForNext+" points avant le rang suivant":"Maîtrise maximale"}</p>`,backStack(backEntry("Calcul",`<p class="effect-card-copy"><span class="back-formula">${b.sumRings} × 10 + ${b.sumSkills}${b.bonus?" + "+b.bonus:""} = ${b.total}</span></p><p class="effect-side-note">Anneaux ${b.sumRings} × 10 + compétences ${b.sumSkills}${b.bonus?" + ajustement "+b.bonus:""}.</p>`,"Réputation"),backEntry("Seuils de maîtrise",backList(["Rang 2 · 150 points","Rang 3 · 175 points","Rang 4 · 200 points","Rang 5 · 225 points"]),"Progression")));
   const entries=character.experience?.ledger||[];
-  const xp=gameCard("xp","Expérience",`<b class="face-score">${getAvailableXp()} XP</b><button class="btn sm" onclick="showScreen('screen-xp')">Gérer les XP</button>`,`<p>${getTotalEarnedXp()} XP acquis · ${getTotalSpentXp()} dépensés</p>`+([...entries].reverse().map(x=>`<p>${x.type==="award"?"+"+x.amount:"−"+x.cost} XP · ${escCard(x.label||x.comment||"Attribution")}</p>`).join("")||"Aucune opération."));
+  const xp=gameCard("xp","Expérience",`<b class="face-score">${getAvailableXp()} XP</b><button class="btn sm" onclick="showScreen('screen-xp')">Gérer les XP</button>`,backStack(backEntry("Bilan",`<p class="effect-card-copy"><b>${getTotalEarnedXp()} XP</b> acquis · <b>${getTotalSpentXp()} XP</b> dépensés</p>`,"Historique"),backEntry("Dernières opérations",([...entries].reverse().map(x=>`<p class="effect-side-note">${x.type==="award"?"+"+x.amount:"−"+x.cost} XP · ${escCard(x.label||x.comment||"Attribution")}</p>`).join("")||`<p class="effect-side-note">Aucune opération.</p>`),"Journal")));
   document.getElementById("personaDeck").innerHTML=
     `<div class="person-column">${identity}${portraitCard()}</div><div class="progress-stack">${rep}${xp}</div>`+social+woundCard("sheet-health","Santé");
   document.getElementById("ringDeck").innerHTML=ringParts.map(p=>ringCard(p)).join("");
   document.getElementById("schoolHeading").textContent=sch?.vocation==="shugenja"?"Enseignement du shugenja":"Techniques acquises";
   document.getElementById("knownTechniques").innerHTML=sch?.vocation==="shugenja"?shugenjaCard(sch,"sheet"):sch?.techniques.filter(t=>t.rank<=getSchoolRank()).map(t=>schoolCard(sch,t,"sheet-tech")).join("")||"Aucune technique.";
   document.getElementById("knownTechniques").insertAdjacentHTML("beforeend",schoolRankPanel(sch));
-  const effects=[...DATA.advantages,...DATA.disadvantages].filter(x=>hasEffect(x.id));
+  const effects=[...DATA.advantages.filter(x=>hasEffect(x.id)).sort((a,b)=>{const cost=x=>{const ds=advantageDetails()[x.id]||[];return ds.length?ds.reduce((n,d)=>n+advantageCost(x,d),0):advantageCost(x);};return cost(a)-cost(b)||compareEffectName(a,b);}),...DATA.disadvantages.filter(x=>hasEffect(x.id)).sort(compareDisadvantageGain)];
   document.getElementById("effectSection").hidden=!effects.length;
-  document.getElementById("effectDeck").innerHTML=effects.map(x=>gameCard(x.id,x.name,`<small>${x.gain?"Désavantage":"Avantage"}${rankedBenefits[x.id]?" · niveau "+benefitLevel(x.id):""}</small><p>${escCard(x.summary)}</p>`,`<p>${escCard(x.desc)}</p>`+effectOnSheet(x.id)+`<small>${x.gain?"Gain "+x.gain:"Coût "+advantageCost(x)} PP</small>`)).join("");
-  if(sch && !sch.legacy && !schoolChoicesComplete(sch)){
+  document.getElementById("effectDeck").innerHTML=effects.map(x=>{const notes=effectCardTexts(x);return gameCard(x.id,x.name,`<small>${x.gain?"Désavantage":"Avantage"}${rankedBenefits[x.id]?" · niveau "+benefitLevel(x.id):""}</small><p>${escCard(x.summary)}</p>${notes.front}`,`<div class="effect-back-stack"><div class="effect-back-entry"><div class="effect-back-head"><span class="effect-back-title">Règle</span><span class="effect-back-meta">Livre de base</span></div><p class="effect-card-copy">${escCard(x.desc)}</p>${effectOnSheet(x.id)}</div>${notes.back}<div class="effect-back-entry"><div class="effect-back-head"><span class="effect-back-title">Coût et suivi</span><span class="effect-back-meta">${x.gain?"Désavantage":"Avantage"}</span></div><p class="effect-side-note">${character.status.campaignRows?.[x.id]?"Ajustement en campagne · aucun PP/XP":x.gain?"Gain "+x.gain:"Coût "+((advantageDetails()[x.id]||[]).length?(advantageDetails()[x.id]||[]).reduce((n,d)=>n+advantageCost(x,d),0):advantageCost(x))+" PP"}</p></div></div>`);}).join("");
+  if(sch && !schoolChoicesComplete(sch)){
     document.getElementById("knownTechniques").insertAdjacentHTML("beforeend",`<section class="card"><h3>Compétences d’école à compléter</h3><p>${escCard(sch.name)} · VF p. ${sch.skillsPage||92}</p>${schoolControls(sch)}</section>`);
   }
   renderMasterSkillsTable();
 }
 
 // Table maîtresse de TOUTES les compétences
-function skillRollModifier(name) {
+function skillRollModifier(name,trait=DATA.skills.find(s=>s.name===name)?.trait) {
   const social = ["Courtisan","Étiquette","Intimidation"].includes(name);
   const verbal = ["Courtisan","Intimidation"].includes(name);
-  let rolled = -woundPenalty();
+  let rolled = -woundPenalty()-agilityDicePenalty(trait);
   if (hasEffect("adv_grand") && social) rolled--;
   if (hasEffect("adv_eloquent") && verbal) rolled++;
   if (hasEffect("dis_malediction_benten")) rolled += name === "Intimidation" ? 1 : name === "Étiquette" ? -2 : 0;
@@ -6676,7 +6752,6 @@ function renderMasterSkillsTable() {
 
   let skills = DATA.skills.filter(sk => {
     const rank = getSkillRank(sk.name);
-    if (sk.legacyChoice && rank<=0)return false;
     if (currentSkillCategoryFilter === "trained" && !query) {
       if (rank <= 0) return false;
     } else if (currentSkillCategoryFilter === "untrained") {
@@ -6703,22 +6778,33 @@ function renderMasterSkillsTable() {
     const substitute=sk.name==="Kenjutsu" && usesIaijutsu();
     const effectiveRank=substitute?getSkillRank("Iaijutsu"):rank;
     const isTrained = effectiveRank > 0;
-    const modifier = skillRollModifier(sk.name);
-    const rolled = traitVal + effectiveRank + modifier;
+    const modifier = skillRollModifier(sk.name,sk.name==="Musique"?"agility":sk.trait);
+    const rolled = Math.max(0,traitVal + effectiveRank + modifier);
     const kept = traitVal;
-    const checkNote = modifier ? (modifier > 0 ? "+" : "") + modifier + " lancé(s)" : "";
+    const checkNote = [modifier ? (modifier > 0 ? "+" : "") + modifier + " lancé(s) au total" : "", agilityDicePenalty(sk.name==="Musique"?"agility":sk.trait)?"Estropié : −2 dés lancés":"",hasEffect("dis_estropie")&&sk.name==="Équitation"?"Le malus Estropié ne s’applique pas si le jet utilise l’Intuition au lieu de l’Agilité":"",hasEffect("dis_estropie")&&sk.trait==="variable"?"Estropié : −2 dés si le jet implique l’Agilité":""].filter(Boolean).join(" · ");
 
-    return {rank, archived:sk.legacyChoice, front:`<tr><th scope="row">${escCard(skillLabel(sk.name))}</th><td><strong class="skill-rank">${rank}</strong></td><td>${escCard(displayedTraits)}</td><td>${escCard(sk.typeLabel)}</td></tr>`,
-      back:`<details class="skill-note"><summary>${escCard(skillLabel(sk.name))}</summary><p>${escCard(sk.desc)}</p><p>${sk.trait==="variable"?"Trait à déterminer selon l’action · rang "+rank:`${sk.traitLabel} ${traitVal} + ${substitute?"Iaijutsu (Kakita)":"compétence"} ${effectiveRank} · ${woundsNow() >= woundsPerRank()*6 ? "Jet impossible · " : ""}${rolled} dés lancés, ${Math.max(0,Math.min(rolled,kept))} gardés.`}${mountedBonus(sk.name)?" · +"+mountedBonus(sk.name)+" au résultat (en selle)":""}${armorPenalty() && ["stamina","strength","agility","reflexes"].includes(sk.trait)?" · action physique : ND +5 (armure lourde)":""}<br>${checkNote?checkNote+" · ":""}${isTrained?"Les 10 sont relancés.":"Les 10 ne sont pas relancés."}</p>${sk.legacyChoice?"":`<strong>Rang ${rank+1} · ${rank+1} XP</strong>`}</details>`};
+    return {rank, front:`<tr><th scope="row">${escCard(skillLabel(sk.name))}</th><td><strong class="skill-rank">${rank}</strong></td><td>${escCard(displayedTraits)}</td><td>${escCard(sk.typeLabel)}</td></tr>`,
+      back:`<details class="skill-note"><summary>${escCard(skillLabel(sk.name))}</summary><p>${escCard(sk.desc)}</p><p>${sk.trait==="variable"?"Trait à déterminer selon l’action · rang "+rank:`${sk.traitLabel} ${traitVal} + ${substitute?"Iaijutsu (Kakita)":"compétence"} ${effectiveRank} · ${woundsNow() >= woundsPerRank()*6 ? "Jet impossible · " : ""}${rolled} dés lancés, ${Math.max(0,Math.min(rolled,kept))} gardés.`}${mountedBonus(sk.name)?" · +"+mountedBonus(sk.name)+" au résultat (en selle)":""}${armorPenalty() && ["stamina","strength","agility","reflexes"].includes(sk.trait)?" · action physique : ND +5 (armure lourde)":""}<br>${checkNote?checkNote+" · ":""}${isTrained?"Les 10 sont relancés.":"Les 10 ne sont pas relancés."}</p><strong>${rank>=RANK_LIMITS.skill?"Rang maximal atteint":`Rang ${rank+1} · ${rank+1} XP`}</strong></details>`};
   });
+  const contextual=[
+    hasEffect("adv_benediction_benten")?"Bénédiction de Benten · Persuasion : +1 dé gardé (+2 si sous le charme).":"",
+    hasEffect("adv_eloquent")?"Éloquent · Échanges verbaux : +1 dé lancé (déjà inclus dans Courtisan et Intimidation).":"",
+    hasEffect("adv_grand")?"Grand · En société : −1 dé lancé (déjà inclus dans Courtisan, Étiquette et Intimidation).":"",
+    hasEffect("adv_sens_equilibre")?"Sens de l’équilibre · Actions d’équilibre : +1 dé lancé.":"",
+    hasEffect("adv_orientation")?"Sens de l’orientation · Orientation : +2 dés lancés.":"",
+    hasEffect("dis_malediction_benten")?"Malédiction de Benten · Cordialité : −2 dés ; intimidation/peur : +1 dé (déjà inclus dans Étiquette ou Intimidation).":"",
+    hasEffect("dis_ampute")?"Amputé · Action liée à la mutilation : ND +10.":"",
+    hasEffect("dis_chagrin_amour")?"Chagrin d’amour · Lorsque le souvenir est ravivé, −1 dé à tous les jets jusqu’à dépense de 1 Vide.":"",
+    hasEffect("dis_dependant")?"Dépendant · −1 dé à tous les jets par jour de sevrage.":"",
+    hasEffect("dis_phobie")?"Phobie · −2 ou −4 dés face à l’objet de la peur, sauf dépense de 1 Vide pour une action.":""
+  ].filter(Boolean);
   function skillGroup(key,title,group) {
     if (!group.length) return "";
-    return gameCard(key,title,`<table class="skill-lines"><thead><tr><th>Compétence</th><th>Rang</th><th>Trait</th><th>Catégorie</th></tr></thead><tbody>${group.map(x=>x.front).join("")}</tbody></table>`,group.map(x=>x.back).join(""));
+    return gameCard(key,title,`<table class="skill-lines"><thead><tr><th>Compétence</th><th>Rang</th><th>Trait</th><th>Catégorie</th></tr></thead><tbody>${group.map(x=>x.front).join("")}</tbody></table>`,backStack(contextual.length?backEntry("Effets selon la situation",backList(contextual),"Contextuel"):"",...group.map(x=>x.back)));
   }
-  const trained=skillGroup("trained-skills","Compétences maîtrisées",rows.filter(x=>!x.archived && x.rank>0));
+  const trained=skillGroup("trained-skills","Compétences maîtrisées",rows.filter(x=>x.rank>0));
   const untrained=skillGroup("untrained-skills","Compétences non maîtrisées",rows.filter(x=>x.rank===0));
-  const archived=skillGroup("archived-skills","Anciennes compétences hors catalogue VF",rows.filter(x=>x.archived));
-  tbody.innerHTML = trained+untrained+archived || "<p>Aucune compétence correspondante.</p>";
+  tbody.innerHTML = trained+untrained || "<p>Aucune compétence correspondante.</p>";
 }
 
 function setSkillFilter(btn, filterKey) {
@@ -6729,26 +6815,9 @@ function setSkillFilter(btn, filterKey) {
 }
 
 // Ajustement en jeu de Traits, Compétences et Stats
-function adjustTraitInGame(traitKey, delta) {
-  if (!character.inGameTraits) character.inGameTraits = {};
-  character.inGameTraits[traitKey] = (character.inGameTraits[traitKey] || 0) + delta;
-  saveCharacter();
-  renderSheetView();
-}
-
-function adjustSkillInGame(skillName, delta) {
-  if (!character.inGameSkills) character.inGameSkills = {};
-  const current = getSkillRank(skillName);
-  if (current + delta < 0) return;
-  character.inGameSkills[skillName] = (character.inGameSkills[skillName] || 0) + delta;
-  saveCharacter();
-  renderMasterSkillsTable();
-  renderSheetView();
-}
-
 function adjustStatInGame(statKey, delta) {
   if (typeof character.status[statKey] !== 'number') character.status[statKey] = 0;
-  character.status[statKey] = Math.max(statKey === "glory" ? -benefitLevel("adv_statut_social") : 0, character.status[statKey] + delta);
+  character.status[statKey] = statKey==="glory" ? character.status[statKey]+delta : Math.max(0,character.status[statKey]+delta);
   saveCharacter();
   renderSheetView();
 }
@@ -6767,7 +6836,7 @@ function initiativePool() {
 function initiativeCard() {
   const {roll,keep,bonus,reflexes,iaijutsu} = initiativePool();
   const front = `<div class="initiative-line"><b>${roll}g${keep} + ${bonus}</b></div>`;
-  const back = `<p>Lancez ${roll} d10 et gardez ${keep===1?"le meilleur":"les deux meilleurs"}. Chaque 10 est relancé et ajouté au dé.</p><p>Ajoutez les Réflexes (${reflexes})${iaijutsu?` et le rang de Iaijutsu de l’école Kakita (+${iaijutsu})`:""}. Le score le plus élevé agit en premier. En cas d’égalité, comparez les Réflexes.</p><small>Livre de base VF · p. 105</small>`;
+  const back = backStack(backEntry("Procédure",backList([`Lancez ${roll} d10 et gardez ${keep===1?"le meilleur":"les deux meilleurs"}.`,`Chaque 10 est relancé et ajouté au dé.`,`Le score le plus élevé agit en premier ; en cas d’égalité, comparez les Réflexes.`]),"Initiative"),backEntry("Calcul",`<p class="effect-card-copy"><span class="back-formula">${roll}g${keep} + ${bonus}</span></p><p class="effect-side-note">Réflexes ${reflexes}${iaijutsu?` + Iaijutsu ${iaijutsu} (école Kakita)`:""}.</p>`,`VF p. 105`));
   return gameCard("initiative","Initiative",front,back);
 }
 
@@ -6784,30 +6853,32 @@ function schoolOptions(){
   const st=character.status;
   function toggle(key,label,checked){return `<label><input type="checkbox" ${checked?"checked":""} onchange="setSchoolOption('${key}',this.checked)"> ${label}</label>`;}
   if(learned("crabe_bushi",4))return `<button type="button" class="btn sm" onclick="toggleHidaRage()">${st.hidaRage?"Fin du tour de rage":"Rage · subir 3 blessures"}</button>`;
-  if(learned("grue_bushi"))return `<label>Pour les jets de Kenjutsu <select onchange="setSchoolOption('kakitaSkill',this.value)">${["Iaijutsu","Kenjutsu"].map(k=>`<option ${(k==="Iaijutsu")===usesIaijutsu()?"selected":""}>${k}</option>`).join("")}</select></label>`;
   if(learned("licorne_bushi"))return toggle("mounted","En selle",st.mounted)+(learned("licorne_bushi",2)?toggle("parrying","Parade",st.parrying):"");
   if(learned("phenix_bushi"))return toggle("shibaVoid","Ajouter le rang de Vide",st.shibaVoid!==false);
   return "";
 }
 function renderCombatView() {
   const rings = getRings();
-  const type=character.status.armorType||"none", armor=type==="heavy"?10:type==="light"?5:0;
-  const daisho=mirumotoDaishoInHand() ? 5 : 0;
-  const armorSelect=`<label>Armure <select onchange="changeArmorType(this.value)">${[["none","Aucune"],["light","Légère"],["heavy","Lourde"]].map(([v,n])=>`<option value="${v}" ${type===v?"selected":""}>${n}</option>`).join("")}</select></label>`;
+  const type=activeArmorType(), armor=(type==="heavy"?10:type==="light"?5:0)+armorQualityBonus();
+  const daisho=equippedDaisho() ? 5 : 0;
+  const armorSelect=`<p>Armure : <b>${type==="heavy"?"Lourde":type==="light"?"Légère":"Aucune"}</b>${armor?` · +${armor} ND`:""}</p>${qualityText(selectedArmor())?`<small>${escCard(qualityText(selectedArmor()))}</small>`:""}`;
   const movement=Math.floor((rings.agility+5)/3);
   const defenseCalc=woundState()==="Épuisé"?"Épuisé · ND 5.":learned("licorne_bushi",2) && character.status.parrying?`Parade · (Réflexes + Défense + Kenjutsu) × 5 = ${parryTarget()}.`:`Réflexes ${rings.reflexes} × 5 + armure ${armor} + daishō ${daisho} = ${calcTnToBeHit()}.`;
   const heavyRule=learned("crabe_bushi")?"Votre technique Hida de rang 1 annule le +5 aux ND physiques (p. 79).":"En armure lourde, ajoutez 5 au ND de chacune de vos actions physiques, y compris les attaques.";
-  const armorBack=`<p>${defenseCalc}</p><p><b>Armure lourde</b> · +10 au ND pour vous toucher. ${heavyRule}</p><p><b>Armure légère</b> · +5 au ND pour vous toucher, sans majoration du ND de vos actions.</p><p>Une armure divise par deux le déplacement. Déplacement par tour avec votre équipement : <b>${type==="none"?movement:movement/2}</b> (sans armure : ${movement}).</p><small>VF p. 126 et 249</small>`;
+  const armorBack=backStack(backEntry("Calcul actuel",backP(defenseCalc),`ND ${calcTnToBeHit()}`),backEntry("Règles d’armure",backList([`Armure lourde · +10 au ND pour vous toucher. ${heavyRule}`,"Armure légère · +5 au ND pour vous toucher, sans majoration du ND de vos actions.",`Une armure divise par deux le déplacement. Déplacement par tour avec votre équipement : ${type==="none"?movement:movement/2} (sans armure : ${movement}).`]),"VF p. 126 et 249"));
   const defense=gameCard("defense","Défense",`<b class="face-score">ND ${calcTnToBeHit()}</b>${armorSelect}${armorPenalty()?"<small>Actions physiques · ND +5</small>":""}<div class="fight-options" id="combatModifiers"></div>`,armorBack);
   document.getElementById("combatDeck").innerHTML=
     `<div class="combat-stack">${initiativeCard()}${defense}${ringCard(ringParts[4],"combat-")}</div>`+woundCard("wounds","Blessures");
   const magic = benefitLevel("adv_resistance_magique") * 5;
   document.getElementById("combatModifiers").innerHTML = [
-    equippedDaisho() ? `<label><input type="checkbox" ${character.status.daishoDrawn?"checked":""} onchange="character.status.daishoDrawn=this.checked;saveCharacter();renderCombatView()"> Daishō en main (+5 ND)</label>` : "",
+    equippedDaisho() ? "Daishō en main · +5 ND (Mirumoto)" : "",
     schoolOptions(),
     hasEffect("adv_grande_destinee") ? `<label><input type="checkbox" ${character.status.destinyFulfilled?"checked":""} onchange="character.status.destinyFulfilled=this.checked;saveCharacter();renderCombatView()"> Destinée accomplie</label> · ${character.status.destinyFulfilled?"Protection terminée":character.status.destinyUsed?"Protection utilisée":"Protection disponible"}` : "",
     hasEffect("adv_clairvoyant") ? "Vous mentir · ND +10" : "",
     hasEffect("dis_credule") ? "Vous convaincre · ND 5" : "",
+    hasEffect("dis_faiblesse_caractere") ? "Attaque impliquant votre Volonté · adversaire +2 dés lancés" : "",
+    hasEffect("dis_mauvaise_reputation") ? "Identification par autrui · +1 dé lancé" : "",
+    hasEffect("dis_ampute") ? "Action liée à la mutilation · ND +10" : "",
     magic ? `Sort vous ciblant · ND du sort +${magic}` : "",
     hasEffect("adv_trompe_la_mort") ? "Peur · Réussite automatique" : ""
   ].filter(Boolean).join(" · ");
@@ -6815,36 +6886,18 @@ function renderCombatView() {
   renderSchoolTechniquesView();
 }
 
-function changeArmorType(type) {
-  character.status.armorType = type;
-  saveCharacter();
-  renderCombatView();
-}
-
-function spendVoidPoint() {
-  if (character.status.currentVoid > 0) {
-    character.status.currentVoid -= 1;
-    saveCharacter();
-    renderCombatView();
-  } else {
-    alert("Vous n'avez plus de points de Vide en réserve !");
-  }
-}
-
-function recoverVoidPoint() {
-  const rings = getRings();
-  if (character.status.currentVoid < rings.void) {
-    character.status.currentVoid += 1;
-    saveCharacter();
-    renderCombatView();
-  }
-}
+function itemArmorType(it){const n=String(it.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();return n==='armure legere'?'light':n==='armure lourde'?'heavy':null;}
+function ownedArmors(){return (character.inventory.items||[]).filter(it=>Number(it.qty??1)>0&&itemArmorType(it));}
+function selectedArmor(){return ownedArmors().find(it=>it.id===character.inventory.armorId);}
+function activeArmorType(){return itemArmorType(selectedArmor()||{})||'none';}
+function changeArmorType(id){if(id&&!ownedArmors().some(it=>it.id===id))return;character.inventory.armorId=id||null;saveCharacter();renderInventoryItemsList();}
+function renderInventoryArmor(){const current=selectedArmor()?.id||'';document.getElementById('inventoryArmor').innerHTML=`<label class="inv-slot">Armure portée<select onchange="changeArmorType(this.value)"><option value="">Aucune armure</option>${ownedArmors().map(it=>`<option value="${escCard(it.id)}" ${current===it.id?'selected':''}>${escCard(itemLabel(it))} · +${(itemArmorType(it)==='heavy'?10:5)+qualityInt(it.qualityND)} ND</option>`).join('')}</select></label>`;}
 
 function woundCard(key,title) {
   const rings=getRings();
   const cap=woundsPerRank(), taken=woundsNow(), level=Math.floor(taken/cap);
-  const effects=DATA.advantages.concat(DATA.disadvantages).filter(x=>hasEffect(x.id)&&["adv_force_terre","dis_fragile","dis_blessure_permanente","adv_retablissement_rapide","adv_grande_destinee"].includes(x.id));
-  return gameCard(key,title,woundTrack(),`<p>${cap} cases par palier · 2 × min(Volonté ${rings.willpower}, Constitution effective ${Math.max(1,rings.stamina-Number(hasEffect("dis_fragile")))})</p><p>${woundState()} · ${taken} blessures. ${level<8?"Prochain seuil à "+((level+1)*cap)+" blessures.":""} Récupération · ${recoveryPerDay()} par jour.</p>${effects.map(x=>"<p><b>"+x.name+"</b> · "+x.summary+"</p>").join("")}`);
+  const effects=DATA.advantages.concat(DATA.disadvantages).filter(x=>hasEffect(x.id)&&["adv_force_terre","dis_fragile","dis_blessure_permanente","adv_retablissement_rapide","adv_grande_destinee","dis_douillet"].includes(x.id));
+  return gameCard(key,title,woundTrack(),backStack(backEntry("Capacité de blessure",`<p class="effect-card-copy">${cap} cases par palier</p><p class="effect-side-note">2 × min(Volonté ${rings.willpower}, Constitution effective ${Math.max(1,rings.stamina-Number(hasEffect("dis_fragile")))})</p>`,"Santé"),backEntry("État actuel",`<p class="effect-card-copy"><b>${woundState()}</b> · ${taken} blessures</p><p class="effect-side-note">${level<8?"Prochain seuil à "+((level+1)*cap)+" blessures. ":""}Récupération · ${recoveryPerDay()} par jour.</p>`,`Suivi`),effects.length?backEntry("Effets appliqués",effects.map(x=>`<p class="effect-side-note"><b>${escCard(x.name)}</b> · ${escCard(x.summary)}</p>`).join(""),"Avantages / handicaps"):""));
 }
 
 function woundTrack() {
@@ -6852,7 +6905,7 @@ function woundTrack() {
   const taken = woundsNow();
   const activeLevelIdx = Math.min(7, Math.floor(taken / boxesPerLevel));
   const levels = ["Indemne","Égratigné","Blessé","Gravement blessé","Estropié","Épuisé","Coma","Moribond"].map((name,i) => ({
-    name, penalty:i<5 ? "−" + Math.max(0,i-benefitLevel("adv_force_terre")) + " dé(s)" : ["Épuisé","Inconscient","Trépas en fin de palier"][i-5],
+    name, penalty:i<5 ? "−" + woundPenaltyAt(i) + " dé(s)" : ["Épuisé","Inconscient","Trépas en fin de palier"][i-5],
   }));
   const actions = `<strong>${woundState()} · ${taken} blessures</strong>
     <button type="button" class="btn sm" onclick="setDamage(woundsNow()-recoveryPerDay())" ${!taken || woundState()==="Mort"?"disabled":""}>Repos · −${recoveryPerDay()} / jour</button>
@@ -6922,7 +6975,27 @@ function weaponProperties(model){
   const initiative=(model.group==="Armes d’hast" && model.key!=="tetsubo") || model.key==="bo";
   return model.note+(initiative?" Face à une arme plus courte, lancez un dé supplémentaire pour l’initiative et gardez le meilleur résultat.":"");
 }
-function catalogProfile(model,id,rings){
+function qualityInt(v){const n=Number(v);return Number.isInteger(n)&&n>=-20&&n<=20?n:0;}
+function qualityText(it){if(!it)return '';return [it.quality?'Qualité '+it.quality:'',it.qualityNote,qualityInt(it.qualityDice)?'VD : '+(qualityInt(it.qualityDice)>0?'+':'')+qualityInt(it.qualityDice)+' dé(s) lancé(s)':'',qualityInt(it.qualityKeep)?'VD : '+(qualityInt(it.qualityKeep)>0?'+':'')+qualityInt(it.qualityKeep)+' dé(s) gardé(s)':'',qualityInt(it.qualityND)?'Protection : '+(qualityInt(it.qualityND)>0?'+':'')+qualityInt(it.qualityND)+' ND':''].filter(Boolean).join(' · ');}
+function armorQualityBonus(){return qualityInt(selectedArmor()?.qualityND);}
+function saveItemQuality(control){
+  const box=control.closest('[data-quality-id]');
+  const it=[...(character.inventory.items||[]),...(character.inventory.customWeapons||[])].find(i=>String(i.id)===box?.dataset.qualityId);if(!it||!box)return;
+  const fields=[...box.querySelectorAll('[data-qfield]')];
+  if(fields.some(f=>f.type==='number'&&!f.checkValidity())){box.querySelector('[data-qstatus]').textContent='Valeur invalide : entier de −20 à +20.';return;}
+  for(const f of fields)it[f.dataset.qfield]=f.type==='number'?qualityInt(f.value):f.value.trim();
+  const saved=saveCharacter();
+  const summary=box.parentElement.querySelector('[data-quality-summary]');if(summary)summary.textContent=qualityText(it);
+  box.querySelector('[data-qstatus]').textContent=saved?'Enregistré · combat actualisé.':'Sauvegarde locale indisponible · exportez la fiche.';
+  if(character.isCreated&&document.getElementById('combatDeck'))renderCombatView();
+  // Ne pas remplacer les sélecteurs pendant un changement de champ : le clic suivant serait perdu.
+  const profiles=ownedWeapons();
+  for(const opt of document.querySelectorAll("#inventoryWeapons select option")){const w=profiles.find(w=>w.id===opt.value);if(w)opt.textContent=(w.label||w.name)+(w.twoHands?" · deux mains":"");}
+  for(const opt of document.querySelectorAll("#inventoryArmor select option")){const a=ownedArmors().find(a=>a.id===opt.value);if(a)opt.textContent=itemLabel(a)+" · +"+((itemArmorType(a)==="heavy"?10:5)+qualityInt(a.qualityND))+" ND";}
+  const row=box.closest(".inv-entry");if(row){const w=ownedWeapons().find(w=>w.id===it.id);row.querySelector(".inv-title").textContent=it.alias||it.name;row.querySelector(".inv-stats").textContent=w?"Dommages "+w.dr:itemArmorType(it)?"Protection +"+((itemArmorType(it)==="heavy"?10:5)+qualityInt(it.qualityND))+" ND":"";}
+}
+function itemQualityEditor(it){const weapon=it.isCustom||!!itemModel(it);const armor=!!itemArmorType(it);const num=(key,label)=>`<label>${label} <input type="number" min="-20" max="20" step="1" data-qfield="${key}" value="${qualityInt(it[key])}" style="width:65px"></label>`;return `<details data-quality-id="${escCard(it.id)}" onchange="saveItemQuality(event.target)"><summary>Qualité et effets particuliers</summary><div class="outfit-info"><label>Nom personnalisé <input data-qfield="alias" value="${escCard(it.alias||'')}" placeholder="Facultatif"></label><label>Qualité <select data-qfield="quality">${['','médiocre','moyenne','luxueuse'].map(q=>`<option value="${q}" ${(it.quality||'')===q?'selected':''}>${q||'Non précisée'}</option>`).join('')}</select></label>${weapon?num('qualityDice','Dommages · dés lancés')+num('qualityKeep','Dommages · dés gardés'):''}${armor?num('qualityND','Bonus de protection au ND'):''}<label>Effet particulier (MJ)<textarea data-qfield="qualityNote" rows="2" maxlength="1000">${escCard(it.qualityNote||'')}</textarea></label><small>VF p. 67 : la qualité ne confère pas de bonus systématique. Certains katana de luxe ont une VD de 4g2 au lieu de 3g2 ; les effets sont propres à l’objet et validés par le MJ.</small><button type="button" class="btn sm" onclick="saveItemQuality(this)">Enregistrer</button><small data-qstatus role="status">Les modifications sont enregistrées automatiquement à la validation du champ.</small></div></details>`;}
+function catalogProfile(model,id,rings,item=null){
   const bow=model.vd==="arc";
   const arrow=arrowTypes.find(a=>a.name===character.inventory.arrows?.[id]) || arrowTypes[0];
   const vd=bow?arrow.vd:model.vd;
@@ -6931,63 +7004,72 @@ function catalogProfile(model,id,rings){
   const useAgility=!bow || (character.schoolId==="licorne_bushi");
   const trait=useAgility?rings.agility:rings.reflexes;
   const attackRoll=pool(trait+getSkillRank(skill),trait);
-  const dr=pool((bow?2:rings.strength)+dice,keep);
+  const damageDice=(bow?2:rings.strength)+dice+qualityInt(item?.qualityDice), damageKeep=keep+qualityInt(item?.qualityKeep);
+  const dr=pool(damageDice,Math.max(0,damageKeep));
   const label=skill==="Armes de hast"?"Yari (armes de hast)":skill;
   let desc=(useAgility?"Agilité":"Réflexes")+" "+trait+" + "+label+" "+getSkillRank(skill)+". ";
   desc+=bow?"Force de l’arc 2 + flèche "+arrow.name+" ("+vd+"). "+(arrow.note||""):"Force "+rings.strength+" + VD "+vd+".";
-  desc+=" "+weaponProperties(model);
-  return {id,modelKey:model.key,name:model.name,skill,attackRoll,dr,desc:desc+" Livre de base VF, p. "+model.page+".",bow,arrow:arrow.name,twoHands:bow||["no-dachi","tetsubo"].includes(model.key)};
+  desc+=" "+weaponProperties(model)+(qualityText(item)?" "+qualityText(item)+" (VF p. 67).":"");
+  return {id,modelKey:model.key,name:model.name,quality:qualityText(item),skill,attackRoll,dr,damageDice,damageKeep,qualityDice:qualityInt(item?.qualityDice),qualityKeep:qualityInt(item?.qualityKeep),effectiveVD:pool(dice+qualityInt(item?.qualityDice),Math.max(0,keep+qualityInt(item?.qualityKeep))),desc:desc+" Livre de base VF, p. "+model.page+".",attackTrait:useAgility?"agility":"reflexes",bow,arrow:arrow.name,twoHands:bow||["no-dachi","tetsubo","naginata","nagamaki","yari","sasumata","sodegarami","bo","die_tsuchi","ono"].includes(model.key)};
 }
-function ownedWeapons(){
-  const inv=character.inventory, items=inv.items||[], rings=getRings();
-  const weapons=[];
-  for(const model of DATA.weapons){
-    const legacy=items.some(it=>!it.weaponKey && (it.name?.trim().toLowerCase()===model.name.toLowerCase() || it.id==="item_"+model.key ||
-      (it.id==="item_daisho" && ["katana","wakizashi"].includes(model.key)) || (model.key==="yumi" && /^(arc|arc \(yumi\))$/i.test(it.name?.trim()))));
-    if(legacy)weapons.push(catalogProfile(model,"w_"+model.key,rings));
-    for(const item of items.filter(it=>it.weaponKey===model.key))weapons.push(catalogProfile(model,item.id,rings));
-  }
-  return [...weapons,...(inv.customWeapons||[])];
+function itemModel(it){return DATA.weapons.find(w=>w.key===it.weaponKey);}
+function itemLabel(it){return [it.alias||it.name,it.quality||'moyenne',qualityInt(it.qualityDice)||qualityInt(it.qualityKeep)?`${qualityInt(it.qualityDice)>=0?'+':''}${qualityInt(it.qualityDice)}g${qualityInt(it.qualityKeep)}`:'',qualityInt(it.qualityND)?`ND ${qualityInt(it.qualityND)>0?'+':''}${qualityInt(it.qualityND)}`:''].filter(Boolean).join(' · ');}
+function ownedWeapons(){const inv=character.inventory,rings=getRings();const weapons=[];for(const it of inv.items){const model=itemModel(it);if(!model||Number(it.qty??1)<=0)continue;const w=catalogProfile(model,it.id,rings,it);weapons.push({...w,name:it.alias||it.name,label:itemLabel(it)});}return [...weapons,...inv.customWeapons.filter(w=>Number(w.qty??1)>0).map(w=>{const m=/^(\d+)g(\d+)$/i.exec(String(w.dr).trim());const base={...w,name:w.alias||w.name,label:itemLabel(w),quality:qualityText(w)};if(!m)return base;const damageDice=Number(m[1])+qualityInt(w.qualityDice),damageKeep=Number(m[2])+qualityInt(w.qualityKeep);return {...base,damageDice,damageKeep,dr:pool(damageDice,Math.max(0,damageKeep))};})];}
+
+function weaponHands(){
+  const inv=character.inventory, available=ownedWeapons(), byId=id=>available.find(w=>w.id===id);
+  const h=inv.hands;
+  let main=byId(h.main)?h.main:null, off=byId(h.off)&&!byId(h.off).twoHands?h.off:null;
+  if(main===off||byId(main)?.twoHands)off=null;
+  inv.hands={main,off};
+  return inv.hands;
 }
+function equippedWeaponIds(){const h=weaponHands();return [h.main,h.off].filter(Boolean);}
 function equippedDaisho(){
-  if(character.schoolId!=="dragon_bushi")return false;
-  const equipped=ownedWeapons().filter(w=>equippedWeaponIds().includes(w.id));
-  return ["katana","wakizashi"].every(key=>equipped.some(w=>w.modelKey===key));
+  const h=weaponHands(), available=ownedWeapons();
+  const keys=[h.main,h.off].map(id=>available.find(w=>w.id===id)?.modelKey);
+  return learned("dragon_bushi")&&keys.includes("katana")&&keys.includes("wakizashi");
 }
-function mirumotoDaishoInHand(){return character.status.daishoDrawn && equippedDaisho();}
-function equippedWeaponIds(){return character.inventory.equippedWeapons || [];}
-function equipWeapon(id,enabled){
-  const ids=new Set(equippedWeaponIds());
-  if(enabled && ownedWeapons().some(w=>w.id===id)) ids.add(id); else ids.delete(id);
-  character.inventory.equippedWeapons=[...ids];
-  saveCharacter();renderInventoryItemsList();
+function assignWeaponHand(slot,id){
+  const h={...weaponHands()}, w=ownedWeapons().find(w=>w.id===id);
+  if(!["main","off"].includes(slot)||(id&&!w))return;
+  if(slot==="off"&&(w?.twoHands||ownedWeapons().find(w=>w.id===h.main)?.twoHands))return;
+  h[slot]=id||null;
+  if(id&&h[slot==="main"?"off":"main"]===id)h[slot==="main"?"off":"main"]=null;
+  if(slot==="main"&&w?.twoHands)h.off=null;
+  character.inventory.hands=h;weaponHands();saveCharacter();renderInventoryItemsList();
+}
+function renderWeaponHands(){
+  const available=ownedWeapons(),h=weaponHands(),two=available.find(w=>w.id===h.main)?.twoHands;
+  const select=(slot,label,disabled)=>`<div class="hand-slot"><label>${label}<select ${disabled?"disabled":""} onchange="assignWeaponHand('${slot}',this.value)"><option value="">${disabled?"Occupée par l’arme à deux mains":"Main libre"}</option>${disabled?"":available.filter(w=>slot==="main"||!w.twoHands).map(w=>`<option value="${escCard(w.id)}" ${h[slot]===w.id?"selected":""}>${escCard(w.label||w.name)}${w.twoHands?" · deux mains":""}</option>`).join("")}</select></label><small>${slot==="main"?"Sans malus de main":disabled?"Les deux mains sont occupées":h.off?(hasEffect("adv_ambidextre")?"Ambidextre · aucun malus":"−2 dés lancés pour les jets de cette main"):"Disponible"}</small></div>`;
+  return `<div class="hand-grid">${select("main","Main directrice",false)}${select("off","Main non directrice",two)}</div><p class="hand-note">${equippedDaisho()?"Technique Mirumoto · +5 au ND pour être touché. ":""} ${attacksPerTurn()} attaque${attacksPerTurn()>1?"s":""} par tour. Manier deux armes ne donne pas d’attaque supplémentaire.</p>`;
 }
 function renderCombatWeapons(){
   const rings=getRings();
-  const equipped=ownedWeapons().filter(w=>equippedWeaponIds().includes(w.id));
-  equipped.unshift({id:"unarmed",name:"Mains nues",attackRoll:pool(rings.agility+getSkillRank("Corps à corps (Jujutsu)"),rings.agility),dr:pool(rings.strength,1),desc:"Agilité + Corps à corps (jiujutsu). VD 0g1 : lancez la Force et gardez un dé (VF p. 105)."});
+  const available=ownedWeapons();
+  const equipped=available.filter(w=>equippedWeaponIds().includes(w.id));
+  const options=document.getElementById("combatWeaponOptions");
+  if(options)options.innerHTML=`<p class="hand-note">${attacksPerTurn()} attaque${attacksPerTurn()>1?"s":""} par tour</p>`+(learned("grue_bushi") && equipped.some(w=>w.skill==="Kenjutsu"||w.skill==="Iaijutsu"||w.usesKenjutsu)?`<label>Technique Kakita · compétence pour les armes de Kenjutsu <select onchange="setSchoolOption('kakitaSkill',this.value)">${["Iaijutsu","Kenjutsu"].map(k=>`<option ${(k==="Iaijutsu")===usesIaijutsu()?"selected":""}>${k}</option>`).join("")}</select></label>`:"");
+  equipped.unshift({id:"unarmed",name:"Mains nues",skill:"Corps à corps (Jujutsu)",attackTrait:"agility",attackRoll:pool(rings.agility+getSkillRank("Corps à corps (Jujutsu)"),rings.agility),dr:pool(rings.strength,1),desc:"Agilité + Corps à corps (jiujutsu). VD 0g1 : lancez la Force et gardez un dé (VF p. 105)."});
   document.getElementById("combatWeaponsList").innerHTML=equipped.map(w=>{
-    const hand=w.id!=="unarmed" && !w.twoHands;
-    const other=hand && (character.status.offhandWeapons||[]).includes(w.id);
+    const hand=w.id!=="unarmed";
+    const other=hand && weaponHands().off===w.id;
+    const handPenalty=other&&!hasEffect("adv_ambidextre")?2:0;
     const baseAttack=w.isCustom && w.usesKenjutsu && learned("grue_bushi") && usesIaijutsu() ? adjustedRoll(w.attackRoll,getSkillRank("Iaijutsu")-getSkillRank("Kenjutsu")) : w.attackRoll;
     const extraKept=Number(learned("crabe_bushi",4) && !!character.status.hidaRage);
-    const attackPool=woundsNow()>=woundsPerRank()*6?"Impossible":adjustedRoll(baseAttack,-woundPenalty()-(other && !hasEffect("adv_ambidextre")?2:0),extraKept);
+    const attackTrait=w.usesKenjutsu?"agility":w.attackTrait||null;
+    const agilityPenalty=agilityDicePenalty(attackTrait);
+    const attackPool=woundsNow()>=woundsPerRank()*6?"Impossible":adjustedRoll(baseAttack,-woundPenalty()-handPenalty-agilityPenalty,extraKept);
     const schoolBonus=schoolStrikeBonus();
     const attackBonus=schoolBonus+mountedBonus(w.skill||"");
     const attack=attackPool==="Impossible"?attackPool:attackPool+(attackBonus?" + "+attackBonus:"");
-    const damage=adjustedRoll(w.dr,Number(hasEffect("adv_grand"))-woundPenalty(),extraKept)+(schoolBonus?" + "+schoolBonus:"");
-    const notes=[extraKept?"Rage · +1 dé gardé":"",armorPenalty()?"Attaque physique · ND +5":"",attacksPerTurn()>1?attacksPerTurn()+" attaques par tour":"",(w.skill==="Iaijutsu" || w.usesKenjutsu && usesIaijutsu()) && learned("grue_bushi")?"Iaijutsu (Kakita)":"",learned("lion_bushi_akodo")?"Au choix : ignorer l’armure adverse ou prendre une augmentation gratuite.":""].filter(Boolean).join(" · ");
+    const damageDelta=Number(hasEffect("adv_grand"))-woundPenalty()-handPenalty;
+    const damage=(Number.isFinite(w.damageDice)?pool(w.damageDice+damageDelta,Math.max(0,w.damageKeep+extraKept)):adjustedRoll(w.dr,damageDelta,extraKept))+(schoolBonus?" + "+schoolBonus:"");
+    const notes=[agilityPenalty?"Estropié · −2 dés lancés à l’attaque":"",hasEffect("dis_estropie")&&!attackTrait?"Estropié · −2 dés si cette attaque utilise l’Agilité":"",damageSelectionNote(),hasEffect("adv_grand")?"Grand · +1 dé lancé aux dommages":"",(w.qualityDice||w.qualityKeep)?`Modificateur de dommages : ${qualityInt(w.qualityDice)>=0?"+":""}${qualityInt(w.qualityDice)}g${qualityInt(w.qualityKeep)}`:"",extraKept?"Rage · +1 dé gardé":"",armorPenalty()?"Attaque physique · ND +5":"",attacksPerTurn()>1?attacksPerTurn()+" attaques par tour":"",(w.skill==="Iaijutsu" || w.usesKenjutsu && usesIaijutsu()) && learned("grue_bushi")?"Iaijutsu (Kakita)":"",learned("lion_bushi_akodo")?"Au choix : ignorer l’armure adverse ou prendre une augmentation gratuite.":""].filter(Boolean).join(" · ");
 
-    return gameCard("weapon-"+w.id,w.name,`<p>Attaque <b>${escCard(attack)}</b> · Dommages <b>${escCard(damage)}</b></p>`+(w.bow?bowArrowControls(w):"")+(notes?`<small>${notes}</small>`:"")+(hand?`<label><input type="checkbox" data-id="${escCard(w.id)}" ${other?"checked":""} onchange="setWeaponHand(this.dataset.id,this.checked)"> Main non directrice</label>`:""),
-      `<p>${escCard(w.desc)}</p><p>Attaque de base ${escCard(baseAttack)} · dommages de base ${escCard(w.dr)}.</p>${schoolBonus?`<p>Technique d’école : +${schoolBonus} au résultat pour toucher et aux dommages.</p>`:""}${learned("crabe_bushi",4)?"<p>Rage berserk : si vous sacrifiez 3 points de Blessures au début du tour, gardez un dé supplémentaire pour toucher et pour les dommages pendant ce tour.</p>":""}${learned("crabe_bushi",5) && attack==="Impossible"?"<p>L’éternité de la montagne : 1 point de Vide permet une action malgré votre état.</p>":""}`);
+    return gameCard("weapon-"+w.id,w.name,`<p>Attaque <b>${escCard(attack)}</b> · Dommages <b>${escCard(damage)}</b></p>`+(w.quality?`<small>${escCard(w.quality)}</small>`:"")+(w.bow?bowArrowControls(w):"")+(notes?`<small>${notes}</small>`:"")+(hand?`<div class="hand-note">${w.twoHands?"Deux mains":other?"Main non directrice":"Main directrice"}${handPenalty?" · −2 dés lancés":other?" · Ambidextre":""}</div>`:""),
+      backStack(backEntry("Description",backP(w.desc),w.skill||"Arme"),backEntry("Calculs de base",`<p class="effect-card-copy">Attaque de base <b>${escCard(baseAttack)}</b> · dommages de base <b>${escCard(w.dr)}</b>${w.effectiveVD?` · VD effective <b>${escCard(w.effectiveVD)}</b>`:""}.</p>`,"Profil"),damageSelectionNote()?backEntry("Règle spéciale",backP(damageSelectionNote(),"effect-side-note"),"Petit"):"",agilityPenalty?backEntry("Modificateur",backP("Estropié : le jet d’attaque utilise l’Agilité et perd 2 dés lancés, sans réduction de la Force ni de la VD.","effect-side-note"),"Agilité"):"",schoolBonus?backEntry("Technique d’école",backP(`+${schoolBonus} au résultat pour toucher et aux dommages.`,"effect-side-note"),"Bonus"):"",learned("crabe_bushi",4)?backEntry("Rage berserk",backP("Si vous sacrifiez 3 points de Blessures au début du tour, gardez un dé supplémentaire pour toucher et pour les dommages pendant ce tour.","effect-side-note"),"Hida rang 4"):"",learned("crabe_bushi",5) && attack==="Impossible"?backEntry("L’éternité de la montagne",backP("1 point de Vide permet une action malgré votre état.","effect-side-note"),"Hida rang 5"):""));
   }).join("");
-}
-function setWeaponHand(id, enabled) {
-  const hands = new Set(character.status.offhandWeapons || []);
-  if (enabled) hands.add(id); else hands.delete(id);
-  character.status.offhandWeapons = [...hands];
-  saveCharacter();
-  renderCombatWeapons();
 }
 function setBowArrow(id,value){
   if(!arrowTypes.some(a=>a.name===value))return;
@@ -7028,25 +7110,18 @@ function addPickedWeapon(){
   if(model){
     name=model.name;
     if(!inv.items)inv.items=[];
-    inv.items.push({id,name,qty:1,weaponKey:model.key});
+    inv.items.push({id,name,qty:1,quality:"moyenne",weaponKey:model.key});
   }else if(fields.model.value==="custom"){
     name=fields.weaponName.value.trim();
     if(!name){fields.weaponName.focus();return;}
     if(!inv.customWeapons)inv.customWeapons=[];
-    inv.customWeapons.push({id,name,isCustom:true,attackRoll:fields.attack.value.trim(),dr:fields.damage.value.trim(),desc:fields.description.value.trim()});
+    inv.customWeapons.push({id,name,quality:"moyenne",isCustom:true,twoHands:fields.twoHands.checked,attackRoll:fields.attack.value.trim(),attackTrait:fields.attackTrait.value,dr:fields.damage.value.trim(),desc:fields.description.value.trim()});
   }else return;
-  if(fields.equip.checked)inv.equippedWeapons=[...equippedWeaponIds(),id];
+  if(fields.equip.checked){const h={...weaponHands()};h.main=id;if(ownedWeapons().find(w=>w.id===id)?.twoHands)h.off=null;inv.hands=h;weaponHands();}
   const saved=saveCharacter();renderInventoryItemsList();renderCombatWeapons();
   document.getElementById("weaponFeedback").textContent=(fields.equip.checked?"Arme ajoutée et équipée pour le combat · ":"Arme ajoutée à l’inventaire · ")+name+(saved?"":" · Sauvegarde locale indisponible. Exportez le personnage.");
   document.getElementById("addWeaponButton").focus();
 }
-function removeCustomWeapon(weaponId) {
-  character.inventory.customWeapons = (character.inventory.customWeapons || []).filter(w => w.id !== weaponId);
-  character.inventory.equippedWeapons=equippedWeaponIds().filter(id=>id!==weaponId);
-  saveCharacter();
-  renderInventoryItemsList();
-}
-
 // -------------------------------------------------------------
 // VUE SORTS (SHUGENJA)
 // -------------------------------------------------------------
@@ -7062,10 +7137,7 @@ function renderSpellsView() {
     const seal = elementSeal(key,sp.element);
     const innate=hasInnateSpell(sp.id);
     const front = `${innate?'<span class="innate-tag">Maîtrise innée</span>':""}<div class="spell-meta">${seal}<small>ND ${sp.tn}</small></div><p>${escCard(spellSummary(sp))}</p>`;
-    if (!sp.page) {
-      return gameCard("spell-"+sp.id,sp.name,front,`<p>${escCard(sp.desc)}</p><p>Portée · ${escCard(sp.range)}<br>Durée · ${escCard(sp.duration)}<br>Maîtrise · ${escCard(sp.mastery)}</p><small>Ancienne fiche importée · hors catalogue VF</small>`,key);
-    }
-    const back=seal+(innate?'<p class="innate-note"><strong>Maîtrise innée.</strong> Vous pouvez lancer ce sort de mémoire. Si vous utilisez son parchemin, vous bénéficiez d’une augmentation gratuite (VF p. 73 et 144).</p>':"")+spellDetails(sp,sch);
+    const back=backStack(backEntry("Affinité élémentaire",seal+(innate?'<p class="innate-note"><strong>Maîtrise innée.</strong> Vous pouvez lancer ce sort de mémoire. Si vous utilisez son parchemin, vous bénéficiez d’une augmentation gratuite (VF p. 73 et 144).</p>':'') ,sp.element),spellDetails(sp,sch));
     return gameCard("spell-"+sp.id,sp.name,front,back,key);
   }).join("");
 }
@@ -7078,7 +7150,7 @@ function spellDetails(sp,sch){
     const schoolElements={crabe_shugenja:"Terre",dragon_shugenja:"Feu",grue_shugenja:"Air",licorne_shugenja:"Eau",lion_shugenja:"Eau",scorpion_shugenja:"Air"};
     const attuned=schoolElements[sch?.id]===(sp.id==="vf_contre_sort"?character.purchases.counterElement:sp.element) && !!schoolElements[sch?.id];
     const schoolNote=attuned || (sch?.id==="phenix_shugenja" && /^Rituel\b/i.test(sp.desc))?`<p>Une augmentation gratuite accordée par votre école (VF p. ${sch.abilityPage}).</p>`:"";
-    return `<div class="spell-detail"><dl>${facts}</dl><h4>Augmentations</h4><ul>${options}</ul>${schoolNote}${affinity}<h4>Effet</h4><p>${escCard(sp.desc)}</p><footer>Livre de base VF · p. ${sp.page}</footer></div>`;
+    return backEntry("Détails du sort",`<div class="spell-detail"><dl>${facts}</dl><h4>Augmentations</h4><ul>${options}</ul>${schoolNote}${affinity}<h4>Effet</h4><p>${escCard(sp.desc)}</p><footer>Livre de base VF · p. ${sp.page}</footer></div>`,`VF p. ${sp.page}`);
 }
 
 function renderSpellIndex(id,creation){
@@ -7147,24 +7219,6 @@ function adjustCurrentVoid(delta) {
   renderCombatView();
 }
 
-function resetVoidPoints() {
-  character.status.glory=character.clanRonin || character.clanId===8 ? 0 : 1;
-  const rings = getRings();
-  character.status.currentVoid = rings.void;
-  saveCharacter();
-  renderSheetView();
-  renderCombatView();
-}
-
-function scrollToSchoolTechniques() {
-  showScreen("screen-combat");
-  setTimeout(() => {
-    const el = document.getElementById("schoolTechniquesSection");
-    if (el) el.open = true;
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 60);
-}
-
 function renderSchoolTechniquesView(){
   const school=DATA.schools.find(s=>s.id===character.schoolId), rank=getSchoolRank();
   document.getElementById("combatSchoolHeading").textContent=school?.vocation==="shugenja"?"Enseignement du shugenja":"Techniques d’école";
@@ -7174,7 +7228,7 @@ function renderSchoolTechniquesView(){
   }
   const techs=(school?.techniques||[]).filter(t=>!character.clanRonin || t.rank===1);
   const draw=t=>schoolCard(school,t,"combat-tech");
-  document.getElementById("sheetSchoolTechniquesContainer").innerHTML=techs.filter(t=>t.rank<=rank).map(draw).join("") || (school?.legacy?"Ancienne école hors du livre de base.":"Aucune technique d’école.");
+  document.getElementById("sheetSchoolTechniquesContainer").innerHTML=techs.filter(t=>t.rank<=rank).map(draw).join("") || "Aucune technique d’école.";
 }
 
 function knownSpellIds(){
@@ -7193,6 +7247,10 @@ function recordSchoolSpell(rank,id){
   character.status.schoolSpells={...byRank,[rank]:[...learned,id]};
   saveCharacter();renderSheetView();
 }
+function familySchoolTrainingBlocked(){
+  const family=DATA.families.find(f=>f.id===character.familyId),school=DATA.schools.find(s=>s.id===character.schoolId);
+  return hasEffect("dis_brebis_galeuse")&&!!family&&!!school&&school.clanId===family.clanId&&school.name.split(/\s+/).includes(family.name);
+}
 function schoolRankPanel(school){
   if(!school || character.clanRonin || !(school.page || school.abilityPage))return "";
   const rank=getSchoolRank(), ceiling=calcInsightBreakdown().currentRank;
@@ -7207,7 +7265,8 @@ function schoolRankPanel(school){
       html+=`<section class="card"><h3>Rang ${level} · Enseignement du sensei</h3><p>${names.length} / 3 sorts inscrits au grimoire</p>${names.length?"<ul>"+names.map(name=>"<li>"+escCard(name)+"</li>").join("")+"</ul>":""}${lessons.length<3?`<label>Sort accordé par le sensei<select class="search-input" onchange="recordSchoolSpell(${level},this.value)"><option value="">Choisir un sort…</option>${options}</select></label>`:""}</section>`;
     }
   }
-  if(rank<ceiling){
+  if(rank<ceiling&&familySchoolTrainingBlocked())html+=`<section class="card"><p><b>Brebis galeuse</b> · Nouvel enseignement dans l’école familiale interdit (VF p. 74). Le MJ doit déterminer une autre école.</p></section>`;
+  else if(rank<ceiling){
     const next=rank+1,tech=school.techniques.find(t=>t.rank===next);
     const gain=school.vocation==="shugenja"?"Trois nouveaux sorts d’un ou plusieurs éléments choisis par le sensei.":tech?`<strong>${escCard(tech.name)}</strong><br>${escCard(tech.desc)}`:"";
     html+=`<section class="card"><h3>Rang ${next} accessible</h3><p>${gain}</p><p>Seuil de Réputation atteint. Après l’enseignement du sensei, inscrivez ce rang sur la fiche (VF p. 60).</p><button type="button" class="btn sm" onclick="recordMastery(${next})">Confirmer le passage au rang ${next}</button></section>`;
@@ -7216,13 +7275,13 @@ function schoolRankPanel(school){
 }
 function recordMastery(rank){
   const school=DATA.schools.find(s=>s.id===character.schoolId);
-  if(character.clanRonin || !(school?.page || school?.abilityPage) || rank!==getSchoolRank()+1 || rank>calcInsightBreakdown().currentRank)return;
+  if(character.clanRonin || familySchoolTrainingBlocked() || !(school?.page || school?.abilityPage) || rank!==getSchoolRank()+1 || rank>calcInsightBreakdown().currentRank)return;
   character.status.approvedMastery=rank;saveCharacter();renderSheetView();renderCombatView();renderSchoolProgress();
 }
 function shugenjaCard(school,key){
   const rank=getSchoolRank();
   return gameCard(key+"-enseignement",school.name,`<small>Maîtrise · rang ${rank}</small><p>${escCard(school.ability || "Trois prières communes et sept autres sorts à la création.")}</p><p>Incantation · anneau + ${rank} dé(s) lancé(s), gardez autant de dés que le rang de l’anneau.</p>`,
-    `<p>Livre de base VF · p. ${school.abilityPage || 92} et 142.</p>`);
+    backStack(backEntry("Enseignement",backP(school.ability || "Trois prières communes et sept autres sorts à la création."),`Rang ${rank}`),backEntry("Incantation",backP(`Anneau + ${rank} dé(s) lancé(s), gardez autant de dés que le rang de l’anneau.`),"Shugenja"),backEntry("Référence",backP(`Livre de base VF · p. ${school.abilityPage || 92} et 142.`,"effect-side-note"))));
 }
 function techniqueCard(school, technique) {
   const first = technique.rank === 1;
@@ -7281,6 +7340,7 @@ function addExperienceAward() {
 }
 
 function buyTraitWithXp(traitKey) {
+  if(!Object.hasOwn(DEFAULT_CHARACTER.baseTraits,traitKey)||permanentTraitScore(traitKey)>=traitLimit(traitKey))return;
   const avail = getAvailableXp();
   const curScore = getTraitScore(traitKey);
   const nextScore = curScore + 1;
@@ -7322,6 +7382,7 @@ function buySkillWithXp(skillName) {
   if(!officialSkill(skillName))return;
   const avail = getAvailableXp();
   const curRank = getSkillRank(skillName);
+  if(curRank>=RANK_LIMITS.skill)return;
   const nextRank = curRank + 1;
   const cost = (curRank === 0) ? 1 : nextRank;
   if (avail < cost) {
@@ -7350,11 +7411,34 @@ function buySkillWithXp(skillName) {
   renderXpView();
 }
 
+function ledgerRemovalError(entry,idx){
+ const ledger=character.experience.ledger;
+ if(entry.type==="award"){
+  let balance=0;for(let i=0;i<ledger.length;i++){if(i===idx)continue;const x=ledger[i];balance+=x.type==="award"?x.amount:-x.cost;if(balance<0)return "Ce gain finance une dépense ultérieure : annulez d’abord les dépenses concernées.";}
+  return "";
+ }
+ if(entry.type!=="purchase"||!["trait","skill","innateSpell"].includes(entry.kind))return "Entrée inconnue : annulation impossible.";
+ if(entry.kind==="innateSpell")return "";
+ if(ledger.slice(idx+1).some(x=>x.type==="purchase"&&x.kind===entry.kind&&x.targetId===entry.targetId))return "Annulez d’abord le dernier achat de ce même trait ou de cette compétence.";
+ const map=entry.kind==="trait"?character.inGameTraits:character.inGameSkills;
+ const score=()=>entry.kind==="trait"?getTraitScore(entry.targetId):getSkillRank(entry.targetId);
+ if(!map||!Number.isInteger(map[entry.targetId])||map[entry.targetId]<1||score()!==entry.cost/(entry.kind==="trait"?4:1))return "Le score actuel ne correspond plus à cet achat. Vérifiez les ajustements manuels avant de l’annuler.";
+ const previous=map[entry.targetId];map[entry.targetId]--;
+ try{
+  if(calcInsightBreakdown().currentRank<(character.status.approvedMastery||1))return "Cette annulation ferait perdre la Réputation requise pour un rang de Maîtrise acquis.";
+  if(hasEffect("dis_fragile")&&getTraitScore("stamina")<2)return "Cette annulation rendrait le désavantage Fragile invalide.";
+  if(entry.kind==="trait"&&character.vocationId==="shugenja"){
+   const rings=getRings();for(const x of ledger.filter(x=>x.kind==="innateSpell"&&x.type==="purchase")){const sp=DATA.spells.find(s=>s.id===x.targetId);if(!sp)continue;const ring=sp.element==="Universel"?Math.max(...spellElements.map(e=>rings[spellElementKey(e)])):rings[spellElementKey(sp.element)];if(ring+getSchoolRank()<sp.mastery)return "Annulez d’abord la maîtrise innée devenue inaccessible.";}
+  }
+  return "";
+ }finally{map[entry.targetId]=previous;}
+}
 function deleteLedgerEntry(entryId) {
   ensureExperienceLedger();
   const idx = character.experience.ledger.findIndex(x => x.id === entryId);
   if (idx === -1) return;
   const entry = character.experience.ledger[idx];
+  const blocker=ledgerRemovalError(entry,idx);if(blocker){alert(blocker);return;}
 
   if (entry.type === "award") {
     const newAvail = getAvailableXp() - entry.amount;
@@ -7375,6 +7459,7 @@ function deleteLedgerEntry(entryId) {
     character.experience.ledger.splice(idx, 1);
   }
 
+  character.status.currentVoid=Math.min(character.status.currentVoid,getRings().void);
   saveCharacter();
   renderXpView();
 }
@@ -7385,12 +7470,12 @@ function renderSchoolProgress(){
   const available=!character.clanRonin && (school?.page || school?.abilityPage);
   document.getElementById("xpSchoolPanel").hidden=!available;
   if(!available)return;
-  document.getElementById("xpMastery").innerHTML=`<p>Maîtrise · rang ${rank} · Réputation · rang accessible ${ceiling}</p>`+(rank<ceiling?`<button type="button" class="btn sm" onclick="recordMastery(${rank+1})">Confirmer le passage au rang ${rank+1}</button>`:"");
+  document.getElementById("xpMastery").innerHTML=`<p>Maîtrise · rang ${rank} · Réputation · rang accessible ${ceiling}</p>`+(rank<ceiling?(familySchoolTrainingBlocked()?`<p>Brebis galeuse · enseignement dans l’école familiale interdit (VF p. 74).</p>`:`<button type="button" class="btn sm" onclick="recordMastery(${rank+1})">Confirmer le passage au rang ${rank+1}</button>`):"");
   const future=school.techniques.filter(t=>t.rank>rank);
   document.getElementById("xpFutureTechniques").innerHTML=future.length?`<h3>Techniques des rangs suivants</h3><div class="deck technique-deck">${future.map(t=>schoolCard(school,t,"xp-tech")).join("")}</div>`:"";
 }
 function hasInnateSpell(id){
-  return (character.experience?.ledger||[]).some(x=>x.type==="purchase" && x.kind==="innateSpell" && x.targetId===id);
+  return !(character.status.innateRemoved||[]).includes(id) && (creationInnateIds().includes(id)||(character.status.campaignRows?.adv_maitrise_innee||[]).some(r=>r.spell===id)||(character.experience?.ledger||[]).some(x=>x.type==="purchase" && x.kind==="innateSpell" && x.targetId===id));
 }
 function canMemorizeSpell(sp){
   if(!sp?.page || character.vocationId!=="shugenja" || !knownSpellIds().has(sp.id) || hasInnateSpell(sp.id))return false;
@@ -7439,16 +7524,17 @@ function renderXpView() {
       const cur = getTraitScore(tm.key);
       const next = cur + 1;
       const cost = next * 4;
-      const canAfford = (avail >= cost);
+      const capped=permanentTraitScore(tm.key)>=traitLimit(tm.key);
+      const canAfford = !capped && avail >= cost;
 
       return `
         <div class="xp-trait" data-element="${tm.element}">
           <div>
             <strong style="color:var(--ink);font-size:13.5px;">${tm.key==="void"?"Anneau du Vide":weakTraits[tm.key]}</strong>
-            <small style="color:var(--ink-muted);display:block;font-size:11px;">${tm.ring} · Score actuel : ${cur} ➔ ${next}</small>
+            <small style="color:var(--ink-muted);display:block;font-size:11px;">${tm.ring} · Score actuel : ${cur}${capped?"":" ➔ "+next}</small>
           </div>
           <button class="btn sm ${canAfford ? 'primary' : ''}" type="button" onclick="buyTraitWithXp('${tm.key}')" ${!canAfford ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
-            Passer à ${next} (${cost} XP)
+            ${capped?"Rang maximal atteint":`Passer à ${next} (${cost} XP)`}
           </button>
         </div>
       `;
@@ -7471,6 +7557,7 @@ function renderXpView() {
 
     ledgerContainer.innerHTML = ledger.map(x => {
       const isAward = (x.type === "award");
+      const blocked=ledgerRemovalError(x,character.experience.ledger.indexOf(x));
       const dateStr = x.at ? new Date(x.at).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : "";
 
       return `
@@ -7484,7 +7571,7 @@ function renderXpView() {
             </div>
             ${x.comment ? `<small style="color:var(--ink-muted);display:block;margin-top:2px;font-size:12px;">• ${x.comment}</small>` : ''}
           </div>
-          <button class="btn sm danger" style="padding:2px 8px;min-height:26px;font-size:11.5px;" type="button" onclick="deleteLedgerEntry('${x.id}')" title="Supprimer ou annuler cette entrée">
+          <button class="btn sm danger" style="padding:2px 8px;min-height:26px;font-size:11.5px;" type="button" onclick="deleteLedgerEntry('${x.id}')" ${blocked?`disabled title="${escCard(blocked)}"`:'title="Supprimer ou annuler cette entrée"'}>
             ${isAward ? 'Supprimer' : 'Annuler / Rembourser'}
           </button>
         </div>
@@ -7502,7 +7589,6 @@ function renderXpSkillsList() {
 
   const skills = DATA.skills.filter(sk => {
     const curRank = getSkillRank(sk.name);
-    if (sk.legacyChoice)return false;
     if (cat === "trained" && curRank <= 0) return false;
     if (cat !== "all" && cat !== "trained" && !inSkillCategory(sk,cat)) return false;
     if (query) {
@@ -7516,7 +7602,8 @@ function renderXpSkillsList() {
     const curRank = getSkillRank(sk.name);
     const nextRank = curRank + 1;
     const cost = (curRank === 0) ? 1 : nextRank;
-    const canAfford = (avail >= cost);
+    const capped=curRank>=RANK_LIMITS.skill;
+    const canAfford = !capped && avail >= cost;
 
 
     return `
@@ -7528,7 +7615,7 @@ function renderXpSkillsList() {
           </div>
         </div>
         <button class="btn sm ${canAfford ? 'primary' : ''}" type="button" data-skill="${escCard(sk.name)}" onclick="buySkillWithXp(this.dataset.skill)" ${!canAfford ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
-          ${curRank === 0 ? `Acquérir (1 XP)` : `Passer à ${nextRank} (${cost} XP)`}
+          ${capped?"Rang maximal atteint":curRank === 0 ? `Acquérir (1 XP)` : `Passer à ${nextRank} (${cost} XP)`}
         </button>
       </div>
     `;
@@ -7561,54 +7648,36 @@ function adjustMoney(curr, delta) {
   renderInventoryView();
 }
 
+function setCustomAttackTrait(id,trait){
+  if(!["agility","reflexes","other"].includes(trait))return;
+  const w=character.inventory.customWeapons.find(x=>x.id===id);
+  if(w){w.attackTrait=trait;saveCharacter();renderInventoryItemsList();renderCombatWeapons();}
+}
 function setCustomKenjutsu(id,enabled){
   const w=character.inventory.customWeapons?.find(w=>w.id===id);
   if(w){w.usesKenjutsu=enabled;saveCharacter();}
 }
-function renderInventoryItemsList() {
-  populateWeaponPicker();
-  document.getElementById("inventoryWeapons").innerHTML=ownedWeapons().map(w=>`<div><label><input type="checkbox" data-id="${escCard(w.id)}" onchange="equipWeapon(this.dataset.id,this.checked)" ${equippedWeaponIds().includes(w.id)?"checked":""}> ${escCard(w.name)} · équipée</label> ${w.isCustom?`<label><input type="checkbox" data-id="${escCard(w.id)}" ${w.usesKenjutsu?"checked":""} onchange="setCustomKenjutsu(this.dataset.id,this.checked)"> Formule basée sur Kenjutsu</label> <button class="btn sm" data-id="${escCard(w.id)}" onclick="removeCustomWeapon(this.dataset.id)">Retirer</button>`:""}</div>`).join("") || "<p>Aucune arme dans l’inventaire.</p>";
-
-  const container = document.getElementById("inventoryItemsContainer");
-  const items = character.inventory.items || [];
-  if (items.length === 0) {
-    container.innerHTML = `<div style="color:var(--ink-dim);font-size:12px;padding:8px;">Aucun objet dans l'inventaire.</div>`;
-    return;
-  }
-  container.innerHTML = items.map(it => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--panel-sub);border:1px solid var(--line);border-radius:6px;">
-      <div>
-        <strong style="color:var(--ink);font-size:13.5px;">${it.name}</strong>
-        ${it.qty > 1 ? `<span class="badge">×${it.qty}</span>` : ''}
-      </div>
-      <button class="btn sm danger" style="padding:2px 8px;min-height:26px;" onclick="removeInventoryItem('${it.id}')">✕</button>
-    </div>
-  `).join("");
+function renderInventoryItemsList(){
+ populateWeaponPicker();const hands=weaponHands(),armor=selectedArmor();renderInventoryArmor();document.getElementById('inventoryWeapons').innerHTML=renderWeaponHands();
+ const profiles=new Map(ownedWeapons().map(w=>[w.id,w]));const all=[...character.inventory.items,...character.inventory.customWeapons];const container=document.getElementById('inventoryItemsContainer');
+ const groups=[['Armes',it=>profiles.has(it.id)||!!itemModel(it)||it.isCustom],['Armures',it=>!!itemArmorType(it)],['Autres objets',it=>!profiles.has(it.id)&&!itemModel(it)&&!it.isCustom&&!itemArmorType(it)]];
+ container.innerHTML=groups.map(([label,filter])=>{const items=all.filter(filter).sort((a,b)=>(a.alias||a.name).localeCompare(b.alias||b.name,'fr'));return `<section class="inv-group"><h3>${label} <small>${items.length}</small></h3>${items.length?items.map(it=>{const w=profiles.get(it.id),type=itemArmorType(it),state=hands.main===it.id?(w?.twoHands?'Deux mains':'Main directrice'):hands.off===it.id?'Main non directrice':armor?.id===it.id?'Portée':'';return `<article class="inv-entry"><div class="inv-head"><div><strong class="inv-title">${escCard(it.alias||it.name)}</strong>${state?` <span class="inv-active">${state}</span>`:''}<div class="inv-stats">${w?'Dommages '+escCard(w.dr):type?'Protection +'+((type==='heavy'?10:5)+qualityInt(it.qualityND))+' ND':''}</div><small data-quality-summary>${escCard(qualityText(it))}</small></div><div class="inv-actions">${!w&&!type&&!it.isCustom&&!itemModel(it)?`<label>Qté <input type="number" min="1" max="9999" value="${Number(it.qty)||1}" data-id="${escCard(it.id)}" onchange="setInventoryQty(this.dataset.id,this.value)"></label>`:''}<button type="button" class="btn sm" data-id="${escCard(it.id)}" onclick="requestInventoryRemoval(this)">Retirer</button></div></div>${itemQualityEditor(it)}${it.isCustom?`<label><input type="checkbox" data-id="${escCard(it.id)}" ${it.usesKenjutsu?'checked':''} onchange="setCustomKenjutsu(this.dataset.id,this.checked)"> Formule basée sur Kenjutsu</label><label>Trait d’attaque <select data-id="${escCard(it.id)}" onchange="setCustomAttackTrait(this.dataset.id,this.value)">${[["","Non précisé"],["agility","Agilité"],["reflexes","Réflexes"],["other","Autre"]].map(([key,label])=>`<option value="${key}" ${(it.attackTrait||"")===key?"selected":""} ${key===""?"disabled":""}>${label}</option>`).join("")}</select></label>`:''}</article>`;}).join(''):'<p class="hand-note">Aucun objet.</p>'}</section>`;}).join('');
+ if(character.isCreated&&document.getElementById('combatDeck'))renderCombatView();
 }
-
-function addCustomInventoryItem() {
-  const input = document.getElementById("newInvItemInput");
-  const val = input.value.trim();
-  if (!val) return;
-  if (!character.inventory.items) character.inventory.items = [];
-  character.inventory.items.push({
-    id: "item_" + Date.now(),
-    name: val,
-    qty: 1
-  });
-  input.value = "";
-  saveCharacter();
-  renderInventoryItemsList();
+function setInventoryQty(id,value){const it=character.inventory.items.find(x=>x.id===id),n=Number(value);if(it&&Number.isInteger(n)&&n>=1&&n<=9999){it.qty=n;saveCharacter();}renderInventoryItemsList();}
+function addCustomInventoryItem(){const input=document.getElementById('newInvItemInput'),name=input.value.trim();if(!name)return;const id='item_'+(globalThis.crypto?.randomUUID?.()||Math.random().toString(36).slice(2));character.inventory.items.push({id,name,qty:1,quality:'moyenne'});input.value='';saveCharacter();renderInventoryItemsList();}
+function requestInventoryRemoval(button){
+ const row=button.closest('.inv-entry'),id=button.dataset.id;if(!row||!id)return;
+ for(const el of document.querySelectorAll('.inv-remove-confirm'))el.remove();
+ const panel=document.createElement('div');panel.className='inv-remove-confirm';panel.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:8px;border-top:1px solid var(--line)';
+ const msg=document.createElement('small');msg.textContent='Retirer cet objet de l’inventaire ? Il sera également déséquipé.';panel.append(msg);
+ for(const [label,action] of [['Confirmer',()=>removeInventoryItem(id)],['Annuler',()=>panel.remove()]]){const b=document.createElement('button');b.type='button';b.className='btn sm';b.textContent=label;b.addEventListener('click',action);panel.append(b);}row.append(panel);
 }
-
-function removeInventoryItem(itemId) {
-  character.inventory.items = (character.inventory.items || []).filter(it => it.id !== itemId);
-  const remaining=new Set(ownedWeapons().map(w=>w.id));
-  character.inventory.equippedWeapons=equippedWeaponIds().filter(id=>remaining.has(id));
-  character.status.offhandWeapons=(character.status.offhandWeapons||[]).filter(id=>remaining.has(id));
-  if(character.inventory.arrows)for(const id of Object.keys(character.inventory.arrows))if(!remaining.has(id))delete character.inventory.arrows[id];
-  saveCharacter();
-  renderInventoryItemsList();
+function removeInventoryItem(id){
+ const inv=character.inventory;id=String(id);const it=[...inv.items,...inv.customWeapons].find(x=>x.id===id);if(!it)return false;
+ const h=weaponHands();if(h.main===id)h.main=null;if(h.off===id)h.off=null;if(inv.armorId===id)inv.armorId=null;
+ inv.items=inv.items.filter(x=>x.id!==id);inv.customWeapons=inv.customWeapons.filter(x=>x.id!==id);if(inv.arrows)delete inv.arrows[id];
+ weaponHands();const saved=saveCharacter();renderInventoryItemsList();const feedback=document.getElementById('weaponFeedback');if(feedback)feedback.textContent='Objet retiré : '+(it.alias||it.name)+(saved?'':' · Sauvegarde locale indisponible : exportez la fiche.');return true;
 }
 
 // -------------------------------------------------------------
@@ -7639,21 +7708,18 @@ function handleFileImport(evt) {
     try {
       const parsed = JSON.parse(e.target.result);
       if (parsed && typeof parsed === "object") {
-        character = Object.assign(JSON.parse(JSON.stringify(DEFAULT_CHARACTER)), parsed);
-      migrateSkillNames(character);
-      if(character.schoolPairApproved==null && ["ronin_bushi","ronin_shugenja","grue_bushi"].includes(character.schoolId)){
-        const names=Object.values(character.schoolChosenSkills||{});character.schoolPairApproved=new Set(names).size<names.length;
-      }
-      if(character.isCreated && character.vocationId==="bushi" && character.status.approvedMastery==null) character.status.approvedMastery=getSchoolRank();
+        validateV1(parsed);
+      if (!parsed.isCreated) throw Error("Personnage non finalisé");
+      character = parsed;
         resetCharacterView();
-        character.isCreated = true;
-        initializeWoundEffects();
+
+  
         saveCharacter();
         showScreen("screen-sheet");
         alert("Personnage importé avec succès !");
       }
     } catch (err) {
-      alert("Erreur : le fichier sélectionné n'est pas un fichier JSON valide.");
+      alert("Import refusé : "+err.message);
     }
   };
   reader.readAsText(file);
